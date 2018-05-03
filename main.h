@@ -2,7 +2,7 @@
 #define LEARNCPP_MAIN_H
 
 #include <iostream>
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 #include <glfw/glfw3.h>
 #include "engine/display/displayManager.h"
 #include "engine/gl/VertexArray.h"

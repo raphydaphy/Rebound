@@ -43,15 +43,15 @@ VertexArray VertexArray::unbind()
 
 VertexArray VertexArray::storeIndices(int indices[], int length)
 {
-    this->indices.bind().store(indices, length).unbind();
+    this->indices.bind().store(indices, length);
     this->indicesLength = length;
     return *this;
 }
 
 VertexArray VertexArray::createAttribute(GLuint index, const void *data, int length, int dimensions)
 {
-    VertexBuffer vbo = VertexBuffer(GL_ARRAY_BUFFER).bind().store(data, length).unbind();
-    glVertexAttribPointer(index, dimensions, GL_FLOAT, GL_FALSE, length * 4, 0);
+    VertexBuffer vbo = VertexBuffer(GL_ARRAY_BUFFER).bind().store(data, length);
+    glVertexAttribPointer(index, dimensions, GL_FLOAT, GL_FALSE, 0, 0);
     buffers.push_back(vbo);
     return *this;
 }

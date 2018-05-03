@@ -13,9 +13,9 @@ add_executable(${PROJECT_NAME} main.cpp main.h engine/display/displayManager.cpp
 # Linking GLFW
 target_link_libraries(${PROJECT_NAME} "glfw" ${GLFW_LIBRARIES})
 
-# glad
-set(GLAD_DIR "${LIBRARIES_DIR}/glad")
-add_library("glad" "${GLAD_DIR}/src/glad.c")
-target_include_directories("glad" PRIVATE "${GLAD_DIR}/include")
-target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_DIR}/include")
-target_link_libraries(${PROJECT_NAME} "glad" "${CMAKE_DL_LIBS}")
+# gl3w
+set(GL3W_DIR "${LIBRARIES_DIR}/gl3w")
+add_library("gl3w" "${GL3W_DIR}/src/gl3w.c")
+target_include_directories("gl3w" PRIVATE "${GL3W_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE "${GL3W_DIR}/include")
+target_link_libraries(${PROJECT_NAME} "gl3w" "${CMAKE_DL_LIBS}")

@@ -1,7 +1,7 @@
 #ifndef LEARNCPP_VERTEXARRAY_H
 #define LEARNCPP_VERTEXARRAY_H
 
-#include "glad/glad.h"
+#include <GL/gl3w.h>
 #include <initializer_list>
 #include <vector>
 #include "VertexBuffer.h"

@@ -1,7 +1,7 @@
 #ifndef LEARNCPP_VERTEXBUFFER_H
 #define LEARNCPP_VERTEXBUFFER_H
 
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 #include <vector>
 
 class VertexBuffer

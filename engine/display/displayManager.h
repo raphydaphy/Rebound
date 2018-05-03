@@ -2,7 +2,7 @@
 #define LEARNCPP_DISPLAYMANAGER_H
 
 #include <iostream>
-#include <glad/glad.h>
+#include <GL/gl3w.h>
 #include <glfw/glfw3.h>
 
 namespace disp

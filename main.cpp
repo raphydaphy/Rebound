@@ -20,14 +20,14 @@ int main()
             -0.5f, 0.5f, 0
     };
 
-    VertexArray vao = VertexArray().bind().createAttribute(0, vertices, sizeof(vertices) / sizeof(vertices[0]), 3).unbind();
+    VertexArray vao = VertexArray().bind().createAttribute(0, vertices, sizeof(vertices), 3).unbind();
 
     while (disp::open())
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
         vao.bind({0});
-        glDrawArrays(GL_TRIANGLES, 0, vao.getIndicesLength());
+        glDrawArrays(GL_TRIANGLES, 0, vao.getIndicesLength() / 3);
         vao.unbind({0});
 
         disp::update();
