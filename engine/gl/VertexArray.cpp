@@ -3,6 +3,9 @@
 VertexArray::VertexArray()
 {
     glGenVertexArrays(1, &id);
+    bind();
+    indices = VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
+    unbind();
 }
 
 VertexArray VertexArray::bind(const std::initializer_list<GLuint> &attributes)
@@ -51,7 +54,7 @@ VertexArray VertexArray::storeIndices(int indices[], int length)
 VertexArray VertexArray::createAttribute(GLuint index, const void *data, int length, int dimensions)
 {
     VertexBuffer vbo = VertexBuffer(GL_ARRAY_BUFFER).bind().store(data, length);
-    glVertexAttribPointer(index, dimensions, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(index, dimensions, GL_FLOAT, GL_FALSE, 0, nullptr);
     buffers.push_back(vbo);
     return *this;
 }

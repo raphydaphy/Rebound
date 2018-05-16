@@ -7,7 +7,9 @@
 class VertexBuffer
 {
 public:
+    VertexBuffer();
     explicit VertexBuffer(GLenum type);
+
     VertexBuffer bind();
     VertexBuffer unbind();
     VertexBuffer store(const void *data, int size);

@@ -21,7 +21,7 @@ namespace disp
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        window = glfwCreateWindow(1280, 720, "LearnCPP", nullptr, nullptr);
+        window = glfwCreateWindow(1280, 720, "Automania", nullptr, nullptr);
 
         if (!window)
         {

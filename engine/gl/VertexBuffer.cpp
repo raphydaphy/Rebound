@@ -1,5 +1,7 @@
 #include "VertexBuffer.h"
 
+VertexBuffer::VertexBuffer() = default;
+
 VertexBuffer::VertexBuffer(GLenum type)
 {
     glGenBuffers(1, &id);
@@ -28,3 +30,5 @@ void VertexBuffer::del()
 {
     glDeleteBuffers(1, &id);
 }
+
+

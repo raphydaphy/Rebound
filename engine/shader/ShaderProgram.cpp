@@ -1,6 +1,6 @@
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLchar *> &attributes)
+ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLchar *> attributes)
 {
     vertex = loadShader(name + ".vert", GL_VERTEX_SHADER);
     fragment = loadShader(name + ".frag", GL_FRAGMENT_SHADER);
@@ -29,8 +29,7 @@ ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLcha
 
 GLuint ShaderProgram::loadShader(std::string file, GLenum type)
 {
-    std::ifstream src;
-    src.open(file);
+    std::ifstream src(file);
 
     if (!src)
     {
@@ -43,7 +42,7 @@ GLuint ShaderProgram::loadShader(std::string file, GLenum type)
     std::string shader;
     std::string line;
 
-    while (src >> line)
+    while (std::getline(src, line))
     {
         shader += line + "\n";
     }
@@ -69,21 +68,23 @@ GLuint ShaderProgram::loadShader(std::string file, GLenum type)
     return id;
 }
 
-void ShaderProgram::bindAttributes(std::initializer_list<const GLchar *> &attributes)
+void ShaderProgram::bindAttributes(std::initializer_list<const GLchar *> attributes)
 {
     GLuint id = 0;
     for (const GLchar *attribute : attributes)
     {
         if (attribute != EMPTY_ATTRIBUTE)
         {
+            std::cout << "Bound attribute " << attribute << " with id " << id << std::endl;
             glBindAttribLocation(program, id, attribute);
+            std::cout << "got location " << glGetAttribLocation(program, attribute) << std::endl;
         }
 
         id++;
     }
 }
 
-void ShaderProgram::storeUniforms(std::initializer_list<Uniform> &uniforms)
+void ShaderProgram::storeUniforms(std::initializer_list<Uniform> uniforms)
 {
     for (Uniform uniform : uniforms)
     {

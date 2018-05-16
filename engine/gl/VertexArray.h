@@ -22,7 +22,7 @@ private:
     GLuint id;
     std::vector<VertexBuffer> buffers;
     int indicesLength;
-    VertexBuffer indices = VertexBuffer(GL_ELEMENT_ARRAY_BUFFER);
+    VertexBuffer indices;
 };
 
 #endif
