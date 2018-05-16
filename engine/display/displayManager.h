@@ -11,6 +11,8 @@ namespace disp
     void destroy();
     bool open();
     void update();
+
+    void errorCallback(int error, const char* description);
 }
 
 #endif

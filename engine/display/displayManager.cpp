@@ -1,4 +1,5 @@
 #include "displayManager.h"
+#include "../../main.h"
 
 namespace disp
 {
@@ -6,6 +7,8 @@ namespace disp
 
     bool init()
     {
+        glfwSetErrorCallback(errorCallback);
+
         if (!glfwInit())
         {
             std::cerr << "Unable to initialize GLFW :(" << std::endl;
@@ -65,5 +68,10 @@ namespace disp
     {
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+
+    void errorCallback(int error, const char* description)
+    {
+        std::cerr << "GLF5W Error " << error << std::endl << description << std::endl;
     }
 }

@@ -2,7 +2,7 @@
 
 int main()
 {
-    glfwSetErrorCallback(errorCallback);
+
 
     if (!disp::init())
     {
@@ -38,9 +38,3 @@ int main()
 
     return 0;
 }
-
-void errorCallback(int error, const char* description)
-{
-    std::cerr << "GLF5W Error " << error << std::endl << description << std::endl;
-}
-
