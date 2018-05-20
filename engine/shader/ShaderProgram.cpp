@@ -75,9 +75,7 @@ void ShaderProgram::bindAttributes(std::initializer_list<const GLchar *> attribu
     {
         if (attribute != EMPTY_ATTRIBUTE)
         {
-            std::cout << "Bound attribute " << attribute << " with id " << id << std::endl;
             glBindAttribLocation(program, id, attribute);
-            std::cout << "got location " << glGetAttribLocation(program, attribute) << std::endl;
         }
 
         id++;

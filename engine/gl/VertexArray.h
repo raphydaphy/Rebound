@@ -14,15 +14,15 @@ public:
     VertexArray bind();
     VertexArray unbind(const std::initializer_list<GLuint> &attributes);
     VertexArray unbind();
-    VertexArray storeIndices(int indices[], int length);
+    VertexArray storeIndices(const GLint indices[], int length);
     VertexArray createAttribute(GLuint index, const void *data, int length, int dimensions);
     int getIndicesLength();
     void del();
+    VertexBuffer indices;
 private:
     GLuint id;
     std::vector<VertexBuffer> buffers;
     int indicesLength;
-    VertexBuffer indices;
 };
 
 #endif

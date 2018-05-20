@@ -13,12 +13,14 @@ int main()
             -0.5f, -0.5f, 0,
             -0.5f, 0.5f, 0,
             0.5f, 0.5f, 0,
-            0.5f, 0.5f, 0,
-            -0.5f, -0.5f, 0,
             0.5f, -0.5f, 0
     };
 
-    VertexArray vao = VertexArray().bind().createAttribute(0, vertices, sizeof(vertices), 3).unbind();
+    static const GLint indices[] = {
+            0, 1, 2, 2, 0, 3
+    };
+
+    VertexArray vao = VertexArray().bind().storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
 
     StaticObjectShader shader;
 
@@ -26,11 +28,11 @@ int main()
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        vao.bind({0});
+        vao.bind({0}).indices.bind();
         shader.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, vao.getIndicesLength(), GL_UNSIGNED_INT, nullptr);
         shader.unbind();
-        vao.unbind({0});
+        vao.unbind({0}).indices.unbind();
 
         disp::update();
     }
