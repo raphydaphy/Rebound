@@ -4,8 +4,8 @@
 #include <iostream>
 #include <GL/gl3w.h>
 #include <glfw/glfw3.h>
-#include "engine/display/displayManager.h"
-#include "engine/gl/VertexArray.h"
+//#include "engine/display/displayManager.h"
+//#include "engine/gl/VertexArray.h"
 #include "engine/shader/impl/StaticObjectShader.h"
 
 #endif
