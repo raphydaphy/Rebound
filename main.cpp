@@ -30,7 +30,9 @@ int main()
 
         vao.bind({0}).indices.bind();
         shader.bind();
+
         glDrawElements(GL_TRIANGLES, vao.getIndicesLength(), GL_UNSIGNED_INT, nullptr);
+
         shader.unbind();
         vao.unbind({0}).indices.unbind();
 
