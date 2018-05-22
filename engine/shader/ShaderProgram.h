@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "../gl/uniform/Uniform.h"
+#include "../gl/Uniform.h"
 
 class ShaderProgram
 {

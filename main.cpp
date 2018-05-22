@@ -10,19 +10,51 @@ int main()
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     static const GLfloat vertices[] = {
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            0.0f,  1.0f, 0.0f/*
             -0.5f, -0.5f, 0,
             -0.5f, 0.5f, 0,
             0.5f, 0.5f, 0,
-            0.5f, -0.5f, 0
+            0.5f, -0.5f, 0*/
     };
 
     static const GLint indices[] = {
-            0, 1, 2, 2, 0, 3
+            0, 1, 2
+            //0, 1, 2, 2, 0, 3
     };
 
     VertexArray vao = VertexArray().bind().storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
 
     StaticObjectShader shader;
+
+    float width = 1080;
+    float height = 720;
+
+    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+
+    // Or, for an ortho camera :
+    //glm::mat4 projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+
+    glm::mat4 view = glm::lookAt(
+            glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
+            glm::vec3(0,0,0), // and looks at the origin
+            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    );
+
+    glm::mat4 model = glm::mat4(1.0f);
+
+    model[0][0] = 1;
+    model[1][1] = 1;
+    model[2][2] = 1;
+    model[3][3] = 1;
+
+    shader.bind();
+    shader.projection.load(projection);
+    shader.view.load(view);
+    shader.model.load(model);
+    shader.unbind();
 
     while (disp::open())
     {

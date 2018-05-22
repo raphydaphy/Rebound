@@ -1,6 +1,6 @@
 #include "StaticObjectShader.h"
 
-StaticObjectShader::StaticObjectShader() : ShaderProgram("C:\\Users\\HEN0017\\CLionProjects\\OpenGlCPP\\engine\\shader\\src\\static_object", { "position" })
+StaticObjectShader::StaticObjectShader() : ShaderProgram(R"(D:\C++\LearnCPP\engine\shader\src\static_object)", { "position" })
 {
-    storeUniforms({});
+    storeUniforms({projection, view, model});
 }
