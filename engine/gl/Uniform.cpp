@@ -19,16 +19,6 @@ GLint Uniform::getLocation()
     return this->location;
 }
 
-const GLchar *Uniform::getName()
-{
-    return this->name;
-}
-
-int *Uniform::getLocationLocation()
-{
-    return &location;
-}
-
 void UniformMatrix::load(glm::mat4 value)
 {
     glUniformMatrix4fv(getLocation(), 1, GL_FALSE, &value[0][0]);

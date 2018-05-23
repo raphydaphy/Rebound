@@ -11,8 +11,6 @@ public:
     explicit Uniform(const GLchar *name);
     void store(GLuint program);
     GLint getLocation();
-    const GLchar *getName();
-    int *getLocationLocation();
 private:
     const GLchar *name;
     GLint location = 0;
