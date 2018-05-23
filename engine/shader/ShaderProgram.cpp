@@ -82,16 +82,6 @@ void ShaderProgram::bindAttributes(std::initializer_list<const GLchar *> attribu
     }
 }
 
-void ShaderProgram::storeUniforms(std::initializer_list<Uniform> uniforms)
-{
-    for (Uniform uniform : uniforms)
-    {
-        uniform.store(program);
-    }
-    glValidateProgram(program);
-}
-
-
 ShaderProgram ShaderProgram::bind()
 {
     glUseProgram(program);

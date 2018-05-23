@@ -10,18 +10,14 @@ int main()
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     static const GLfloat vertices[] = {
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            0.0f,  1.0f, 0.0f/*
-            -0.5f, -0.5f, 0,
-            -0.5f, 0.5f, 0,
-            0.5f, 0.5f, 0,
-            0.5f, -0.5f, 0*/
+            -1, -1, 0,
+            -1, 1, 0,
+            1, 1, 0,
+            1, -1, 0
     };
 
     static const GLint indices[] = {
-            0, 1, 2
-            //0, 1, 2, 2, 0, 3
+            0, 1, 2, 2, 0, 3
     };
 
     VertexArray vao = VertexArray().bind().storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
@@ -45,15 +41,9 @@ int main()
 
     glm::mat4 model = glm::mat4(1.0f);
 
-    model[0][0] = 1;
-    model[1][1] = 1;
-    model[2][2] = 1;
-    model[3][3] = 1;
-
     shader.bind();
     shader.projection.load(projection);
     shader.view.load(view);
-    shader.model.load(model);
     shader.unbind();
 
     while (disp::open())
@@ -63,10 +53,14 @@ int main()
         vao.bind({0}).indices.bind();
         shader.bind();
 
+        shader.model.load(model);
+
         glDrawElements(GL_TRIANGLES, vao.getIndicesLength(), GL_UNSIGNED_INT, nullptr);
 
         shader.unbind();
         vao.unbind({0}).indices.unbind();
+
+        model = glm::translate(model, glm::vec3(0.01f, 0.001f, 0.0f));
 
         disp::update();
     }
