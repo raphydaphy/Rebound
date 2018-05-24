@@ -70,6 +70,20 @@ namespace disp
         glfwPollEvents();
     }
 
+    int getWidth()
+    {
+        int width = 0;
+        glfwGetWindowSize(window, &width, nullptr);
+        return width;
+    }
+
+    int getHeight()
+    {
+        int height = 0;
+        glfwGetWindowSize(window, nullptr, &height);
+        return height;
+    }
+
     void errorCallback(int error, const char* description)
     {
         std::cerr << "GLF5W Error " << error << std::endl << description << std::endl;

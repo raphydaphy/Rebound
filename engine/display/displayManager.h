@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <GL/gl3w.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace disp
 {
@@ -11,6 +11,8 @@ namespace disp
     void destroy();
     bool open();
     void update();
+    int getWidth();
+    int getHeight();
 
     void errorCallback(int error, const char* description);
 }

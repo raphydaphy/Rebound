@@ -1,7 +1,7 @@
 #ifndef LEARNCPP_UNIFORM_H
 #define LEARNCPP_UNIFORM_H
 
-#include <c++/iostream>
+#include <iostream>
 #include <GL/gl3w.h>
 #include "../../lib/glm/glm/gtc/matrix_transform.hpp"
 

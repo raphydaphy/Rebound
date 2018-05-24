@@ -24,11 +24,8 @@ int main()
 
     StaticObjectShader shader;
 
-    float width = 1080;
-    float height = 720;
-
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)disp::getWidth() / disp::getHeight(), 0.1f, 100.0f);
 
     // Or, for an ortho camera :
     //glm::mat4 projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates

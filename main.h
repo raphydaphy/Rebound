@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <GL/gl3w.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "engine/display/displayManager.h"
 #include "engine/gl/VertexArray.h"
