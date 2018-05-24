@@ -51,6 +51,8 @@ namespace core
             tpsCount = 0;
 
             timeCount -= 1;
+
+            std::cout << "FPS: " << getFPS() << " TPS: " << getTPS();
         }
     }
 
@@ -74,9 +76,11 @@ namespace core
         double now = getTime();
         float target = 1.0f / targetFPS;
 
-        while (now - lastLoopTime < targetFPS);
+        while (now - lastLoopTime < target);
         {
             std::this_thread::yield();
+            //std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            now = getTime();
         }
     }
 }

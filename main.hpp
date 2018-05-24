@@ -10,4 +10,7 @@
 #include "engine/gl/VertexArray.hpp"
 #include "engine/shader/impl/StaticObjectShader.hpp"
 
+void update(float delta);
+void render(float alpha);
+
 #endif

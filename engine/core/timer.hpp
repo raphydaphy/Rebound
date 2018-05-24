@@ -2,8 +2,9 @@
 #define TIMER_H
 
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <thread>
+#include <chrono>
+#include <iostream>
 
 namespace core
 {
