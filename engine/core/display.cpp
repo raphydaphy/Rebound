@@ -1,11 +1,11 @@
-#include "displayManager.h"
-#include "../../main.h"
+#include "display.hpp"
+#include "../../main.hpp"
 
-namespace disp
+namespace core
 {
     GLFWwindow *window;
 
-    bool init()
+    bool initDisplay()
     {
         glfwSetErrorCallback(errorCallback);
 
@@ -31,6 +31,7 @@ namespace disp
         }
 
         glfwMakeContextCurrent(window);
+        //glfwSwapInterval(0);
 
         std::cout << "Initialized GLFW successfully with version " << glfwGetVersionString() << std::endl;
 
@@ -53,31 +54,31 @@ namespace disp
         return true;
     }
 
-    void destroy()
+    void destroyDisplay()
     {
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
-    bool open()
+    bool displayOpen()
     {
         return !glfwWindowShouldClose(window);
     }
 
-    void update()
+    void updateDisplay()
     {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    int getWidth()
+    int getDisplayWidth()
     {
         int width = 0;
         glfwGetWindowSize(window, &width, nullptr);
         return width;
     }
 
-    int getHeight()
+    int getDisplayHeight()
     {
         int height = 0;
         glfwGetWindowSize(window, nullptr, &height);

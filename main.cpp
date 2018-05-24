@@ -1,11 +1,13 @@
-#include "main.h"
+#include "main.hpp"
 
 int main()
 {
-    if (!disp::init())
+    if (!core::initDisplay())
     {
         return 1;
     }
+
+    core::initTimer();
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
@@ -24,8 +26,9 @@ int main()
 
     StaticObjectShader shader;
 
-    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)disp::getWidth() / disp::getHeight(), 0.1f, 100.0f);
+    // Projection matrix : 45° Field of View, 4:3 ratio, core range : 0.1 unit <-> 100 units
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() /
+            core::getDisplayHeight(), 0.1f, 100.0f);
 
     // Or, for an ortho camera :
     //glm::mat4 projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
@@ -43,8 +46,17 @@ int main()
     shader.view.load(view);
     shader.unbind();
 
-    while (disp::open())
+    const int TARGET_FPS = 120;
+    const int TARGET_TPS = 20;
+
+    float delta;
+    float accumulator = 0;
+    float interval = 1f / TARGET_TPS;
+    float alpha;
+
+    while (core::displayOpen())
     {
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         vao.bind({0}).indices.bind();
@@ -59,12 +71,12 @@ int main()
 
         model = glm::translate(model, glm::vec3(0.01f, 0.001f, 0.0f));
 
-        disp::update();
+        core::updateDisplay();
     }
 
     shader.cleanup();
     vao.del();
-    disp::destroy();
+    core::destroyDisplay();
 
     return 0;
 }

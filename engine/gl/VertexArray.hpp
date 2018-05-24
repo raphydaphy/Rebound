@@ -4,7 +4,7 @@
 #include <GL/gl3w.h>
 #include <initializer_list>
 #include <vector>
-#include "VertexBuffer.h"
+#include "VertexBuffer.hpp"
 
 class VertexArray
 {

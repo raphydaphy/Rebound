@@ -5,8 +5,9 @@
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include "engine/display/displayManager.h"
-#include "engine/gl/VertexArray.h"
-#include "engine/shader/impl/StaticObjectShader.h"
+#include "engine/core/display.hpp"
+#include "engine/core/timer.hpp"
+#include "engine/gl/VertexArray.hpp"
+#include "engine/shader/impl/StaticObjectShader.hpp"
 
 #endif

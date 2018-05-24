@@ -5,14 +5,16 @@
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 
-namespace disp
+namespace core
 {
-    bool init();
-    void destroy();
-    bool open();
-    void update();
-    int getWidth();
-    int getHeight();
+    bool initDisplay();
+    void destroyDisplay();
+
+    bool displayOpen();
+    void updateDisplay();
+
+    int getDisplayWidth();
+    int getDisplayHeight();
 
     void errorCallback(int error, const char* description);
 }

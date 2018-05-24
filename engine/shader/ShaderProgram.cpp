@@ -1,4 +1,4 @@
-#include "ShaderProgram.h"
+#include "ShaderProgram.hpp"
 
 ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLchar *> attributes)
 {

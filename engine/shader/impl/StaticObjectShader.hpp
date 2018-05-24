@@ -1,7 +1,7 @@
 #ifndef LEARNCPP_STATICOBJECTSHADER_H
 #define LEARNCPP_STATICOBJECTSHADER_H
 
-#include "../ShaderProgram.h"
+#include "../ShaderProgram.hpp"
 
 class StaticObjectShader: public ShaderProgram
 {

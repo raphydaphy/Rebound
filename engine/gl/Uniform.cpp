@@ -1,4 +1,4 @@
-#include "Uniform.h"
+#include "Uniform.hpp"
 
 Uniform::Uniform(const GLchar *name)
 {
