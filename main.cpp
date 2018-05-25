@@ -7,6 +7,9 @@ glm::mat4 *projection;
 glm::mat4 *view;
 glm::mat4 *model;
 
+glm::vec3 *rectPos;
+glm::vec3 *prevRectPos;
+
 int main()
 {
     if (!core::initDisplay())
@@ -46,39 +49,25 @@ int main()
 
     model = new glm::mat4(1.0f);
 
+    rectPos = new glm::vec3(0);
+    prevRectPos = new glm::vec3(0);
+
     shader->bind();
     shader->projection.load(*projection);
     shader->view.load(*view);
     shader->unbind();
 
-    const int TARGET_FPS = 120;
-    const int TARGET_TPS = 20;
-
-    float delta = 0;
-    float accumulator = 0;
-    float interval = 1.0f / TARGET_TPS;
-    float alpha = 0;
-
     while (core::displayOpen())
     {
-        delta = core::getDeltaTime();
-        accumulator += delta;
-
-        while (accumulator >= interval)
+        while (core::shouldTick())
         {
-            update(1.0f / TARGET_TPS);
+            update(1.0f / core::getTargetTPS());
             core::updateTPS();
-            accumulator -= interval;
         }
-        alpha = accumulator / interval;
-        render(alpha);
+
+        render(core::getAlphaTime());
 
         core::updateFPS();
-        core::updateTimer();
-
-        std::cout << "h" << std::endl;
-        core::syncTimer(TARGET_FPS);
-        std::cout << "y" << std::endl;
     }
 
     shader->cleanup();
@@ -90,7 +79,8 @@ int main()
 
 void update(float delta)
 {
-
+    prevRectPos->x = rectPos->x;
+    rectPos->x += 0.01f;
 }
 
 void render(float alpha)
@@ -100,14 +90,13 @@ void render(float alpha)
     vao->bind({0}).indices.bind();
     shader->bind();
 
+    *model = glm::translate(glm::mat4(1), glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
     shader->model.load(*model);
 
     glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
 
     shader->unbind();
     vao->unbind({0}).indices.unbind();
-
-    *model = glm::translate(*model, glm::vec3(0.01f, 0.001f, 0.0f));
 
     core::updateDisplay();
 }

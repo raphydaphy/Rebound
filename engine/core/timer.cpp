@@ -11,9 +11,19 @@ namespace core
     int tps = 0;
     int tpsCount = 0;
 
+    int targetTPS = 20;
+
+    float accumulator = 0;
+    float interval = 1.0f / targetTPS;
+
     void initTimer()
     {
         lastLoopTime = glfwGetTime();
+    }
+
+    double getTime()
+    {
+        return glfwGetTime();
     }
 
     float getDeltaTime()
@@ -25,23 +35,15 @@ namespace core
         return delta;
     }
 
-    double getTime()
+    float getAlphaTime()
     {
-        return glfwGetTime();
+        return accumulator / interval;
     }
 
     void updateFPS()
     {
         fpsCount++;
-    }
 
-    void updateTPS()
-    {
-        tpsCount++;
-    }
-
-    void updateTimer()
-    {
         if (timeCount > 1)
         {
             fps = fpsCount;
@@ -52,8 +54,16 @@ namespace core
 
             timeCount -= 1;
 
-            std::cout << "FPS: " << getFPS() << " TPS: " << getTPS();
+            std::cout << "FPS: " << getFPS() << " TPS: " << getTPS() << std::endl;
         }
+
+        accumulator += getDeltaTime();
+    }
+
+    void updateTPS()
+    {
+        tpsCount++;
+        accumulator -= interval;
     }
 
     int getFPS()
@@ -66,21 +76,13 @@ namespace core
         return tps > 0 ? tps : tpsCount;
     }
 
-    double getTimerLoopTime()
+    int getTargetTPS()
     {
-        return lastLoopTime;
+        return targetTPS;
     }
 
-    void syncTimer(int targetFPS)
+    bool shouldTick()
     {
-        double now = getTime();
-        float target = 1.0f / targetFPS;
-
-        while (now - lastLoopTime < target);
-        {
-            std::this_thread::yield();
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            now = getTime();
-        }
+        return accumulator >= interval;
     }
 }

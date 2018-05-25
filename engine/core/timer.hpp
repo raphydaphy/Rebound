@@ -10,18 +10,18 @@ namespace core
 {
     void initTimer();
 
-    float getDeltaTime();
     double getTime();
+    float getDeltaTime();
+    float getAlphaTime();
 
     void updateFPS();
     void updateTPS();
-    void updateTimer();
 
     int getFPS();
     int getTPS();
+    int getTargetTPS();
 
-    double getTimerLoopTime();
-    void syncTimer(int targetFPS);
+    bool shouldTick();
 }
 
 #endif
