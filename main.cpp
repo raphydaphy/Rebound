@@ -33,7 +33,8 @@ int main()
     };
 
     vao = new VertexArray();
-    vao->bind().storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
+    vao->bind();
+    vao->storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
     shader = new StaticObjectShader();
 
     // Projection matrix : 45° Field of View, 4:3 ratio, core range : 0.1 unit <-> 100 units
