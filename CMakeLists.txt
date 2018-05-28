@@ -13,7 +13,7 @@ include_directories("${LIBRARIES_DIR}/glfw/include")
 add_subdirectory("lib/glm")
 include_directories("${LIBRARIES_DIR}/glw/glw")
 
-add_executable(${PROJECT_NAME} main.cpp main.hpp engine/core/display.cpp engine/core/display.hpp engine/gl/VertexBuffer.cpp engine/gl/VertexBuffer.hpp engine/gl/VertexArray.cpp engine/gl/VertexArray.hpp engine/gl/Uniform.cpp engine/gl/Uniform.hpp engine/shader/ShaderProgram.cpp engine/shader/ShaderProgram.hpp engine/shader/impl/StaticObjectShader.cpp engine/shader/impl/StaticObjectShader.hpp engine/core/timer.cpp engine/core/timer.hpp engine/core/loader.cpp engine/core/loader.hpp)
+add_executable(${PROJECT_NAME} main.cpp main.hpp engine/core/display.cpp engine/core/display.hpp engine/gl/VertexBuffer.cpp engine/gl/VertexBuffer.hpp engine/gl/VertexArray.cpp engine/gl/VertexArray.hpp engine/gl/Uniform.cpp engine/gl/Uniform.hpp engine/shader/ShaderProgram.cpp engine/shader/ShaderProgram.hpp engine/shader/impl/StaticObjectShader.cpp engine/shader/impl/StaticObjectShader.hpp engine/core/timer.cpp engine/core/timer.hpp engine/core/loader.cpp engine/core/loader.hpp engine/gl/Vertex.cpp engine/gl/Vertex.hpp)
 
 # Linking GLFW
 target_link_libraries(${PROJECT_NAME} "glfw" ${GLFW_LIBRARIES})

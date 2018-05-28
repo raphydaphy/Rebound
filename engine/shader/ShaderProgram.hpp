@@ -10,12 +10,13 @@
 #include <vector>
 #include "../gl/Uniform.hpp"
 
+#define SHADER_EMPTY_ATTRIBUTE "EMPTY"
+
 class ShaderProgram
 {
 public:
     ShaderProgram(std::string name, std::initializer_list<const GLchar *> attributes);
     GLuint loadShader(std::string file, GLenum type);
-    const std::string EMPTY_ATTRIBUTE = "EMPTY";
 
     template <typename T>
     void storeUniforms(T *value)
