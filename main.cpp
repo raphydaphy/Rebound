@@ -12,10 +12,7 @@ glm::vec3 *prevRectPos;
 
 int main()
 {
-    if (!core::initDisplay())
-    {
-        return 1;
-    }
+    if (!core::initDisplay()) return 1;
 
     core::initTimer();
 
@@ -37,15 +34,10 @@ int main()
     vao->storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
     shader = new StaticObjectShader();
 
-    // Projection matrix : 45° Field of View, 4:3 ratio, core range : 0.1 unit <-> 100 units
     projection = new glm::mat4();
 
     view = new glm::mat4();
-    *view = glm::lookAt(
-            glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-            glm::vec3(0,0,0), // and looks at the origin
-            glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
+    *view = glm::lookAt(glm::vec3(4,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
     model = new glm::mat4(1.0f);
 

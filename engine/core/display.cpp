@@ -34,7 +34,7 @@ namespace core
         }
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
 
         std::cout << "Initialized GLFW successfully with version " << glfwGetVersionString() << std::endl;
 

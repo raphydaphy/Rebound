@@ -1,9 +1,0 @@
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/splitview.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/simple.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/boing.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/wave.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/particles.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/gears.dir
-/cygdrive/c/Users/Raph's PC/Downloads/glfw-3.2.1/glfw-3.2.1/examples/cmake-build-debug/CMakeFiles/heightmap.dir

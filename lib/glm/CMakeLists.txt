@@ -160,7 +160,6 @@ endif()
 include_directories("${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(glm)
-add_subdirectory(test)
 
 option(GLM_INSTALL_ENABLE "GLM install" ON)
 
