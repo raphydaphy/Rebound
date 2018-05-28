@@ -30,7 +30,7 @@
 
 #if defined(_GLFW_USE_CHDIR)
 
-// Change to our application bundle's resources directory, if present
+// Change to our application bundle's res directory, if present
 //
 static void changeToResourcesDirectory(void)
 {

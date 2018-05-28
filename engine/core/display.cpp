@@ -8,7 +8,7 @@ namespace core
     int prevWidth = 0;
     int prevHeight = 0;
 
-    bool initDisplay()
+    bool initDisplay(const char *name)
     {
         glfwSetErrorCallback(errorCallback);
 
@@ -24,7 +24,7 @@ namespace core
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-        window = glfwCreateWindow(1280, 720, "Automania", nullptr, nullptr);
+        window = glfwCreateWindow(1280, 720, name, nullptr, nullptr);
 
         if (!window)
         {

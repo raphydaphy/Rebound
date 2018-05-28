@@ -12,7 +12,7 @@ glm::vec3 *prevRectPos;
 
 int main()
 {
-    if (!core::initDisplay()) return 1;
+    if (!core::initDisplay("Rebound")) return 1;
 
     core::initTimer();
 

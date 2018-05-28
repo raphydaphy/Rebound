@@ -7,7 +7,7 @@
 
 namespace core
 {
-    bool initDisplay();
+    bool initDisplay(const char *name);
     void destroyDisplay();
 
     bool displayOpen();
