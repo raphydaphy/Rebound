@@ -5,6 +5,9 @@ namespace core
 {
     GLFWwindow *window;
 
+    int prevWidth = 0;
+    int prevHeight = 0;
+
     bool initDisplay()
     {
         glfwSetErrorCallback(errorCallback);
@@ -65,8 +68,16 @@ namespace core
         return !glfwWindowShouldClose(window);
     }
 
+    bool displayResized()
+    {
+        return prevWidth != getDisplayWidth() || prevHeight != getDisplayHeight();
+    }
+
     void updateDisplay()
     {
+        prevWidth = getDisplayWidth();
+        prevHeight = getDisplayHeight();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

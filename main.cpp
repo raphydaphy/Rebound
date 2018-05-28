@@ -39,7 +39,6 @@ int main()
 
     // Projection matrix : 45° Field of View, 4:3 ratio, core range : 0.1 unit <-> 100 units
     projection = new glm::mat4();
-    *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 100.0f);
 
     view = new glm::mat4();
     *view = glm::lookAt(
@@ -54,7 +53,6 @@ int main()
     prevRectPos = new glm::vec3(0);
 
     shader->bind();
-    shader->projection.load(*projection);
     shader->view.load(*view);
     shader->unbind();
 
@@ -90,6 +88,14 @@ void render(float alpha)
 
     vao->bind({0}).indices.bind();
     shader->bind();
+
+    if (core::displayResized())
+    {
+        *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 100.0f);
+        shader->projection.load(*projection);
+
+        glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
+    }
 
     *model = glm::translate(glm::mat4(1), glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
     shader->model.load(*model);

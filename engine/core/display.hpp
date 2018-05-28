@@ -11,6 +11,8 @@ namespace core
     void destroyDisplay();
 
     bool displayOpen();
+    bool displayResized();
+
     void updateDisplay();
 
     int getDisplayWidth();
