@@ -6,6 +6,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../gl/Vertex.hpp"
+#include <glm/glm.hpp>
 
 namespace core
 {

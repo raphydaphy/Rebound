@@ -34,6 +34,8 @@ int main()
     vao->storeIndices(indices, sizeof(indices)).createAttribute(0, vertices, sizeof(vertices), 3).unbind();
     shader = new StaticObjectShader();
 
+    core::loadOBJ("res/model/acacia_tree_1.obj");
+
     projection = new glm::mat4();
 
     view = new glm::mat4();
