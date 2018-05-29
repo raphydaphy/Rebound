@@ -93,9 +93,9 @@ namespace core
             }
         }
 
-        std::vector<float> verticesArray;
-        std::vector<float> texturesArray;
-        std::vector<float> normalsArray;
+        std::vector<float> verticesArray(vertices.size() * 3);
+        std::vector<float> texturesArray(vertices.size() * 2);
+        std::vector<float> normalsArray(vertices.size() * 3);
 
         for (int i = 0; i < vertices.size(); i++)
         {
@@ -113,10 +113,11 @@ namespace core
             normalsArray[i * 3] = normal.x;
             normalsArray[i * 3 + 1] = normal.y;
             normalsArray[i * 3 + 2] = normal.z;
-
         }
 
         Model m(verticesArray, texturesArray, normalsArray, indices);
+
+        std::cout << "made it to the end" << std::endl;
         return m;
     }
 }
