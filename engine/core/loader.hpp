@@ -6,12 +6,33 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "../gl/Vertex.hpp"
+#include <iterator>
+#include <array>
 #include <glm/glm.hpp>
+
+#define VERTEX_NO_INDEX (-1)
+
+struct Vertex
+{
+    Vertex(int index, glm::vec3 position);
+    glm::vec3 position;
+    int index;
+    int texCoordIndex = VERTEX_NO_INDEX;
+    int normalIndex = VERTEX_NO_INDEX;
+};
+
+struct Model
+{
+    Model(std::vector<float> verticesArray, std::vector<float> texturesArray, std::vector<float> normalsArray, std::vector<int> indicesArray);
+    std::vector<float> verticesArray;
+    std::vector<float> texturesArray;
+    std::vector<float> normalsArray;
+    std::vector<int> indicesArray;
+};
 
 namespace core
 {
-    void loadOBJ(std::string path);
+    Model loadOBJ(std::string path);
 }
 
 #endif

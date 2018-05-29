@@ -1,29 +1,41 @@
 #include "loader.hpp"
 
-glm::vec3 parseLine(const std::string in)
+template<typename Out>
+void split(const std::string &s, char delim, Out result)
 {
-    std::string split[4];
-    int i = 0;
-    std::stringstream stream(in);
-
-    while (stream.good() && i < 4)
-    {
-        stream >> split[i];
-        i++;
-    }
-
-    if (i == 4) // vec3
-    {
-        return glm::vec3(::atof(split[1].c_str()), ::atof(split[2].c_str()), ::atof(split[3].c_str())); // NOLINT
-    } else if (i == 3) // vec2
-    {
-        return glm::vec3(::atof(split[1].c_str()), ::atof(split[2].c_str()), 0); // NOLINT
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        *(result++) = item;
     }
 }
 
+std::vector<std::string> split(const std::string &s, char delim)
+{
+    std::vector<std::string> elems;
+    split(s, delim, std::back_inserter(elems));
+    return elems;
+}
+
+Vertex::Vertex(int index, glm::vec3 position)
+{
+    this->index = index;
+    this->position = position;
+}
+
+Model::Model(std::vector<float> verticesArray, std::vector<float> texturesArray, std::vector<float> normalsArray,
+             std::vector<int> indicesArray)
+{
+    this->verticesArray = verticesArray;
+    this->texturesArray = texturesArray;
+    this->normalsArray = normalsArray;
+    this->indicesArray = indicesArray;
+}
+
+
 namespace core
 {
-    void loadOBJ(std::string path)
+    Model loadOBJ(std::string path)
     {
         path = "../" + path;
         std::ifstream src(path);
@@ -43,19 +55,68 @@ namespace core
 
         while (std::getline(src, line))
         {
-            if (line.find("v ") != std::string::npos)
+            std::vector<std::string> words = split(line, ' ');
+            if (words[0] == "v")
             {
-                vertices.emplace_back((int) vertices.size(), parseLine(line));
-            } else if (line.find("vt ") != std::string::npos)
+                vertices.emplace_back((int) vertices.size(), glm::vec3(atof(words[1].c_str()), atof(words[2].c_str()), atof(words[3].c_str()))); // NOLINT
+            } else if (words[0] == "vt")
             {
-                textures.emplace_back(glm::vec2(parseLine(line)));
-            } else if (line.find("vn ") != std::string::npos)
+                textures.emplace_back(glm::vec2(atof(words[1].c_str()), atof(words[2].c_str()))); // NOLINT
+            } else if (words[0] == "vn")
             {
-                normals.emplace_back(parseLine(line));
-            } else if (line.find("f "))
+                normals.emplace_back(glm::vec3(atof(words[1].c_str()), atof(words[2].c_str()), atof(words[3].c_str()))); // NOLINT
+            } else if (words[0] == "f")
             {
-                break;
+                for (int v = 1; v <= 3; v++)
+                {
+                    std::vector<std::string> vertex = split(words[v], '/');
+
+                    int index = atoi(vertex[0].c_str()) - 1; // NOLINT
+                    int texCoordIndex = atoi(vertex[1].c_str()) - 1; // NOLINT
+                    int normalIndex = atoi(vertex[2].c_str()) - 1; // NOLINT
+
+                    Vertex vert = vertices[index];
+
+                    if (vert.texCoordIndex == VERTEX_NO_INDEX || vert.normalIndex == VERTEX_NO_INDEX)
+                    {
+                        vert.texCoordIndex = texCoordIndex;
+                        vert.normalIndex = normalIndex;
+
+                        indices.push_back(index);
+                    }
+                    else
+                    {
+                        std::cout << "tried to process an already processed vertex" << std::endl;
+                    }
+
+                }
             }
         }
+
+        std::vector<float> verticesArray;
+        std::vector<float> texturesArray;
+        std::vector<float> normalsArray;
+
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            Vertex vertex = vertices[i];
+            glm::vec2 texture = textures[vertex.texCoordIndex];
+            glm::vec3 normal = normals[vertex.normalIndex];
+
+            verticesArray[i * 3] = vertex.position.x;
+            verticesArray[i * 3 + 1] = vertex.position.y;
+            verticesArray[i * 3 + 2] = vertex.position.z;
+
+            texturesArray[i * 2] = texture.x;
+            texturesArray[i * 2 + 1] = texture.y;
+
+            normalsArray[i * 3] = normal.x;
+            normalsArray[i * 3 + 1] = normal.y;
+            normalsArray[i * 3 + 2] = normal.z;
+
+        }
+
+        Model m(verticesArray, texturesArray, normalsArray, indices);
+        return m;
     }
 }
