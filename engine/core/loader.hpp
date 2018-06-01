@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iterator>
 #include <array>
+#include <utility>
 #include <glm/glm.hpp>
 
 #define VERTEX_NO_INDEX (-1)
