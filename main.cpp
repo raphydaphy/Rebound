@@ -20,26 +20,15 @@ int main()
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
-    static const GLfloat vertices[] = {
-            -1, -1, 0,
-            -1, 1, 0,
-            1, 1, 0,
-            1, -1, 0
-    };
-
-    static const GLint indices[] = {
-            0, 1, 2, 2, 0, 3
-    };
-
     Model acacia_1 = core::loadOBJ("../res/model/acacia_tree_1.obj");
     verticesLength = acacia_1.verticesArray.size();
     std::cout << "Indices: " << acacia_1.indicesArray.size() << " Vertices: " << acacia_1.verticesArray.size() << std::endl;
     vao = new VertexArray();
     vao->bind();
-    vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size()).createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size() *
-            sizeof(glm::vec3), 3).createAttribute(1, &acacia_1.texturesArray[0], acacia_1.texturesArray.size() * sizeof(glm::vec2), 2).unbind();
+    vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size())
+            .createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size() * sizeof(glm::vec3), 3)
+            .createAttribute(1, &acacia_1.texturesArray[0], acacia_1.texturesArray.size() * sizeof(glm::vec2), 2).unbind();
     shader = new StaticObjectShader();
-
 
     // temporary, will create a class for it later
 
@@ -48,23 +37,20 @@ int main()
     //load and decode
     std::vector<unsigned char> buffer, image;
     core::loadPNG(buffer, filename);
-    unsigned long w, h;
-    int error = pico::decodePNG(image, w, h, buffer.empty() ? nullptr : &buffer[0], (unsigned long)buffer.size());
+    GLsizei width, height;
+    int error = pico::decodePNG(image, width, height, buffer.empty() ? nullptr : &buffer[0], (unsigned long)buffer.size(), true);
 
     //if there's an error, display it
-    if(error != 0) std::cout << "error: " << error << std::endl;
-
-    //the pixels are now in the vector "image", use it as texture, draw it, ...
-
-    if(image.size() > 4)
+    if(error != 0)
     {
-        std::cout << "width: " << w << " height: " << h << " first pixel: " << std::hex << int(image[0]) << int(image[1]) << int(image[2]) << int(image[3]) << std::endl;
+        std::cout << "error: " << error << std::endl;
     }
 
     GLuint texID;
+
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_2D, texID);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, w, h, 0, GL_BGR, GL_UNSIGNED_BYTE, &image[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &(image[0]));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
