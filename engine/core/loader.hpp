@@ -11,29 +11,18 @@
 #include <utility>
 #include <glm/glm.hpp>
 
-#define VERTEX_NO_INDEX (-1)
-
-struct Vertex
-{
-    Vertex(int index, glm::vec3 position);
-    glm::vec3 position;
-    int index;
-    int texCoordIndex = VERTEX_NO_INDEX;
-    int normalIndex = VERTEX_NO_INDEX;
-};
-
 struct Model
 {
-    Model(std::vector<float> verticesArray, std::vector<float> texturesArray, std::vector<float> normalsArray, std::vector<int> indicesArray);
-    std::vector<float> verticesArray;
-    std::vector<float> texturesArray;
-    std::vector<float> normalsArray;
+    Model(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray, std::vector<int> indicesArray);
+    std::vector<glm::vec3> verticesArray;
+    std::vector<glm::vec2> texturesArray;
+    std::vector<glm::vec3> normalsArray;
     std::vector<int> indicesArray;
 };
 
 namespace core
 {
-    Model loadOBJ(std::string path);
+    Model loadOBJ(const char *path);
 }
 
 #endif

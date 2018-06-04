@@ -10,6 +10,8 @@ glm::mat4 *model;
 glm::vec3 *rectPos;
 glm::vec3 *prevRectPos;
 
+int verticesLength = 0;
+
 int main()
 {
     if (!core::initDisplay("Rebound")) return 1;
@@ -29,12 +31,13 @@ int main()
             0, 1, 2, 2, 0, 3
     };
 
-    Model acacia_1 = core::loadOBJ("res/model/acacia_tree_1.obj");
-
+    Model acacia_1 = core::loadOBJ("../res/model/acacia_tree_1.obj");
+    verticesLength = acacia_1.verticesArray.size();
     std::cout << "Indices: " << acacia_1.indicesArray.size() << " Vertices: " << acacia_1.verticesArray.size() << std::endl;
     vao = new VertexArray();
     vao->bind();
-    vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size()).createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size(), 3).unbind();
+    vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size()).createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size() *
+            sizeof(glm::vec3), 3).unbind();
     shader = new StaticObjectShader();
 
     projection = new glm::mat4();
@@ -96,7 +99,8 @@ void render(float alpha)
     *model = glm::translate(*model, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
     shader->model.load(*model);
 
-    glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
+   // glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
+    glDrawArrays(GL_TRIANGLES, 0, verticesLength);
 
     shader->unbind();
     vao->unbind({0}).indices.unbind();

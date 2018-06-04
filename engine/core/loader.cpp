@@ -1,29 +1,6 @@
 #include "loader.hpp"
 
-template<typename Out>
-void split(const std::string &s, char delim, Out result)
-{
-    std::stringstream ss(s);
-    std::string item;
-    while (std::getline(ss, item, delim)) {
-        *(result++) = item;
-    }
-}
-
-std::vector<std::string> split(const std::string &s, char delim)
-{
-    std::vector<std::string> elems;
-    split(s, delim, std::back_inserter(elems));
-    return elems;
-}
-
-Vertex::Vertex(int index, glm::vec3 position)
-{
-    this->index = index;
-    this->position = position;
-}
-
-Model::Model(std::vector<float> verticesArray, std::vector<float> texturesArray, std::vector<float> normalsArray,
+Model::Model(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray,
              std::vector<int> indicesArray)
 {
     this->verticesArray = std::move(verticesArray);
@@ -51,89 +28,102 @@ void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename)
 
 namespace core
 {
-    Model loadOBJ(std::string path)
+    Model loadOBJ(const char *path)
     {
-        path = "../" + path;
-        std::ifstream src(path);
 
-        if (!src)
+        printf("Loading OBJ file %s...\n", path);
+
+        std::vector<int> vertexIndices, uvIndices, normalIndices;
+        std::vector<glm::vec3> temp_vertices;
+        std::vector<glm::vec2> temp_uvs;
+        std::vector<glm::vec3> temp_normals;
+
+
+        FILE * file = fopen(path, "r");
+        if(!file)
         {
             std::cout << "Unable to locate model at " << path << std::endl;
             exit(1);
         }
 
-        std::string line;
-
-        std::vector<Vertex> vertices;
-        std::vector<glm::vec2> textures;
-        std::vector<glm::vec3> normals;
-        std::vector<int> indices;
-
-        while (std::getline(src, line))
+        while( 1 )
         {
-            std::vector<std::string> words = split(line, ' ');
-            if (words[0] == "v")
+
+            char lineHeader[128];
+            int res = fscanf(file, "%s", lineHeader);
+            if (res == EOF)
             {
-                vertices.emplace_back((int) vertices.size(), glm::vec3(atof(words[1].c_str()), atof(words[2].c_str()), atof(words[3].c_str()))); // NOLINT
-            } else if (words[0] == "vt")
-            {
-                textures.emplace_back(glm::vec2(atof(words[1].c_str()), atof(words[2].c_str()))); // NOLINT
-            } else if (words[0] == "vn")
-            {
-                normals.emplace_back(glm::vec3(atof(words[1].c_str()), atof(words[2].c_str()), atof(words[3].c_str()))); // NOLINT
-            } else if (words[0] == "f")
-            {
-                for (int v = 1; v <= 3; v++)
-                {
-                    std::vector<std::string> vertex = split(words[v], '/');
-
-                    int index = atoi(vertex[0].c_str()) - 1; // NOLINT
-                    int texCoordIndex = atoi(vertex[1].c_str()) - 1; // NOLINT
-                    int normalIndex = atoi(vertex[2].c_str()) - 1; // NOLINT
-
-                    Vertex vert = vertices[index];
-
-                    if (vert.texCoordIndex == VERTEX_NO_INDEX || vert.normalIndex == VERTEX_NO_INDEX)
-                    {
-                        vert.texCoordIndex = texCoordIndex;
-                        vert.normalIndex = normalIndex;
-
-                        indices.push_back(index);
-                    }
-                    else
-                    {
-                        std::cout << "tried to process an already processed vertex" << std::endl;
-                    }
-
-                }
+                break;
             }
+            if ( strcmp( lineHeader, "v" ) == 0 )
+            {
+                glm::vec3 vertex;
+                fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+                temp_vertices.push_back(vertex);
+            }else if ( strcmp( lineHeader, "vt" ) == 0 )
+            {
+                glm::vec2 uv;
+                fscanf(file, "%f %f\n", &uv.x, &uv.y );
+                uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
+                temp_uvs.push_back(uv);
+            }else if ( strcmp( lineHeader, "vn" ) == 0 )
+            {
+                glm::vec3 normal;
+                fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+                temp_normals.push_back(normal);
+            } else if ( strcmp( lineHeader, "f" ) == 0 )
+            {
+                std::string vertex1, vertex2, vertex3;
+                unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+                int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
+                if (matches != 9){
+                    printf("File can't be read by our simple parser :-( Try exporting with other options\n");
+                    fclose(file);
+                    exit(1);
+                }
+                vertexIndices.push_back(vertexIndex[0]);
+                vertexIndices.push_back(vertexIndex[1]);
+                vertexIndices.push_back(vertexIndex[2]);
+                uvIndices    .push_back(uvIndex[0]);
+                uvIndices    .push_back(uvIndex[1]);
+                uvIndices    .push_back(uvIndex[2]);
+                normalIndices.push_back(normalIndex[0]);
+                normalIndices.push_back(normalIndex[1]);
+                normalIndices.push_back(normalIndex[2]);
+            } else
+            {
+                // Probably a comment, eat up the rest of the line
+                char stupidBuffer[1000];
+                fgets(stupidBuffer, 1000, file);
+            }
+
         }
 
-        std::vector<float> verticesArray(vertices.size() * 3);
-        std::vector<float> texturesArray(vertices.size() * 2);
-        std::vector<float> normalsArray(vertices.size() * 3);
+        std::vector<glm::vec3> out_vertices;
+        std::vector<glm::vec2> out_uvs;
+        std::vector<glm::vec3> out_normals;
 
-        for (int i = 0; i < vertices.size(); i++)
+        // For each vertex of each triangle
+        for( unsigned int i=0; i<vertexIndices.size(); i++ )
         {
-            Vertex vertex = vertices[i];
-            glm::vec2 texture = textures[vertex.texCoordIndex];
-            glm::vec3 normal = normals[vertex.normalIndex];
+            // Get the indices of its attributes
+            int vertexIndex = vertexIndices[i];
+            int uvIndex = uvIndices[i];
+            int normalIndex = normalIndices[i];
 
-            verticesArray[i * 3] = vertex.position.x;
-            verticesArray[i * 3 + 1] = vertex.position.y;
-            verticesArray[i * 3 + 2] = vertex.position.z;
+            // Get the attributes thanks to the index
+            glm::vec3 vertex = temp_vertices[ vertexIndex-1 ];
+            glm::vec2 uv = temp_uvs[ uvIndex-1 ];
+            glm::vec3 normal = temp_normals[ normalIndex-1 ];
 
-            texturesArray[i * 2] = texture.x;
-            texturesArray[i * 2 + 1] = texture.y;
-
-            normalsArray[i * 3] = normal.x;
-            normalsArray[i * 3 + 1] = normal.y;
-            normalsArray[i * 3 + 2] = normal.z;
+            // Put the attributes in buffers
+            out_vertices.push_back(vertex);
+            out_uvs     .push_back(uv);
+            out_normals .push_back(normal);
         }
+        fclose(file);
 
-        Model m(verticesArray, texturesArray, normalsArray, indices);
-
-        std::cout << "made it to the end" << std::endl;
+        Model m(out_vertices, out_uvs, out_normals, vertexIndices);
         return m;
     }
 }
