@@ -24,6 +24,8 @@ int main()
     verticesLength = acacia_1.verticesArray.size();
     std::cout << "Indices: " << acacia_1.indicesArray.size() << " Vertices: " << acacia_1.verticesArray.size() << std::endl;
     vao = new VertexArray();
+
+    std::cout << "v0" << acacia_1.texturesArray[0].x << std::endl;
     vao->bind();
     vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size())
             .createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size() * sizeof(glm::vec3), 3)
@@ -98,7 +100,7 @@ void render(float alpha)
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    vao->bind({0}).indices.bind();
+    vao->bind({0, 1}).indices.bind();
     shader->bind();
 
     if (core::displayResized())
@@ -113,11 +115,11 @@ void render(float alpha)
     *model = glm::translate(*model, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
     shader->model.load(*model);
 
-   // glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
+    // glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
     glDrawArrays(GL_TRIANGLES, 0, verticesLength);
 
     shader->unbind();
-    vao->unbind({0}).indices.unbind();
+    vao->unbind({0, 1}).indices.unbind();
 
     core::updateDisplay();
 }
