@@ -9,23 +9,6 @@ Model::Model(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> textur
     this->indicesArray = std::move(indicesArray);
 }
 
-void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename)
-{
-    std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
-
-    //get filesize
-    std::streamsize size = 0;
-    if (file.seekg(0, std::ios::end).good()) size = file.tellg();
-    if (file.seekg(0, std::ios::beg).good()) size -= file.tellg();
-
-    //read contents of the file into the vector
-    if (size > 0)
-    {
-        buffer.resize((size_t) size);
-        file.read((char *) (&buffer[0]), size);
-    } else buffer.clear();
-}
-
 namespace core
 {
     Model loadOBJ(const char *path)
@@ -125,5 +108,22 @@ namespace core
 
         Model m(out_vertices, out_uvs, out_normals, vertexIndices);
         return m;
+    }
+
+    void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename)
+    {
+        std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
+
+        //get filesize
+        std::streamsize size = 0;
+        if (file.seekg(0, std::ios::end).good()) size = file.tellg();
+        if (file.seekg(0, std::ios::beg).good()) size -= file.tellg();
+
+        //read contents of the file into the vector
+        if (size > 0)
+        {
+            buffer.resize((size_t) size);
+            file.read((char *) (&buffer[0]), size);
+        } else buffer.clear();
     }
 }

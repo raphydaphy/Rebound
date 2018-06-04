@@ -9,6 +9,7 @@
 #include "engine/core/timer.hpp"
 #include "engine/gl/VertexArray.hpp"
 #include "engine/core/loader.hpp"
+#include "engine/core/pico.hpp"
 #include "engine/shader/impl/StaticObjectShader.hpp"
 
 void update(float delta);

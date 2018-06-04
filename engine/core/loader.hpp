@@ -23,6 +23,7 @@ struct Model
 namespace core
 {
     Model loadOBJ(const char *path);
+    void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename);
 }
 
 #endif
