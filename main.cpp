@@ -2,14 +2,15 @@
 
 StaticModel *acacia_1;
 StaticModel *acacia_2;
+StaticModel *acacia_3;
 
 StaticObjectShader *shader;
 
 glm::mat4 *projection;
 glm::mat4 *view;
 
-glm::mat4 *model_acacia_1;
-glm::mat4 *model_acacia_2;
+glm::mat4 *model_acacia_base;
+glm::mat4 *model_acacia_translated;
 
 glm::vec3 *rectPos;
 glm::vec3 *prevRectPos;
@@ -24,6 +25,7 @@ int main()
 
     acacia_1 = new StaticModel("model/acacia_tree_1");
     acacia_2 = new StaticModel("model/acacia_tree_2");
+    acacia_3 = new StaticModel("model/acacia_tree_3");
 
     shader = new StaticObjectShader();
 
@@ -35,11 +37,11 @@ int main()
     view = new glm::mat4();
     *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
-    model_acacia_1 = new glm::mat4(1.0f);
-    model_acacia_2 = new glm::mat4(1.0f);
+    model_acacia_base = new glm::mat4(1.0f);
+    model_acacia_translated = new glm::mat4(1.0f);
 
-    rectPos = new glm::vec3(0);
-    prevRectPos = new glm::vec3(0);
+    rectPos = new glm::vec3(10, 0, 0);
+    prevRectPos = new glm::vec3(10, 0, 0);
 
     shader->bind();
     shader->view.load(*view);
@@ -95,22 +97,23 @@ void render(float alpha)
 
 
     acacia_1->bind();
-
-
-    *model_acacia_1 = glm::scale(glm::mat4(1), glm::vec3(0.25f));
-    *model_acacia_1 = glm::translate(*model_acacia_1, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
-    shader->model.load(*model_acacia_1);
-
+    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
+    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
+    shader->model.load(*model_acacia_base);
     glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
-
     acacia_1->unbind();
 
     acacia_2->bind();
-
-    *model_acacia_2 = glm::translate(*model_acacia_1, glm::vec3(-15, 0, 0));
-    shader->model.load(*model_acacia_2);
+    *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(-15, 0, 0));
+    shader->model.load(*model_acacia_translated);
     glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
     acacia_2->unbind();
+
+    acacia_3->bind();
+    *model_acacia_translated = glm::translate(*model_acacia_translated, glm::vec3(-18, 0, 0));
+    shader->model.load(*model_acacia_translated);
+    glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
+    acacia_3->unbind();
 
     shader->unbind();
 

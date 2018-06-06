@@ -10,7 +10,7 @@ out vec4 out_color;
 void main()
 {
     vec3 unit_normal = normalize(pass_normal);
-    vec3 unit_light_vector = normalize(vec3(0, 15, -20));
+    vec3 unit_light_vector = normalize(vec3(5, 8, -20));
 
     float light_angle = dot(unit_normal, unit_light_vector);
     float brightness = max(light_angle, 0.2);
