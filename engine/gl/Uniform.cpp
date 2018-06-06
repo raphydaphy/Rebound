@@ -23,3 +23,8 @@ void UniformMatrix::load(glm::mat4 value)
 {
     glUniformMatrix4fv(getLocation(), 1, GL_FALSE, &value[0][0]);
 }
+
+void UniformVector3::load(glm::vec3 value)
+{
+    glUniform3fv(getLocation(), 1, &value[0]);
+}

@@ -23,4 +23,11 @@ public:
     void load(glm::mat4 value);
 };
 
+class UniformVector3 : public Uniform
+{
+public:
+    using Uniform::Uniform;
+    void load(glm::vec3 value);
+};
+
 #endif
