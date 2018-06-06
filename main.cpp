@@ -1,16 +1,18 @@
 #include "main.hpp"
 
-VertexArray *vao;
+StaticModel *acacia_1;
+StaticModel *acacia_2;
+
 StaticObjectShader *shader;
 
 glm::mat4 *projection;
 glm::mat4 *view;
-glm::mat4 *model;
+
+glm::mat4 *model_acacia_1;
+glm::mat4 *model_acacia_2;
 
 glm::vec3 *rectPos;
 glm::vec3 *prevRectPos;
-
-int verticesLength = 0;
 
 int main()
 {
@@ -20,16 +22,9 @@ int main()
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
-    Model acacia_1 = core::loadOBJ("../res/model/acacia_tree_1.obj");
-    verticesLength = acacia_1.verticesArray.size();
-    std::cout << "Indices: " << acacia_1.indicesArray.size() << " Vertices: " << acacia_1.verticesArray.size() << std::endl;
-    vao = new VertexArray();
+    acacia_1 = new StaticModel("model/acacia_tree_1");
+    acacia_2 = new StaticModel("model/acacia_tree_2");
 
-    vao->bind();
-    vao->storeIndices(&acacia_1.indicesArray[0], acacia_1.indicesArray.size())
-            .createAttribute(0, &acacia_1.verticesArray[0], acacia_1.verticesArray.size() * sizeof(glm::vec3), 3)
-            .createAttribute(1, &acacia_1.texturesArray[0], acacia_1.texturesArray.size() * sizeof(glm::vec2), 2)
-            .createAttribute(2, &acacia_1.normalsArray[0], acacia_1.normalsArray.size() * sizeof(glm::vec3), 3).unbind();
     shader = new StaticObjectShader();
 
     // temporary, will create a class for it later
@@ -59,9 +54,10 @@ int main()
     projection = new glm::mat4();
 
     view = new glm::mat4();
-    *view = glm::lookAt(glm::vec3(1,1,-10), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
-    model = new glm::mat4(1.0f);
+    model_acacia_1 = new glm::mat4(1.0f);
+    model_acacia_2 = new glm::mat4(1.0f);
 
     rectPos = new glm::vec3(0);
     prevRectPos = new glm::vec3(0);
@@ -89,7 +85,10 @@ int main()
     glDisable(GL_DEPTH_TEST);
 
     shader->cleanup();
-    vao->del();
+
+    acacia_1->del();
+    acacia_2->del();
+
     core::destroyDisplay();
 
     return 0;
@@ -105,7 +104,6 @@ void render(float alpha)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    vao->bind({0, 1, 2}).indices.bind();
     shader->bind();
 
     if (core::displayResized())
@@ -116,15 +114,27 @@ void render(float alpha)
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
     }
 
-    *model = glm::scale(glm::mat4(1), glm::vec3(0.25f));
-    *model = glm::translate(*model, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
-    shader->model.load(*model);
 
-    // glDrawElements(GL_TRIANGLES, vao->getIndicesLength(), GL_UNSIGNED_INT, nullptr);
-    glDrawArrays(GL_TRIANGLES, 0, verticesLength);
+    acacia_1->bind();
+
+
+    *model_acacia_1 = glm::scale(glm::mat4(1), glm::vec3(0.25f));
+    *model_acacia_1 = glm::translate(*model_acacia_1, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
+    shader->model.load(*model_acacia_1);
+
+    glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
+
+    acacia_1->unbind();
+
+    acacia_2->bind();
+
+    *model_acacia_2 = glm::translate(*model_acacia_1, glm::vec3(-15, 0, 0));
+    shader->model.load(*model_acacia_2);
+    glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
+    acacia_2->unbind();
 
     shader->unbind();
-    vao->unbind({0, 1, 2}).indices.unbind();
+
 
     core::updateDisplay();
 }

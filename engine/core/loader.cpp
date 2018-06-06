@@ -1,6 +1,6 @@
 #include "loader.hpp"
 
-Model::Model(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray,
+ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray,
              std::vector<int> indicesArray)
 {
     this->verticesArray = std::move(verticesArray);
@@ -11,7 +11,7 @@ Model::Model(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> textur
 
 namespace core
 {
-    Model loadOBJ(const char *path)
+    ModelData loadOBJ(const char *path)
     {
 
         printf("Loading OBJ file %s...\n", path);
@@ -25,7 +25,7 @@ namespace core
         FILE * file = fopen(path, "r");
         if(!file)
         {
-            std::cout << "Unable to locate model at " << path << std::endl;
+            std::cout << "Unable to locate model_acacia_1 at " << path << std::endl;
             exit(1);
         }
 
@@ -106,7 +106,7 @@ namespace core
         }
         fclose(file);
 
-        Model m(out_vertices, out_uvs, out_normals, vertexIndices);
+        ModelData m(out_vertices, out_uvs, out_normals, vertexIndices);
         return m;
     }
 

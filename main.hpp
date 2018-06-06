@@ -11,6 +11,7 @@
 #include "engine/core/loader.hpp"
 #include "engine/core/pico.hpp"
 #include "engine/shader/impl/StaticObjectShader.hpp"
+#include "engine/scene/Model.hpp"
 
 void update(float delta);
 void render(float alpha);
