@@ -12,6 +12,7 @@
 #include "engine/core/pico.hpp"
 #include "engine/shader/impl/StaticObjectShader.hpp"
 #include "engine/scene/Model.hpp"
+#include "engine/scene/Texture.hpp"
 
 void update(float delta);
 void render(float alpha);

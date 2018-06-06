@@ -27,29 +27,8 @@ int main()
 
     shader = new StaticObjectShader();
 
-    // temporary, will create a class for it later
-
-    const char* filename = "../res/texture/atlas.png";
-
-    //load and decode
-    std::vector<unsigned char> buffer, image;
-    core::loadPNG(buffer, filename);
-    GLsizei width, height;
-    int error = pico::decodePNG(image, width, height, buffer.empty() ? nullptr : &buffer[0], (unsigned long)buffer.size(), true);
-
-    //if there's an error, display it
-    if(error != 0)
-    {
-        std::cout << "error: " << error << std::endl;
-    }
-
-    GLuint texID;
-
-    glGenTextures(1, &texID);
-    glBindTexture(GL_TEXTURE_2D, texID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &(image[0]));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    Texture atlas = Texture("texture/atlas");
+    atlas.bind();
 
     projection = new glm::mat4();
 

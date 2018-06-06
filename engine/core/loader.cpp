@@ -13,7 +13,6 @@ namespace core
 {
     ModelData loadOBJ(const char *path)
     {
-
         printf("Loading OBJ file %s...\n", path);
 
         std::vector<int> vertexIndices, uvIndices, normalIndices;
