@@ -37,6 +37,11 @@ int main()
     view = new glm::mat4();
     *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
+    float sunBrightness = 0.8f;
+    Light sun(glm::vec3(50000, 100000, 50000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
+
+    glm::vec3 skyColor(0.5, 0.5, 0.5);
+
     model_acacia_base = new glm::mat4(1.0f);
     model_acacia_translated = new glm::mat4(1.0f);
 
@@ -45,6 +50,10 @@ int main()
 
     shader->bind();
     shader->view.load(*view);
+    shader->light_position.load(sun.getPosition());
+    shader->light_color.load(sun.getColor());
+    shader->light_attenuation.load(sun.getAttenuation());
+    shader->sky_color.load(skyColor);
     shader->unbind();
 
     glEnable(GL_DEPTH_TEST);

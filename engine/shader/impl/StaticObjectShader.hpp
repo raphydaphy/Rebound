@@ -10,6 +10,12 @@ public:
     UniformMatrix projection = UniformMatrix("projection");
     UniformMatrix view = UniformMatrix("view");
     UniformMatrix model = UniformMatrix("model");
+
+    UniformVector3 light_position = UniformVector3("light_position");
+    UniformVector3 light_color = UniformVector3("light_color");
+    UniformVector3 light_attenuation = UniformVector3("light_attenuation");
+
+    UniformVector3 sky_color = UniformVector3("sky_color");
 };
 
 #endif

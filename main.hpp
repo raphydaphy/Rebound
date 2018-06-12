@@ -13,6 +13,7 @@
 #include "engine/shader/impl/StaticObjectShader.hpp"
 #include "engine/scene/Model.hpp"
 #include "engine/scene/Texture.hpp"
+#include "engine/scene/Light.hpp"
 
 void update(float delta);
 void render(float alpha);
