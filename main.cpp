@@ -50,9 +50,7 @@ int main()
 
     shader->bind();
     shader->view.load(*view);
-    shader->light_position.load(sun.getPosition());
-    shader->light_color.load(sun.getColor());
-    shader->light_attenuation.load(sun.getAttenuation());
+    shader->loadLight(sun, 0);
     shader->sky_color.load(skyColor);
     shader->unbind();
 

@@ -4,12 +4,15 @@
 #include <iostream>
 #include <GL/gl3w.h>
 #include "../../lib/glm/glm/gtc/matrix_transform.hpp"
+#include <vector>
+#include <string>
+#include <initializer_list>
 
 class Uniform
 {
 public:
     explicit Uniform(const GLchar *name);
-    void store(GLuint program);
+    virtual void store(GLuint program);
     GLint getLocation();
 private:
     const GLchar *name;
@@ -28,6 +31,17 @@ class UniformVector3 : public Uniform
 public:
     using Uniform::Uniform;
     void load(glm::vec3 value);
+};
+
+class UniformVector3Array : public Uniform
+{
+public:
+    UniformVector3Array(std::string, int size);
+    void store(GLuint program) override;
+    void load(const std::initializer_list<glm::vec3> &attributes);
+    void load(glm::vec3 vec, int id);
+private:
+    std::vector<UniformVector3> vectors;
 };
 
 #endif

@@ -2,13 +2,13 @@
 
 in vec2 pass_uvs;
 in vec3 pass_normal;
-in vec3 pass_light_vector;
+in vec3 pass_light_vectors[4];
 in vec3 pass_camera_vector;
 in float pass_visibility;
 
 uniform sampler2D tex;
-uniform vec3 light_color;
-uniform vec3 light_attenuation;
+uniform vec3 light_colors[4];
+uniform vec3 light_attenuations[4];
 uniform vec3 sky_color;
 
 out vec4 out_color;
@@ -20,16 +20,17 @@ void main()
 
     vec3 diffuse = vec3(0);
 
-    // per light:
-        float distance = length(pass_light_vector);
-        float att_factor = light_attenuation.x + (light_attenuation.y * distance) + (light_attenuation.z * distance * distance);
-        vec3 unit_light_vector = normalize(pass_light_vector);
+    for (int light = 0; light < 4; light++)
+    {
+        float distance = length(pass_light_vectors[light]);
+        float att_factor = light_attenuations[light].x + (light_attenuations[light].y * distance) + (light_attenuations[light].z * distance * distance);
+        vec3 unit_light_vector = normalize(pass_light_vectors[light]);
 
         float light_angle = dot(unit_normal, unit_light_vector);
         float brightness = max(light_angle, 0.2);
 
-        diffuse = diffuse + (brightness * light_color) / att_factor;
-
+        diffuse = diffuse + (brightness * light_colors[light]) / att_factor;
+    }
     diffuse = max(diffuse, 0.2);
 
     vec4 texture_color = texture(tex, pass_uvs);

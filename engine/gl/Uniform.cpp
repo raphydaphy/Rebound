@@ -28,3 +28,36 @@ void UniformVector3::load(glm::vec3 value)
 {
     glUniform3fv(getLocation(), 1, &value[0]);
 }
+
+UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name.c_str())
+{
+    for (int vec = 0; vec < size; vec++)
+    {
+        std::string cname = name + "[" + std::to_string(vec) + "]";
+        std::cout << cname << std::endl;
+        vectors.emplace_back(cname.c_str());
+    }
+}
+
+void UniformVector3Array::store(GLuint program)
+{
+    for (UniformVector3 vec : vectors)
+    {
+        vec.store(program);
+    }
+}
+
+void UniformVector3Array::load(const std::initializer_list<glm::vec3> &attributes)
+{
+    int n = 0;
+    for (glm::vec3 vec : attributes)
+    {
+        vectors[n].load(vec);
+        n++;
+    }
+}
+
+void UniformVector3Array::load(glm::vec3 vec, int id)
+{
+    vectors[id].load(vec);
+}

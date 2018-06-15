@@ -8,11 +8,11 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-uniform vec3 light_position;
+uniform vec3 light_positions[4];
 
 out vec2 pass_uvs;
 out vec3 pass_normal;
-out vec3 pass_light_vector;
+out vec3 pass_light_vectors[4];
 out vec3 pass_camera_vector;
 out float pass_visibility;
 
@@ -27,7 +27,10 @@ void main()
 
     pass_uvs = uvs;
     pass_normal = (model * vec4(normal, 0)).xyz;
-    pass_light_vector = light_position - world_position.xyz;
+    for (int light = 0; light < 4; light++)
+    {
+        pass_light_vectors[light] = light_positions[light] - world_position.xyz;
+    }
     pass_camera_vector = (inverse(view) * vec4(0, 0, 0, 1)).xyz - world_position.xyz;
     pass_visibility = clamp(exp(-pow((length(relative_position.xyz)*fog_density), fog_gradient)), 0, 1);
 }
