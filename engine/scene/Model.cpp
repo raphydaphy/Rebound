@@ -1,7 +1,6 @@
 #include "Model.hpp"
 
-
-StaticModel::StaticModel(std::string path) : StaticModel( core::loadOBJ(("../res/" + path + ".obj").c_str())) { }
+StaticModel::StaticModel(std::string path) : StaticModel( core::loadOBJ(path + ".obj")) { }
 
 StaticModel::StaticModel(ModelData data)
 {

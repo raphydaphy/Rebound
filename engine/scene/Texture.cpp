@@ -3,10 +3,8 @@
 
 Texture::Texture(std::string path)
 {
-    path = "../res/" + path + ".png";
-
     std::vector<unsigned char> buffer, image;
-    core::loadPNG(buffer, path.c_str());
+    core::loadPNG(buffer, path + ".png");
     int error = pico::decodePNG(image, width, height, buffer.empty() ? nullptr : &buffer[0], (unsigned long)buffer.size(), true);
 
     if(error != 0)
@@ -20,8 +18,6 @@ Texture::Texture(std::string path)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    printf("Loading PNG file %s...\n", path);
 }
 
 Texture Texture::bind()

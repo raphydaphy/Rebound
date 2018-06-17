@@ -12,7 +12,7 @@
 class Uniform
 {
 public:
-    explicit Uniform(const GLchar *name);
+    explicit Uniform(std::string name);
     virtual void store(GLuint program);
     GLint getLocation();
     std::string getName();

@@ -20,7 +20,7 @@ void main()
 
     vec3 diffuse = vec3(0);
 
-    for (int light = 0; light < /*4*/ 1; light++)
+    for (int light = 0; light < 4; light++)
     {
         float distance = length(pass_light_vectors[light]);
         float att_factor = light_attenuations[light].x + (light_attenuations[light].y * distance) + (light_attenuations[light].z * distance * distance);

@@ -1,8 +1,9 @@
 #include "Uniform.hpp"
+#include <utility>
 
-Uniform::Uniform(const GLchar *name)
+Uniform::Uniform(std::string name)
 {
-    this->name = std::string(name);
+    this->name = std::move(name);
 }
 
 void Uniform::store(GLuint program)
@@ -34,20 +35,20 @@ void UniformVector3::load(glm::vec3 value)
     glUniform3fv(getLocation(), 1, &value[0]);
 }
 
-UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name.c_str())
+UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name)
 {
     for (int vec = 0; vec < size; vec++)
     {
         std::string cname = name + "[" + std::to_string(vec) + "]";
-        vectors.push_back(std::make_unique<UniformVector3>(cname.c_str()));
+        vectors.push_back(std::make_unique<UniformVector3>(cname));
     }
 }
 
 void UniformVector3Array::store(GLuint program)
 {
-    for (int vec = 0; vec < vectors.size(); vec++)
+    for (auto &vector : vectors)
     {
-        vectors[vec]->store(program);
+        vector->store(program);
     }
 }
 

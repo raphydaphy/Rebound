@@ -1,4 +1,7 @@
 #include "loader.hpp"
+#include <utility>
+
+std::string resourceDirectory = "";
 
 ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray,
              std::vector<int> indicesArray)
@@ -11,9 +14,11 @@ ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2
 
 namespace core
 {
-    ModelData loadOBJ(const char *path)
+    ModelData loadOBJ(std::string spath)
     {
-        printf("Loading OBJ file %s...\n", path);
+        spath = resourceDirectory + spath;
+        const char *path = spath.c_str();
+        std::cout << "Loading OBJ file " << path << std::endl;
 
         std::vector<int> vertexIndices, uvIndices, normalIndices;
         std::vector<glm::vec3> temp_vertices;
@@ -24,7 +29,7 @@ namespace core
         FILE * file = fopen(path, "r");
         if(!file)
         {
-            std::cout << "Unable to locate model_acacia_1 at " << path << std::endl;
+            std::cerr << "Unable to locate model_acacia_1 at " << path << std::endl;
             exit(1);
         }
 
@@ -109,8 +114,12 @@ namespace core
         return m;
     }
 
-    void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename)
+    void loadPNG(std::vector<unsigned char> &buffer, std::string sfilename)
     {
+        sfilename = resourceDirectory + sfilename;
+        const std::string &filename = sfilename;
+        std::cout << "Loading PNG file " << filename << std::endl;
+
         std::ifstream file(filename.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
 
         //get filesize
@@ -124,5 +133,15 @@ namespace core
             buffer.resize((size_t) size);
             file.read((char *) (&buffer[0]), size);
         } else buffer.clear();
+    }
+
+    void setResourceDirectory(std::string dir)
+    {
+        resourceDirectory = std::move(dir);
+    }
+
+    std::string getResourceDirectory()
+    {
+        return resourceDirectory;
     }
 }

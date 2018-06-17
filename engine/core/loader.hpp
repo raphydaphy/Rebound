@@ -22,8 +22,10 @@ struct ModelData
 
 namespace core
 {
-    ModelData loadOBJ(const char *path);
-    void loadPNG(std::vector<unsigned char> &buffer, const std::string &filename);
+    ModelData loadOBJ(std::string spath);
+    void loadPNG(std::vector<unsigned char> &buffer, std::string sfilename);
+    void setResourceDirectory(std::string dir);
+    std::string getResourceDirectory();
 }
 
 #endif
