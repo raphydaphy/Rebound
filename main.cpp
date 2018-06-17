@@ -38,10 +38,10 @@ int main()
     view = new glm::mat4();
     *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
-    float sunBrightness = 0.2f;
+    float sunBrightness = 0.8f;
     Light sun(glm::vec3(50000, 100000, 50000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
     Light blue(glm::vec3(0, 0, 0), glm::vec3(0, 0, 5), glm::vec3(1, 0.01f, 0.002f));
-    Light green(glm::vec3(10, 25, 0), glm::vec3(0, 1, 0), glm::vec3(1, 0.01f, 0.002f));
+    Light green(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
     Light red(glm::vec3(-23, 10, 0), glm::vec3(1, 0, 0), glm::vec3(1, 0.01f, 0.002f));
 
     glm::vec3 skyColor(0.5, 0.5, 0.5);
@@ -92,7 +92,7 @@ int main()
 void update(float delta)
 {
     prevRectPos->x = rectPos->x;
-    rectPos->x += 0.01f;
+    rectPos->x += 0.01;
 }
 
 void render(float alpha)
@@ -113,6 +113,7 @@ void render(float alpha)
     acacia_1->bind();
     *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
     *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(prevRectPos->x + alpha * (rectPos->x - prevRectPos->x), 0, 0));
+
     shader->model.load(*model_acacia_base);
     glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
     acacia_1->unbind();
