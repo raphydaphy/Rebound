@@ -1,15 +1,15 @@
 #include "Uniform.hpp"
 
-Uniform::Uniform(std::string name)
+Uniform::Uniform(const GLchar *name)
 {
     std::cout << "called uniform constructor" << std::endl;
-    this->name = name.c_str();
+    this->name = std::string(name);
 }
 
 void Uniform::store(GLuint program)
 {
     std::cout << "Storing time has arrived for " << getName() << std::endl;
-    location = glGetUniformLocation(program, name);
+    location = glGetUniformLocation(program, name.c_str());
     if (location == -1)
     {
         std::cerr << "No uniform variable called " << name << " found in program #" << program << std::endl;
@@ -21,7 +21,7 @@ GLint Uniform::getLocation()
     return this->location;
 }
 
-const GLchar *Uniform::getName()
+std::string Uniform::getName()
 {
     return name;
 }
@@ -36,13 +36,13 @@ void UniformVector3::load(glm::vec3 value)
     glUniform3fv(getLocation(), 1, &value[0]);
 }
 
-UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name)
+UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name.c_str())
 {
     std::cout << " calling uniformvector3array constructor " << std::endl;
     for (int vec = 0; vec < size; vec++)
     {
         std::string cname = name + "[" + std::to_string(vec) + "]";
-        auto *vector3 = new UniformVector3(cname);
+        auto *vector3 = new UniformVector3(cname.c_str());
 
         std::cout << "MAKING uniformVector3 [" << vec << "]:" << vector3->getName() << " --> " << getName() << " @ " << vector3 << std::endl;
 

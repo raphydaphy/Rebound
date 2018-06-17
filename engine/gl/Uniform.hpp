@@ -4,19 +4,19 @@
 #include <iostream>
 #include <GL/gl3w.h>
 #include "../../lib/glm/glm/gtc/matrix_transform.hpp"
-#include <string>
 #include <vector>
+#include <string>
 #include <initializer_list>
 
 class Uniform
 {
 public:
-    explicit Uniform(std::string name);
+    explicit Uniform(const GLchar *name);
     virtual void store(GLuint program);
     GLint getLocation();
-    const GLchar *getName();
+    std::string getName();
 private:
-    const GLchar *name;
+    std::string name;
     GLint location = 0;
 };
 

@@ -23,15 +23,13 @@ void main()
     for (int light = 0; light < /*4*/ 1; light++)
     {
         float distance = length(pass_light_vectors[light]);
-        //float att_factor = light_attenuations[light].x + (light_attenuations[light].y * distance) + (light_attenuations[light].z * distance * distance);
-        float att_factor = 1 + (0 * distance) + (0 * distance * distance);
+        float att_factor = light_attenuations[light].x + (light_attenuations[light].y * distance) + (light_attenuations[light].z * distance * distance);
         vec3 unit_light_vector = normalize(pass_light_vectors[light]);
 
         float light_angle = dot(unit_normal, unit_light_vector);
         float brightness = max(light_angle, 0.2);
 
-       // diffuse = diffuse + (brightness * light_colors[light]) / att_factor;
-        diffuse = diffuse + (brightness * vec3(1, 1, 1)) / att_factor;
+        diffuse = diffuse + (brightness * light_colors[light]) / att_factor;
     }
     diffuse = max(diffuse, 0.2);
 

@@ -14,10 +14,9 @@ public:
     UniformVector3 sky_color = UniformVector3("sky_color");
     void loadLight(Light light, int id);
 private:
-
-    //UniformVector3Array light_colors = UniformVector3Array("light_colors", 4);
-    //UniformVector3Array light_attenuations = UniformVector3Array("light_attenuations", 4);
     UniformVector3Array light_positions = UniformVector3Array("light_positions", 4);
+    UniformVector3Array light_colors = UniformVector3Array("light_colors", 4);
+    UniformVector3Array light_attenuations = UniformVector3Array("light_attenuations", 4);
 };
 
 #endif
