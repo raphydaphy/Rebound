@@ -2,13 +2,11 @@
 
 Uniform::Uniform(const GLchar *name)
 {
-    std::cout << "called uniform constructor" << std::endl;
     this->name = std::string(name);
 }
 
 void Uniform::store(GLuint program)
 {
-    std::cout << "Storing time has arrived for " << getName() << std::endl;
     location = glGetUniformLocation(program, name.c_str());
     if (location == -1)
     {
@@ -38,17 +36,10 @@ void UniformVector3::load(glm::vec3 value)
 
 UniformVector3Array::UniformVector3Array(std::string name, int size) : Uniform(name.c_str())
 {
-    std::cout << " calling uniformvector3array constructor " << std::endl;
     for (int vec = 0; vec < size; vec++)
     {
         std::string cname = name + "[" + std::to_string(vec) + "]";
-        auto *vector3 = new UniformVector3(cname.c_str());
-
-        std::cout << "MAKING uniformVector3 [" << vec << "]:" << vector3->getName() << " --> " << getName() << " @ " << vector3 << std::endl;
-
-        vectors.push_back(vector3);
-
-        std::cout << "CONFIRMING uniformVector3 [" << vec << "]: " << vectors[vec]->getName() << " @ " << vectors[vec] <<  std::endl;
+        vectors.push_back(std::make_unique<UniformVector3>(cname.c_str()));
     }
 }
 
@@ -56,10 +47,7 @@ void UniformVector3Array::store(GLuint program)
 {
     for (int vec = 0; vec < vectors.size(); vec++)
     {
-        UniformVector3 *vector = vectors[vec];
-
-        std::cout << "STORING uniformVector3 [" << vec << "]: " << vectors[vec]->getName() << " @ " << vectors[vec] << std::endl;
-        vector->store(program);
+        vectors[vec]->store(program);
     }
 }
 

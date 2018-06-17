@@ -22,8 +22,6 @@ public:
     void storeUniforms(T *value)
     {
         Uniform *v = value;
-
-        std::cout << " storing uniform variables now and his name is " << v->getName() << std::endl;
         v->store(program);
     }
 

@@ -2,7 +2,6 @@
 
 StaticObjectShader::StaticObjectShader() : ShaderProgram(R"(../engine/shader/src/static_object)", { "position", "uvs", "normal" })
 {
-    std::cout << "called constructor " << std::endl;
     storeUniforms(&projection, &view, &model, &light_positions, &light_colors, &light_attenuations, &sky_color);
 }
 

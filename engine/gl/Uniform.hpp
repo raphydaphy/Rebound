@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <initializer_list>
+#include <memory>
 
 class Uniform
 {
@@ -42,7 +43,7 @@ public:
     void load(const std::initializer_list<glm::vec3> &attributes);
     void load(glm::vec3 vec, int id);
 private:
-    std::vector<UniformVector3*> vectors;
+    std::vector<std::unique_ptr<UniformVector3>> vectors;
 };
 
 #endif

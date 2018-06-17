@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(LearnCPP)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(LIBRARIES_DIR "lib")
 
 # Including GLFW
