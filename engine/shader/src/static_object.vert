@@ -29,7 +29,7 @@ void main()
     pass_normal = (model * vec4(normal, 0)).xyz;
     for (int light = 0; light < 4; light++)
     {
-        pass_light_vectors[light] = light_positions[light] - world_position.xyz;
+       pass_light_vectors[light] = light_positions[light] - world_position.xyz;
     }
     pass_camera_vector = (inverse(view) * vec4(0, 0, 0, 1)).xyz - world_position.xyz;
     pass_visibility = clamp(exp(-pow((length(relative_position.xyz)*fog_density), fog_gradient)), 0, 1);
