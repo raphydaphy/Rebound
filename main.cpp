@@ -38,11 +38,11 @@ int main()
     view = new glm::mat4();
     *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
-    float sunBrightness = 0.8f;
+    float sunBrightness = 1;
     Light sun(glm::vec3(50000, 100000, 50000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
-    Light blue(glm::vec3(0, 0, 0), glm::vec3(0, 0, 5), glm::vec3(1, 0.01f, 0.002f));
+    Light blue(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
     Light green(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
-    Light red(glm::vec3(-23, 10, 0), glm::vec3(1, 0, 0), glm::vec3(1, 0.01f, 0.002f));
+    Light red(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
 
     glm::vec3 skyColor(0.5, 0.5, 0.5);
 
