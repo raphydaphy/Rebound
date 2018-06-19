@@ -2,6 +2,7 @@
 
 float surface = 0.5f;
 int windingOrder[] = { 0, 1, 2 };
+glm::vec3 edgeVertex[12];
 
 int vertexOffset[][3] =
 {
@@ -308,10 +309,11 @@ float getOffset(float v1, float v2)
     float delta = v2 - v1;
     return (delta == 0) ? surface : (surface - v1) / delta;
 }
-/* java
- *
-private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float[] cubeIn, List<Vector3f> vertices, List<Vector3f> normals, List<Vector3f> colors, List<Integer> indices)
+
+private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors, std::vector<int> *indices)
 {
+    <std::vector<std::vector<glm::vec3>> triangles;
+
     int flagIndex = 0;
 
     for (int adj = 0; adj < 8; adj++)
@@ -326,7 +328,7 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
 
     if (edgeFlags == 0)
     {
-        return new ArrayList<>();
+        return triangles;
     }
 
     float offset;
@@ -337,7 +339,7 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
         {
             offset = getOffset(cubeIn[edgeConnection[edge][0]], cubeIn[edgeConnection[edge][1]]);
 
-            edgeVertex[edge] = new Vector3f(
+            edgeVertex[edge] = glm::vec3(
                     (float) x + (vertexOffset[edgeConnection[edge][0]][0] + offset * edgeDirection[edge][0]),
                     (float) y + (vertexOffset[edgeConnection[edge][0]][1] + offset * edgeDirection[edge][1]),
                     (float) z + (vertexOffset[edgeConnection[edge][0]][2] + offset * edgeDirection[edge][2]));
@@ -346,8 +348,6 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
 
     int index, vertex;
 
-    List<Vector3f[]> triangles = new ArrayList<>();
-
     for (int triangle = 0; triangle < 5; triangle++)
     {
         if (triangleConnectionTable[flagIndex][3 * triangle] < 0)
@@ -355,35 +355,42 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
             break;
         }
 
-        index = vertices.size();
+        index = vertices->size();
 
-        Vector3f[] triangleVerts = new Vector3f[3];
+        std::vector<glm::vec3> triangleVerts;
 
         for (int triVertex = 0; triVertex < 3; triVertex++)
         {
             vertex = triangleConnectionTable[flagIndex][3 * triangle + triVertex];
-            indices.add(index + windingOrder[triVertex]);
-            vertices.add(edgeVertex[vertex]);
-            triangleVerts[triVertex] = edgeVertex[vertex];
+            indices->push_back(index + windingOrder[triVertex]);
+            vertices->push_back(edgeVertex[vertex]);
+            triangleVerts.push_back(edgeVertex[vertex]);
         }
 
-        triangles.add(triangleVerts);
+        triangles.push_back(triangleVerts);
 
-        Vector3f a = Vector3f.sub(triangleVerts[1],triangleVerts[0], null);
-        Vector3f b = Vector3f.sub(triangleVerts[2], triangleVerts[0], null);
-        Vector3f normal = Vector3f.cross(a, b, null).normalise(null);
+        glm::vec3 a = triangleVerts[1] - triangleVerts[0];
+        glm::vec3 b = triangleVerts[2] - triangleVerts[0];
+        glm::vec3 normal = glm::cross(a, b);
+        normal = glm::normalize(normal);
 
-        normals.addAll(Arrays.asList(normal, normal, normal));
+        for (int i = 0; i < 3; i++)
+        {
+            normals->push_back(normal);
+        }
 
         float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3f;
-        Vector3f color = getBlendColor(voxelIn, worldY + height);
+        glm::vec3 color = getBlendColor(voxelIn, worldY + height);
 
-        colors.addAll(Arrays.asList(color, color, color));
+        for (int i = 0; i < 3; i++)
+        {
+            colors->push_back(color);
+        }
     }
 
     return triangles;
 }
-*/
+
 namespace marching
 {
     void setSurface(float surface)
