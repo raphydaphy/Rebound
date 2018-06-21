@@ -24,6 +24,11 @@ public:
     Biome(float maxHeight, float heightMultiplier, float baseHeight, int noiseOctaves, float noiseScale, float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions);
     Biome *getByID(int id);
     int getID();
+    virtual float genTerrainDensity(int x, int y, int z, int octaves, float scale, float persistance, float lacunarity, float baseHeight, std::vector<glm::vec3> octaveOffsets);
+protected:
+    virtual float evaulateOctave(float sampleX, float sampleY, float sampleZ);
+    virtual float evaulateNoise(int x, int y, int z, float density, float halfSize);
+    virtual float getBaseDensity(int x, int y, int z);
 private:
     int id;
 

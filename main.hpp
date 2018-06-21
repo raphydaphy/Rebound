@@ -9,7 +9,7 @@
 #include "engine/core/timer.hpp"
 #include "engine/gl/VertexArray.hpp"
 #include "engine/core/loader.hpp"
-#include "engine/core/pico.hpp"
+#include "engine/lib/pico.hpp"
 #include "engine/shader/impl/StaticObjectShader.hpp"
 #include "engine/scene/Model.hpp"
 #include "engine/scene/Texture.hpp"

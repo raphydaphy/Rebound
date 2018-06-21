@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "engine/core/util.hpp"
 
 TexturedStaticModel *acacia_1;
 TexturedStaticModel *acacia_2;
@@ -21,6 +22,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
+    core::initNoise(12);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
@@ -39,10 +41,7 @@ int main()
     *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
     float sunBrightness = 1;
-    Light sun(glm::vec3(50000, 100000, 50000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
-    Light blue(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
-    Light green(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
-    Light red(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 0, 0));
+    Light sun(glm::vec3(-12000000, 15000000, -5000000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
 
     glm::vec3 skyColor(0.5, 0.5, 0.5);
 
@@ -55,9 +54,6 @@ int main()
     shader->bind();
     shader->view.load(*view);
     shader->loadLight(sun, 0);
-    shader->loadLight(blue, 1);
-    shader->loadLight(green, 2);
-    shader->loadLight(red, 3);
     shader->sky_color.load(skyColor);
     shader->unbind();
 

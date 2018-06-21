@@ -10,6 +10,8 @@
 #include <vector>
 #include <memory> // unique_ptr
 #include <ctime> // time for random seed
+#include <cstdint>
+#include <stdint-gcc.h>
 
 #if defined(__clang__) // Couldn't find one for clang
 #define FORCE_INLINE inline

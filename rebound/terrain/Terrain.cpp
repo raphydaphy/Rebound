@@ -9,52 +9,54 @@ TerrainVoxel::TerrainVoxel(float density, Biome *biome, float biomeEdge)
     this->biomeEdge = biomeEdge;
 }
 
+
+
 std::vector<ColoredModelData> Terrain::generateModelData()
-{
-    glm::vec3 offset(x, y, z);
-/*
-    if (voxels == null)
+{/*
+    glm::vec3 offset(this->x, this->y, this->z);
+
+    if (voxels == nullptr)
     {
-        voxels = new TerrainVoxel[SIZE * SIZE * SIZE];
+        voxels = new std::vector<TerrainVoxel>(size * size * size);
 
-        final int biomeOctaves = 5;
+        const int biomeOctaves = 5;
 
-        Vector3f[] terrainOffsets = generateTerrainOffsets(BiomeRegistry.getHighestOctaveCount(), offset);
-        Vector2f[] biomeOffsets = generateBiomeOffsets(biomeOctaves, offset);
+        std::vector<glm::vec3> terrainOffsets = generateTerrainOffsets(BiomeRegistry.getHighestOctaveCount(), offset);
+        std::vector<glm::vec2> biomeOffsets = generateBiomeOffsets(biomeOctaves, offset);
 
-        for (int x = 0; x < SIZE; x++)
+        for (int x = 0; x < size; x++)
         {
-            for (int y = 0; y < SIZE; y++)
+            for (int y = 0; y < size; y++)
             {
-                for (int z = 0; z < SIZE; z++)
+                for (int z = 0; z < size; z++)
                 {
 
                     float biomeDensity = ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2f, biomeOffsets) + 1) / 2f) * 100f;
 
-                    Biome lowerBiome = BiomeRegistry.getByHeight(biomeDensity);
-                    Biome higherBiome = BiomeRegistry.getByID(lowerBiome.getID() + 1);
+                    Biome *lowerBiome = BiomeRegistry.getByHeight(biomeDensity);
+                    Biome *higherBiome = BiomeRegistry.getByID(lowerBiome->getID() + 1);
 
-                    float terrainDensityLower = lowerBiome.genTerrainDensity(noise, x, (int)this.y + y, z, lowerBiome.noiseOctaves, lowerBiome.noiseScale, lowerBiome.noisePersistance, lowerBiome.noiseLacunarity, lowerBiome.baseHeight, terrainOffsets) * lowerBiome.heightMultiplier;
-                    float terrainDensityHigher = higherBiome.genTerrainDensity(noise, x, (int)this.y + y, z, higherBiome.noiseOctaves, higherBiome.noiseScale, higherBiome.noisePersistance, higherBiome.noiseLacunarity, higherBiome.baseHeight, terrainOffsets) * higherBiome.heightMultiplier;
+                    float terrainDensityLower = lowerBiome->genTerrainDensity(x, (int)this->y + y, z, lowerBiome->noiseOctaves, lowerBiome->noiseScale, lowerBiome->noisePersistance, lowerBiome->noiseLacunarity, lowerBiome->baseHeight, terrainOffsets) * lowerBiome->heightMultiplier;
+                    float terrainDensityHigher = higherBiome->genTerrainDensity(x, (int)this->y + y, z, higherBiome->noiseOctaves, higherBiome->noiseScale, higherBiome->noisePersistance, higherBiome->noiseLacunarity, higherBiome->baseHeight, terrainOffsets) * higherBiome->heightMultiplier;
 
-                    float alpha = Math.abs((float) MathUtils.clamp((lowerBiome.maxHeight - biomeDensity) / 16f, 0f, 1f) - 1);
-                    float interpolatedDensity = MathUtils.interpolate(terrainDensityLower, terrainDensityHigher, alpha);
+                    float alpha = std::abs((float) std::clamp((lowerBiome->maxHeight - biomeDensity) / 16f, 0f, 1f) - 1);
+                    float interpolatedDensity = core::lerp(terrainDensityLower, terrainDensityHigher, alpha);
 
-                    voxels[x + y * SIZE + z * SIZE * SIZE] = new TerrainVoxel(interpolatedDensity, lowerBiome, alpha);
+                    voxels->at(x + y * size + z * size * size) = TerrainVoxel(interpolatedDensity, lowerBiome, alpha);
                 }
             }
         }
     }
-    List<Vector3f> vertices = new ArrayList<>();
-    List<Vector3f> normals = new ArrayList<>();
-    List<Vector3f> colors = new ArrayList<>();
-    List<Integer> indices = new ArrayList<>();
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> colors;
+
 
     MarchingCubesGenerator generator = new MarchingCubesGenerator();
 
     // triangles should have SIZE - 1 ^ 3 entries in it, one for every voxel except the last x, y and z rows
     triangles = new HashMap<>();
-    generator.generateMesh(voxels, SIZE, SIZE, SIZE, (int)this.y, vertices, normals, colors, indices, triangles);
+    generator.generateMesh(voxels, size, size, size, (int)this.y, vertices, normals, colors, triangles);
 
     int numMeshes = vertices.size() / MAX_VERTS_PER_MESH + 1;
 
@@ -116,4 +118,29 @@ std::vector<ColoredModelData> Terrain::generateModelData()
     }
 
     return models;*/
+}
+
+float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float persistance, float lacunarity,
+                               std::vector<glm::vec2> octaveOffsets)
+{
+    float density = 0;
+    float halfSize = size / 2;
+
+    float frequency = 1;
+    float amplitude = 1;
+
+    for (int octave = 0; octave < octaves; octave++)
+    {
+        float sampleX = (x - halfSize + octaveOffsets[octave].x) / scale * frequency;
+        float sampleZ = (z - halfSize + octaveOffsets[octave].y) / scale * frequency;
+
+        float noiseValue = (float) core::getNoise().Evaluate(sampleX, sampleZ);
+
+        density += noiseValue * amplitude;
+
+        amplitude *= persistance;
+        frequency *= lacunarity;
+    }
+
+    return density;
 }

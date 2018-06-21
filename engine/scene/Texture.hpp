@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "../core/loader.hpp"
-#include "../core/pico.hpp"
+#include "../lib/pico.hpp"
 
 class Texture
 {

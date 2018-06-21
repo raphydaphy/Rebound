@@ -315,7 +315,7 @@ glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
     return glm::vec3(1, 1, 1);
 }
 
-std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors, std::vector<int> *indices)
+std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
 {
     std::vector<std::vector<glm::vec3>> triangles;
 
@@ -367,7 +367,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         for (int triVertex = 0; triVertex < 3; triVertex++)
         {
             vertex = triangleConnectionTable[flagIndex][3 * triangle + triVertex];
-            indices->push_back(index + windingOrder[triVertex]);
+            //indices->push_back(index + windingOrder[triVertex]);
             vertices->push_back(edgeVertex[vertex]);
             triangleVerts.push_back(edgeVertex[vertex]);
         }
@@ -398,6 +398,50 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
 namespace marching
 {
+    void generateMesh(std::vector<TerrainVoxel> *voxels, int width, int height, int depth, int worldY,
+                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
+                      std::map<glm::vec3, std::vector<std::vector<glm::vec3>>> *triangles)
+    {
+        if (::surface > 0)
+        {
+            windingOrder[0] = 0;
+            windingOrder[1] = 1;
+            windingOrder[2] = 2;
+        }
+        else
+        {
+            windingOrder[0] = 2;
+            windingOrder[1] = 1;
+            windingOrder[2] = 0;
+        }
+
+        float cube[8];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                for (int z = 0; z < depth; z++)
+                {
+                    for (int adj = 0; adj < 8; adj++)
+                    {
+                        int adjX = x + vertexOffset[adj][0];
+                        int adjY = y + vertexOffset[adj][1];
+                        int adjZ = z + vertexOffset[adj][2];
+
+                        cube[adj] = voxels->at(adjX + adjY * width + adjZ * height * depth).density;
+                    }
+                   /*() triangles->insert(std::pair<glm::vec3,
+                            std::vector<std::vector<glm::vec3>>
+                                    (glm::vec3(x, y, z), */
+                                     marchCube(x, y, z, worldY,
+                                              voxels->at(x + y * width + z * height * depth),
+                                              cube, vertices, normals, colors); //));
+                }
+            }
+        }
+    }
+
     void setSurface(float surface)
     {
         ::surface = surface;

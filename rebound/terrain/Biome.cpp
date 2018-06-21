@@ -1,4 +1,5 @@
 #include "Biome.hpp"
+#include "Terrain.hpp"
 
 int lastBiomeID = 0;
 int lastRegionID = 0;
@@ -57,4 +58,45 @@ Biome *Biome::getByID(int id)
 int Biome::getID()
 {
     return this->id;
+}
+
+float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, float persistance, float lacunarity,
+                               float baseHeight, std::vector<glm::vec3> octaveOffsets)
+{
+    float density = getBaseDensity(x, y, z);
+    float halfSize = Terrain::size / 2;
+
+    float amplitude = 2;
+    float frequency = 1.5f;
+
+    for (int octave = 0; octave < octaves; octave++)
+    {
+        float sampleX = (x - halfSize + octaveOffsets[octave].x) / scale * frequency;
+        float sampleY = (y - halfSize + octaveOffsets[octave].y) / scale * frequency;
+        float sampleZ = (z - halfSize + octaveOffsets[octave].z) / scale * frequency;
+
+        float noiseValue = evaulateOctave(sampleX, sampleY, sampleZ);
+
+        density += noiseValue * amplitude;
+
+        amplitude *= persistance;
+        frequency *= lacunarity;
+    }
+
+    return evaulateNoise(x, y, z, density, halfSize);
+}
+
+float Biome::evaulateOctave(float sampleX, float sampleY, float sampleZ)
+{
+    return (float)core::getNoise().Evaluate(sampleX, sampleY, sampleZ) * 2 - 1;
+}
+
+float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)
+{
+    return density * halfSize;
+}
+
+float Biome::getBaseDensity(int x, int y, int z)
+{
+    return -y / 2 + baseHeight;
 }
