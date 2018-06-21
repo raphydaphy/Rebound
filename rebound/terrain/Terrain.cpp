@@ -133,9 +133,9 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     {
         float sampleX = (x - halfSize + octaveOffsets[octave].x) / scale * frequency;
         float sampleZ = (z - halfSize + octaveOffsets[octave].y) / scale * frequency;
-
-        float noiseValue = (float) core::getNoise().Evaluate(sampleX, sampleZ);
-
+        //TODO: this line
+        //float noiseValue = (float) core::getNoise().Evaluate(sampleX, sampleZ);
+        float noiseValue = 1;
         density += noiseValue * amplitude;
 
         amplitude *= persistance;

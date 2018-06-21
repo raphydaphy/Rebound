@@ -88,7 +88,10 @@ float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, fl
 
 float Biome::evaulateOctave(float sampleX, float sampleY, float sampleZ)
 {
-    return (float)core::getNoise().Evaluate(sampleX, sampleY, sampleZ) * 2 - 1;
+    // TODO: this line
+
+    //return (float)core::getNoise().Evaluate(sampleX, sampleY, sampleZ) * 2 - 1;
+    return 1;
 }
 
 float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)

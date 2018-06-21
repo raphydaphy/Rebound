@@ -6,7 +6,7 @@
 namespace core
 {
     float lerp(float a, float b, float alpha);
-    OpenSimplexNoise getNoise();
+  //  OpenSimplexNoise getNoise();
     void initNoise(int seed);
 }
 

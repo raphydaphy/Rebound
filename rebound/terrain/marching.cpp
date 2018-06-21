@@ -431,12 +431,8 @@ namespace marching
 
                         cube[adj] = voxels->at(adjX + adjY * width + adjZ * height * depth).density;
                     }
-                   /*() triangles->insert(std::pair<glm::vec3,
-                            std::vector<std::vector<glm::vec3>>
-                                    (glm::vec3(x, y, z), */
-                                     marchCube(x, y, z, worldY,
-                                              voxels->at(x + y * width + z * height * depth),
-                                              cube, vertices, normals, colors); //));
+                    // insert this into triangles
+                    marchCube(x, y, z, worldY, voxels->at(x + y * width + z * height * depth),cube, vertices, normals, colors);
                 }
             }
         }

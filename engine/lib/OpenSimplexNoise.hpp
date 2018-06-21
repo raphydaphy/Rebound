@@ -6,12 +6,10 @@
   Optimised by DigitalShadow
   This version by Mark A. Ropper (Markyparky56)
 *******************************************************************************/
-#include <array>
+/*#include <array>
 #include <vector>
 #include <memory> // unique_ptr
 #include <ctime> // time for random seed
-#include <cstdint>
-#include <stdint-gcc.h>
 
 #if defined(__clang__) // Couldn't find one for clang
 #define FORCE_INLINE inline
@@ -578,4 +576,4 @@ std::vector<OpenSimplexNoise::pContribution4> OpenSimplexNoise::contributions4D;
 
 // Initialise our static tables
 OpenSimplexNoise::StaticConstructor OpenSimplexNoise::staticConstructor;
-#endif
+#endif*/
