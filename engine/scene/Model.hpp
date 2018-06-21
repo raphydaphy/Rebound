@@ -8,15 +8,25 @@
 class StaticModel
 {
 public:
-    explicit StaticModel(std::string path);
-    explicit StaticModel(ModelData data);
     int getVerticesLength();
     StaticModel bind();
     StaticModel unbind();
     void del();
-private:
-    int vertices;
+protected:
+    int vertices{};
     VertexArray vao;
+};
+
+class TexturedStaticModel : public StaticModel
+{
+public:
+    explicit TexturedStaticModel(std::string path);
+    explicit TexturedStaticModel(TexturedModelData data);
+};
+
+class ColoredStaticModel : public StaticModel
+{
+  explicit ColoredStaticModel(ColoredModelData data);
 };
 
 #endif

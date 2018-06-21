@@ -3,18 +3,27 @@
 
 std::string resourceDirectory = "";
 
-ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec2> texturesArray, std::vector<glm::vec3> normalsArray,
-             std::vector<int> indicesArray)
+ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray)
 {
     this->verticesArray = std::move(verticesArray);
-    this->texturesArray = std::move(texturesArray);
     this->normalsArray = std::move(normalsArray);
-    this->indicesArray = std::move(indicesArray);
+}
+
+TexturedModelData::TexturedModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray,
+             std::vector<glm::vec2> texturesArray) : ModelData(std::move(verticesArray), std::move(normalsArray))
+{
+    this->texturesArray = std::move(texturesArray);
+}
+
+ColoredModelData::ColoredModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray,
+             std::vector<glm::vec3> colorsArray) : ModelData(std::move(verticesArray), std::move(normalsArray))
+{
+    this->colorsArray = std::move(colorsArray);
 }
 
 namespace core
 {
-    ModelData loadOBJ(std::string spath)
+    TexturedModelData loadOBJ(std::string spath)
     {
         spath = resourceDirectory + spath;
         const char *path = spath.c_str();
@@ -110,7 +119,7 @@ namespace core
         }
         fclose(file);
 
-        ModelData m(out_vertices, out_uvs, out_normals, vertexIndices);
+        TexturedModelData m(out_vertices, out_normals, out_uvs);
         return m;
     }
 

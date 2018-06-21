@@ -1,8 +1,8 @@
 #include "main.hpp"
 
-StaticModel *acacia_1;
-StaticModel *acacia_2;
-StaticModel *acacia_3;
+TexturedStaticModel *acacia_1;
+TexturedStaticModel *acacia_2;
+TexturedStaticModel *acacia_3;
 
 StaticObjectShader *shader;
 
@@ -24,9 +24,9 @@ int main()
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
-    acacia_1 = new StaticModel("model/acacia_tree_1");
-    acacia_2 = new StaticModel("model/acacia_tree_2");
-    acacia_3 = new StaticModel("model/acacia_tree_3");
+    acacia_1 = new TexturedStaticModel("model/acacia_tree_1");
+    acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
+    acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
     shader = new StaticObjectShader();
 

@@ -310,9 +310,14 @@ float getOffset(float v1, float v2)
     return (delta == 0) ? surface : (surface - v1) / delta;
 }
 
-private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors, std::vector<int> *indices)
+glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
 {
-    <std::vector<std::vector<glm::vec3>> triangles;
+    return glm::vec3(1, 1, 1);
+}
+
+std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors, std::vector<int> *indices)
+{
+    std::vector<std::vector<glm::vec3>> triangles;
 
     int flagIndex = 0;
 
@@ -335,7 +340,7 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
 
     for (int edge = 0; edge < 12; edge++)
     {
-        if ((edgeFlags & (1 << edge)) != 0)
+        if (0 != (edgeFlags & (1 << edge)))
         {
             offset = getOffset(cubeIn[edgeConnection[edge][0]], cubeIn[edgeConnection[edge][1]]);
 
@@ -379,7 +384,7 @@ private <std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int 
             normals->push_back(normal);
         }
 
-        float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3f;
+        float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3;
         glm::vec3 color = getBlendColor(voxelIn, worldY + height);
 
         for (int i = 0; i < 3; i++)

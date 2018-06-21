@@ -3,8 +3,8 @@
 int lastBiomeID = 0;
 int lastRegionID = 0;
 
-std::map<int, Biome> biomes;
-std::map<int, BiomeRegion> regions;
+//std::map<int, Biome> biomes;
+//std::map<int, BiomeRegion> regions;
 
 BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b)
 {
@@ -14,15 +14,15 @@ BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, fl
 
     this->id = lastRegionID++;
 
-    regions.insert(std::pair<int, BiomeRegion>(this->id, *this));
+   // regions.insert(std::pair<int, BiomeRegion>(this->id, *this));
 }
 
-BiomeRegion BiomeRegion::getByID(int id)
+BiomeRegion *BiomeRegion::getByID(int id)
 {
-    if (regions.find(id) != regions.end())
+    /*if (regions.find(id) != regions.end())
     {
-        return regions[id];
-    }
+        return &regions[id];
+    }*/
     return nullptr;
 }
 
@@ -41,15 +41,15 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
 
     this->id = lastBiomeID++;
 
-    biomes.insert(std::pair<int, Biome>(this->id, *this));
+    //biomes.insert(std::pair<int, Biome>(this->id, *this));
 }
 
-Biome Biome::getByID(int id)
+Biome *Biome::getByID(int id)
 {
-    if (biomes.find(id) != biomes.end())
+    /*if (biomes.find(id) != biomes.end())
     {
-        return biomes[id];
-    }
+        return &biomes[id];
+    }*/
     return nullptr;
 }
 
