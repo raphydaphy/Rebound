@@ -3,11 +3,16 @@
 class GlobalNoise
 {
 public:
+    static GlobalNoise &get()
+    {
+        static GlobalNoise data;
+        return data;
+    }
+private:
     GlobalNoise() = default;
+public:
     FastNoise noise;
 };
-
-static constexpr GlobalNoise globalNoise;
 
 namespace core
 {
@@ -18,11 +23,11 @@ namespace core
 
     FastNoise getNoise()
     {
-        return globalNoise.noise;
+        return GlobalNoise::get().noise;
     }
 
     void initNoise(int seed)
     {
-        globalNoise.noise = FastNoise(seed);
+        GlobalNoise::get().noise = FastNoise(seed);
     }
 }

@@ -1,13 +1,20 @@
 #include "loader.hpp"
 #include <utility>
 
-struct ResourceLocation
+
+class ResourceLocation
 {
+public:
+    static ResourceLocation &get()
+    {
+        static ResourceLocation data;
+        return data;
+    }
+private:
     ResourceLocation() = default;
+public:
     std::string directory = "";
 };
-
-static constexpr ResourceLocation reboundResources;
 
 ModelData::ModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray)
 {
@@ -31,7 +38,7 @@ namespace core
 {
     TexturedModelData loadOBJ(std::string spath)
     {
-        spath = reboundResources.directory + spath;
+        spath = ResourceLocation::get().directory + spath;
         const char *path = spath.c_str();
         std::cout << "Loading OBJ file " << path << std::endl;
 
@@ -131,7 +138,7 @@ namespace core
 
     void loadPNG(std::vector<unsigned char> &buffer, std::string sfilename)
     {
-        sfilename = reboundResources.directory + sfilename;
+        sfilename = ResourceLocation::get().directory + sfilename;
         const std::string &filename = sfilename;
         std::cout << "Loading PNG file " << filename << std::endl;
 
@@ -152,11 +159,11 @@ namespace core
 
     void setResourceDirectory(std::string dir)
     {
-        reboundResources.directory = std::move(dir);
+        ResourceLocation::get().directory = std::move(dir);
     }
 
     std::string getResourceDirectory()
     {
-        return reboundResources.directory;
+        return ResourceLocation::get().directory;
     }
 }

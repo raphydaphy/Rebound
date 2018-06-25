@@ -7,6 +7,8 @@
 #include <initializer_list>
 #include <vector>
 #include <map>
+#include "../../engine/core/util.hpp"
+#include <memory>
 
 struct BiomeRegion
 {

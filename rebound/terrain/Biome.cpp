@@ -1,9 +1,17 @@
 #include "Biome.hpp"
 #include "Terrain.hpp"
-struct biomeData
-{
-    biomeData() = default;
 
+class BiomeData
+{
+public:
+    static BiomeData &get()
+    {
+        static BiomeData data;
+        return data;
+    }
+private:
+    BiomeData() = default;
+public:
     int lastBiomeID = 0;
     int lastRegionID = 0;
 
@@ -11,24 +19,22 @@ struct biomeData
     std::map<int, BiomeRegion> regionMap;
 };
 
-static constexpr biomeData vars;
-
 BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b)
 {
     this->name = std::move(name);
     this->maxHeight = maxHeight;
     this->color = glm::vec3(r, g, b);
 
-    this->id = vars.lastRegionID++;
+    this->id = BiomeData::get().lastRegionID++;
 
-    vars.regionMap.insert(std::pair<int, BiomeRegion>(this->id, *this));
+    BiomeData::get().regionMap.insert(std::pair<int, BiomeRegion>(this->id, *this));
 }
 
 BiomeRegion BiomeRegion::getByID(int id)
 {
-    if (vars.regionMap.find(id) != vars.regionMap.end())
+    if (BiomeData::get().regionMap.find(id) != BiomeData::get().regionMap.end())
     {
-        return vars.regionMap.at(id);
+        return BiomeData::get().regionMap.at(id);
     }
 }
 
@@ -45,22 +51,22 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
 
     this->regions = std::vector<BiomeRegion>(regions);
 
-    this->id = vars.lastBiomeID++;
+    this->id = (BiomeData::get().lastBiomeID)++;
 
-    vars.biomeMap.insert(std::pair<int, Biome>(this->id, *this));
+    BiomeData::get().biomeMap.insert(std::pair<int, Biome>(this->id, *this));
 }
 
 Biome Biome::getByID(int id)
 {
-    if (vars.biomeMap.find(id) != vars.biomeMap.end())
+    if (BiomeData::get().biomeMap.find(id) != BiomeData::get().biomeMap.end())
     {
-        return vars.biomeMap.at(id);
+        return BiomeData::get().biomeMap.at(id);
     }
 }
 
 Biome Biome::getByHeight(float height)
 {
-    for (auto biome : vars.biomeMap)
+    for (auto biome : BiomeData::get().biomeMap)
     {
         if (height < biome.second.maxHeight)
         {

@@ -51,7 +51,7 @@ int main()
     model_acacia_translated = new glm::mat4(1.0f);
 
     rectPos = new glm::vec3(-15, 0, 0);
-    prevRectPos = new glm::vec3(10, 0, 0);
+    prevRectPos = new glm::vec3(-15, 0, 0);
 
     shader->bind();
     shader->view.load(*view);
@@ -107,10 +107,11 @@ void render(float alpha)
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
     }
 
+    float interp = core::lerp(rectPos->x, prevRectPos->x, alpha);
 
     acacia_3->bind();
     *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
-    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(core::lerp(prevRectPos->x, rectPos->x, alpha), 0, 0));
+    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(interp, 0, 0));
 
     shader->model.load(*model_acacia_base);
     glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
@@ -118,14 +119,14 @@ void render(float alpha)
 
     acacia_2->bind();
     *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(-15, 5, 0));
-    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(rectPos->x) * -10, glm::vec3(0, 1, 0));
+    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * -10, glm::vec3(0, 1, 0));
     shader->model.load(*model_acacia_translated);
     glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
     acacia_2->unbind();
 
     acacia_1->bind();
     *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(15, -10, 0));
-    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(rectPos->x) * 10, glm::vec3(0, 1, 0));
+    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * 10, glm::vec3(0, 1, 0));
     shader->model.load(*model_acacia_translated);
     glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
     acacia_1->unbind();
