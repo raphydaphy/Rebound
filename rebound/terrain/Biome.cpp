@@ -69,25 +69,6 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
     }
 }
 
-Biome Biome::getByID(int id)
-{
-    if (BiomeData::get().biomeMap.find(id) != BiomeData::get().biomeMap.end())
-    {
-        return BiomeData::get().biomeMap.at(id);
-    }
-}
-
-Biome Biome::getByHeight(float height)
-{
-    for (auto biome : BiomeData::get().biomeMap)
-    {
-        if (height < biome.second.maxHeight)
-        {
-            return biome.second;
-        }
-    }
-}
-
 int Biome::getID()
 {
     return this->id;
@@ -148,12 +129,40 @@ DesertBiome::DesertBiome() : Biome(20, 1, 10, 12, 250, 0.5f, 2,
                                    {BiomeRegion("Sand", 10, 210 / 256.0f, 219 / 256.0f, 111 / 256.0f)})
 { }
 
-std::shared_ptr<Biome> biomes::getHighestBiome()
+namespace biomes
 {
-    return BiomeData::get().highestBiome;
-}
+    std::shared_ptr<Biome> getHighestBiome()
+    {
+        return BiomeData::get().highestBiome;
+    }
 
-int biomes::getHighestOctaveCount()
-{
-    return BiomeData::get().highestOctaveCount;
+    int getHighestOctaveCount()
+    {
+        return BiomeData::get().highestOctaveCount;
+    }
+
+    Biome getByID(int id)
+    {
+        if (BiomeData::get().biomeMap.find(id) != BiomeData::get().biomeMap.end())
+        {
+            return BiomeData::get().biomeMap.at(id);
+        }
+    }
+
+    Biome getByHeight(float height)
+    {
+        for (auto biome : BiomeData::get().biomeMap)
+        {
+            if (height < biome.second.maxHeight)
+            {
+                return biome.second;
+            }
+        }
+    }
+
+    void init()
+    {
+        auto forest = std::make_unique<ForestBiome>(ForestBiome());
+        auto desert = std::make_unique<DesertBiome>(DesertBiome());
+    }
 }

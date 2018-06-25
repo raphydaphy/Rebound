@@ -23,11 +23,15 @@ int main()
     core::setResourceDirectory("../rebound/res/");
     core::initSeed(12);
 
+    biomes::init();
+
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 
     acacia_1 = new TexturedStaticModel("model/acacia_tree_1");
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
+
+    Terrain terrain(0, 0, 0);
 
     shader = new StaticObjectShader();
 

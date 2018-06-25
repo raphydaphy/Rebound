@@ -16,6 +16,7 @@
 #include "engine/scene/Light.hpp"
 #include "engine/core/util.hpp"
 #include "rebound/terrain/Biome.hpp"
+#include "rebound/terrain/Terrain.hpp"
 
 void update(float delta);
 void render(float alpha);

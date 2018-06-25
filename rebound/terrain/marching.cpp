@@ -428,7 +428,6 @@ namespace marching
                         int adjX = x + vertexOffset[adj][0];
                         int adjY = y + vertexOffset[adj][1];
                         int adjZ = z + vertexOffset[adj][2];
-
                         cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth).density;
                     }
                     // insert this into triangles

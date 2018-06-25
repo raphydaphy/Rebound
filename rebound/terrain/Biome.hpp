@@ -25,8 +25,6 @@ class Biome
 {
 public:
     Biome(float maxHeight, float heightMultiplier, float baseHeight, int noiseOctaves, float noiseScale, float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions);
-    static Biome getByID(int id);
-    static Biome getByHeight(float height);
     int getID();
     virtual float genTerrainDensity(int x, int y, int z, int octaves, float scale, float persistance, float lacunarity, float baseHeight, std::vector<glm::vec3> octaveOffsets);
     bool operator==(const Biome &rhs);
@@ -63,10 +61,12 @@ public:
 
 namespace biomes
 {
-    static constexpr ForestBiome forest();
-    static constexpr DesertBiome desert();
-
     std::shared_ptr<Biome> getHighestBiome();
     int getHighestOctaveCount();
+
+    Biome getByID(int id);
+    Biome getByHeight(float height);
+
+    void init();
 }
 #endif

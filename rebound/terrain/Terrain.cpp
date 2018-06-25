@@ -16,6 +16,11 @@ std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
 
     for (int octave = 0; octave < octaves; octave++)
     {
+        float offX = core::randomInt(-10000, 10000) + offset.x;
+        float offY = core::randomInt(-10000, 10000) + offset.y;
+        float offZ = core::randomInt(-10000, 10000) + offset.z;
+
+        terrainOffsets.emplace_back(offX, offY, offZ);
     }
 
     return terrainOffsets;
@@ -24,6 +29,14 @@ std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
 std::vector<glm::vec2> genBiomeOffsets(int octaves, glm::vec3 offset)
 {
     std::vector<glm::vec2> biomeOffsets;
+
+    for (int octave = 0; octave < octaves; octave++)
+    {
+        float offX = core::randomInt(-10000, 10000) + offset.x;
+        float offY = core::randomInt(-10000, 10000) + offset.y;
+
+        biomeOffsets.emplace_back(offX, offY);
+    }
 
     return biomeOffsets;
 }
@@ -50,8 +63,8 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                     float biomeDensity =
                             ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
 
-                    Biome lowerBiome = Biome::getByHeight(biomeDensity);
-                    Biome higherBiome = Biome::getByID(lowerBiome.getID() + 1);
+                    Biome lowerBiome = biomes::getByHeight(biomeDensity);
+                    Biome higherBiome = biomes::getByID(lowerBiome.getID() + 1);
 
                     // TODO: these two lines are kind of dumb
                     float terrainDensityLower =
@@ -72,7 +85,6 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                 }
             }
         }
-
         for (unsigned int voxel = 0; voxel < tmpVoxels.size(); voxel++)
         {
             voxels.push_back(*tmpVoxels.at(voxel));
@@ -82,10 +94,9 @@ std::vector<ColoredModelData> Terrain::generateModelData()
     std::vector<glm::vec3> normals;
     std::vector<glm::vec3> colors;
 
-
     // triangles should have SIZE - 1 ^ 3 entries in it, one for every voxel except the last x, y and z rows
     std::map<glm::vec3, std::vector<glm::vec3>> triangles;
-    marching::generateMesh(voxels, size, size, size, (int)this->y, &vertices, &normals, &colors, &triangles);
+    marching::generateMesh(voxels, size - 1, size - 1, size - 1, (int)this->y, &vertices, &normals, &colors, &triangles);
 
     int numMeshes = vertices.size() / MAX_VERTS_PER_MESH + 1;
 
@@ -118,6 +129,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
 
     }
 
+
     return models;
 }
 
@@ -142,4 +154,14 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     }
 
     return density;
+}
+
+Terrain::Terrain(int gridX, int gridY, int gridZ)
+{
+    this->x = gridX * (size - 1);
+    this->y = gridY * (size - 1);
+    this->z = gridZ * (size - 1);
+
+    // TODO: use a thread for this
+    unprepared = std::move(generateModelData());
 }
