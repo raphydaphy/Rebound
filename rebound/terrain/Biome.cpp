@@ -14,6 +14,9 @@ private:
 public:
     int lastBiomeID = 0;
     int lastRegionID = 0;
+    int highestOctaveCount = 0;
+
+    std::shared_ptr<Biome> highestBiome;
 
     std::map<int, Biome> biomeMap;
     std::map<int, BiomeRegion> regionMap;
@@ -54,6 +57,16 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
     this->id = (BiomeData::get().lastBiomeID)++;
 
     BiomeData::get().biomeMap.insert(std::pair<int, Biome>(this->id, *this));
+
+    if (BiomeData::get().highestBiome == nullptr || this->maxHeight > BiomeData::get().highestBiome->maxHeight)
+    {
+        BiomeData::get().highestBiome = std::make_shared<Biome>(this);
+    }
+
+    if (this->noiseOctaves > BiomeData::get().highestOctaveCount)
+    {
+        BiomeData::get().highestOctaveCount = this->noiseOctaves;
+    }
 }
 
 Biome Biome::getByID(int id)
@@ -129,12 +142,18 @@ bool Biome::operator==(const Biome &rhs)
 ForestBiome::ForestBiome() : Biome(80, 2, 10, 10, 250, 0.6f, 2,
                                    {BiomeRegion("Grass", 10, 0.0431372549f, 0.91764705882f, 0.23921568627f),
                                     BiomeRegion("Forest", 13, 0.0431372549f, 0.91764705882f, 0.23921568627f)})
-{
-
-}
+{ }
 
 DesertBiome::DesertBiome() : Biome(20, 1, 10, 12, 250, 0.5f, 2,
                                    {BiomeRegion("Sand", 10, 210 / 256.0f, 219 / 256.0f, 111 / 256.0f)})
-{
+{ }
 
+std::shared_ptr<Biome> biomes::getHighestBiome()
+{
+    return BiomeData::get().highestBiome;
+}
+
+int biomes::getHighestOctaveCount()
+{
+    return BiomeData::get().highestOctaveCount;
 }

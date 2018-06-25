@@ -30,11 +30,7 @@ public:
     int getID();
     virtual float genTerrainDensity(int x, int y, int z, int octaves, float scale, float persistance, float lacunarity, float baseHeight, std::vector<glm::vec3> octaveOffsets);
     bool operator==(const Biome &rhs);
-protected:
-    virtual float evaulateOctave(float sampleX, float sampleY, float sampleZ);
-    virtual float evaulateNoise(int x, int y, int z, float density, float halfSize);
-    virtual float getBaseDensity(int x, int y, int z);
-private:
+
     int id;
 
     float maxHeight;
@@ -45,7 +41,11 @@ private:
     float noiseScale;
     float noisePersistance;
     float noiseLacunarity;
-
+protected:
+    virtual float evaulateOctave(float sampleX, float sampleY, float sampleZ);
+    virtual float evaulateNoise(int x, int y, int z, float density, float halfSize);
+    virtual float getBaseDensity(int x, int y, int z);
+private:
     std::vector<BiomeRegion> regions;
 };
 
@@ -65,5 +65,8 @@ namespace biomes
 {
     static constexpr ForestBiome forest();
     static constexpr DesertBiome desert();
+
+    std::shared_ptr<Biome> getHighestBiome();
+    int getHighestOctaveCount();
 }
 #endif

@@ -1,7 +1,5 @@
-
-
 cmake_minimum_required(VERSION 3.10)
-project(LearnCPP)
+project(Rebound)
 
 set(CMAKE_CXX_STANDARD 17)
 set(LIBRARIES_DIR "lib")
@@ -25,4 +23,3 @@ add_library("gl3w" "${GL3W_DIR}/src/gl3w.c")
 target_include_directories("gl3w" PRIVATE "${GL3W_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE "${GL3W_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "gl3w" "${CMAKE_DL_LIBS}")
-
