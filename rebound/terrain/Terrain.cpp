@@ -33,11 +33,9 @@ std::vector<ColoredModelData> Terrain::generateModelData()
 {
     glm::vec3 offset(this->x, this->y, this->z);
 
-    if (voxels == nullptr)
+    if (voxels.empty())
     {
-        auto tmpVoxels = std::vector<TerrainVoxel>(size * size * size);
-        voxels = std::make_unique<std::vector<TerrainVoxel>>(tmpVoxels);
-
+        std::vector<TerrainVoxel*> tmpVoxels(size * size * size);
         const int biomeOctaves = 5;
 
         std::vector<glm::vec3> terrainOffsets = genTerrainOffsets(biomes::getHighestOctaveCount(), offset);
@@ -50,21 +48,35 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                 for (int z = 0; z < size; z++)
                 {
 
-                    float biomeDensity = ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
+                    float biomeDensity =
+                            ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
 
                     Biome lowerBiome = Biome::getByHeight(biomeDensity);
                     Biome higherBiome = Biome::getByID(lowerBiome.getID() + 1);
 
                     // TODO: these two lines are kind of dumb
-                    float terrainDensityLower = lowerBiome.genTerrainDensity(x, (int)this->y + y, z, lowerBiome.noiseOctaves, lowerBiome.noiseScale, lowerBiome.noisePersistance, lowerBiome.noiseLacunarity, lowerBiome.baseHeight, terrainOffsets) * lowerBiome.heightMultiplier;
-                    float terrainDensityHigher = higherBiome.genTerrainDensity(x, (int)this->y + y, z, higherBiome.noiseOctaves, higherBiome.noiseScale, higherBiome.noisePersistance, higherBiome.noiseLacunarity, higherBiome.baseHeight, terrainOffsets) * higherBiome.heightMultiplier;
+                    float terrainDensityLower =
+                            lowerBiome.genTerrainDensity(x, (int) this->y + y, z, lowerBiome.noiseOctaves,
+                                                         lowerBiome.noiseScale, lowerBiome.noisePersistance,
+                                                         lowerBiome.noiseLacunarity, lowerBiome.baseHeight,
+                                                         terrainOffsets) * lowerBiome.heightMultiplier;
+                    float terrainDensityHigher =
+                            higherBiome.genTerrainDensity(x, (int) this->y + y, z, higherBiome.noiseOctaves,
+                                                          higherBiome.noiseScale, higherBiome.noisePersistance,
+                                                          higherBiome.noiseLacunarity, higherBiome.baseHeight,
+                                                          terrainOffsets) * higherBiome.heightMultiplier;
 
-                    float alpha = std::abs((float) core::clamp((lowerBiome.maxHeight - biomeDensity) / 16.0f, 0, 1) - 1);
+                    float alpha = std::abs(core::clamp((lowerBiome.maxHeight - biomeDensity) / 16.0f, 0, 1) - 1);
                     float interpolatedDensity = core::lerp(terrainDensityLower, terrainDensityHigher, alpha);
 
-                    voxels->at(x + y * size + z * size * size) = TerrainVoxel(interpolatedDensity, &lowerBiome, alpha);
+                    tmpVoxels.at((unsigned int)(x + y * size + z * size * size)) = new TerrainVoxel(interpolatedDensity, &lowerBiome, alpha);
                 }
             }
+        }
+
+        for (unsigned int voxel = 0; voxel < tmpVoxels.size(); voxel++)
+        {
+            voxels.push_back(*tmpVoxels.at(voxel));
         }
     }
     std::vector<glm::vec3> vertices;
@@ -74,7 +86,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
 
     // triangles should have SIZE - 1 ^ 3 entries in it, one for every voxel except the last x, y and z rows
     std::map<glm::vec3, std::vector<glm::vec3>> triangles;
-    marching::generateMesh(*voxels, size, size, size, (int)this->y, &vertices, &normals, &colors, &triangles);
+    marching::generateMesh(voxels, size, size, size, (int)this->y, &vertices, &normals, &colors, &triangles);
 
     int numMeshes = vertices.size() / MAX_VERTS_PER_MESH + 1;
 
@@ -103,7 +115,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
             continue;
         }
 
-        models.push_back(ColoredModelData(splitVertices, splitNormals, splitColors));
+        models.emplace_back(splitVertices, splitNormals, splitColors);
 
     }
 

@@ -60,7 +60,7 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
 
     if (BiomeData::get().highestBiome == nullptr || this->maxHeight > BiomeData::get().highestBiome->maxHeight)
     {
-        BiomeData::get().highestBiome = std::make_shared<Biome>(this);
+        BiomeData::get().highestBiome = std::make_shared<Biome>(*this);
     }
 
     if (this->noiseOctaves > BiomeData::get().highestOctaveCount)

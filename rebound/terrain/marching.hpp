@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <memory>
 #include "Terrain.hpp"
 
 namespace marching

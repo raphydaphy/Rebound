@@ -398,9 +398,9 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
 namespace marching
 {
-    void generateMesh(std::vector<TerrainVoxel> *voxels, int width, int height, int depth, int worldY,
+    void generateMesh(std::vector<TerrainVoxel> voxels, int width, int height, int depth, int worldY,
                       std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
-                      std::map<glm::vec3, std::vector<std::vector<glm::vec3>>> *triangles)
+                      std::map<glm::vec3, std::vector<glm::vec3>> *triangles)
     {
         if (::surface > 0)
         {
@@ -429,10 +429,10 @@ namespace marching
                         int adjY = y + vertexOffset[adj][1];
                         int adjZ = z + vertexOffset[adj][2];
 
-                        cube[adj] = voxels->at(adjX + adjY * width + adjZ * height * depth).density;
+                        cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth).density;
                     }
                     // insert this into triangles
-                    marchCube(x, y, z, worldY, voxels->at(x + y * width + z * height * depth),cube, vertices, normals, colors);
+                    marchCube(x, y, z, worldY, voxels.at(x + y * width + z * height * depth),cube, vertices, normals, colors);
                 }
             }
         }
