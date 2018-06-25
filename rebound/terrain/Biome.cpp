@@ -1,11 +1,17 @@
 #include "Biome.hpp"
 #include "Terrain.hpp"
+struct biomeData
+{
+    biomeData() = default;
 
-int lastBiomeID = 0;
-int lastRegionID = 0;
+    int lastBiomeID = 0;
+    int lastRegionID = 0;
 
-//std::map<int, Biome> biomes;
-//std::map<int, BiomeRegion> regions;
+    std::map<int, Biome> biomeMap;
+    std::map<int, BiomeRegion> regionMap;
+};
+
+static constexpr biomeData vars;
 
 BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b)
 {
@@ -13,18 +19,17 @@ BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, fl
     this->maxHeight = maxHeight;
     this->color = glm::vec3(r, g, b);
 
-    this->id = lastRegionID++;
+    this->id = vars.lastRegionID++;
 
-   // regions.insert(std::pair<int, BiomeRegion>(this->id, *this));
+    vars.regionMap.insert(std::pair<int, BiomeRegion>(this->id, *this));
 }
 
-BiomeRegion *BiomeRegion::getByID(int id)
+BiomeRegion BiomeRegion::getByID(int id)
 {
-    /*if (regions.find(id) != regions.end())
+    if (vars.regionMap.find(id) != vars.regionMap.end())
     {
-        return &regions[id];
-    }*/
-    return nullptr;
+        return vars.regionMap.at(id);
+    }
 }
 
 Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int noiseOctaves, float noiseScale,
@@ -40,20 +45,29 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
 
     this->regions = std::vector<BiomeRegion>(regions);
 
-    this->id = lastBiomeID++;
+    this->id = vars.lastBiomeID++;
 
-    //biomes.insert(std::pair<int, Biome>(this->id, *this));
+    vars.biomeMap.insert(std::pair<int, Biome>(this->id, *this));
 }
 
-Biome *Biome::getByID(int id)
+Biome Biome::getByID(int id)
 {
-    /*if (biomes.find(id) != biomes.end())
+    if (vars.biomeMap.find(id) != vars.biomeMap.end())
     {
-        return &biomes[id];
-    }*/
-    return nullptr;
+        return vars.biomeMap.at(id);
+    }
 }
 
+Biome Biome::getByHeight(float height)
+{
+    for (auto biome : vars.biomeMap)
+    {
+        if (height < biome.second.maxHeight)
+        {
+            return biome.second;
+        }
+    }
+}
 
 int Biome::getID()
 {
@@ -88,8 +102,6 @@ float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, fl
 
 float Biome::evaulateOctave(float sampleX, float sampleY, float sampleZ)
 {
-    // TODO: this line
-
     return (float)core::getNoise().GetSimplex(sampleX, sampleY, sampleZ) * 2 - 1;
 }
 
@@ -100,5 +112,23 @@ float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)
 
 float Biome::getBaseDensity(int x, int y, int z)
 {
-    return -y / 2 + baseHeight;
+    return -y / 2.0f + baseHeight;
+}
+
+bool Biome::operator==(const Biome &rhs)
+{
+    return id == rhs.id;
+}
+
+ForestBiome::ForestBiome() : Biome(80, 2, 10, 10, 250, 0.6f, 2,
+                                   {BiomeRegion("Grass", 10, 0.0431372549f, 0.91764705882f, 0.23921568627f),
+                                    BiomeRegion("Forest", 13, 0.0431372549f, 0.91764705882f, 0.23921568627f)})
+{
+
+}
+
+DesertBiome::DesertBiome() : Biome(20, 1, 10, 12, 250, 0.5f, 2,
+                                   {BiomeRegion("Sand", 10, 210 / 256.0f, 219 / 256.0f, 111 / 256.0f)})
+{
+
 }

@@ -1,6 +1,13 @@
 #include "util.hpp"
 
-FastNoise *noise;
+class GlobalNoise
+{
+public:
+    GlobalNoise() = default;
+    FastNoise noise;
+};
+
+static constexpr GlobalNoise globalNoise;
 
 namespace core
 {
@@ -11,11 +18,11 @@ namespace core
 
     FastNoise getNoise()
     {
-        return *noise;
+        return globalNoise.noise;
     }
 
     void initNoise(int seed)
     {
-        noise = new FastNoise(seed);
+        globalNoise.noise = FastNoise(seed);
     }
 }

@@ -14,6 +14,8 @@
 #include "engine/scene/Model.hpp"
 #include "engine/scene/Texture.hpp"
 #include "engine/scene/Light.hpp"
+#include "engine/core/util.hpp"
+#include "rebound/terrain/Biome.hpp"
 
 void update(float delta);
 void render(float alpha);
