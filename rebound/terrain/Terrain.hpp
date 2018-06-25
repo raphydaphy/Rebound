@@ -20,6 +20,7 @@ struct TerrainVoxel
 class Terrain
 {
 public:
+    Terrain(int gridX, int gridY, int gridZ);
     static const int size = 33;
 private:
     float genBiomeDensity(int x, int z, int octaves, float scale, float persistance, float lacunarity, std::vector<glm::vec2> octaveOffsets);

@@ -17,14 +17,11 @@ glm::vec3 *prevRectPos;
 
 int main()
 {
-    FastNoise f(3);
-    double s = f.GetSimplex(3, 3.3, 5.2);
-    std::cout << s << std::endl;
     if (!core::initDisplay("Rebound")) return 1;
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initNoise(12);
+    core::initSeed(12);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1);
 

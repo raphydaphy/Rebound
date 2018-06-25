@@ -1,17 +1,18 @@
 #include "util.hpp"
 
-class GlobalNoise
+class GlobalRandoms
 {
 public:
-    static GlobalNoise &get()
+    static GlobalRandoms &get()
     {
-        static GlobalNoise data;
+        static GlobalRandoms data;
         return data;
     }
 private:
-    GlobalNoise() = default;
+    GlobalRandoms() = default;
 public:
     FastNoise noise;
+    std::mt19937 rand;
 };
 
 namespace core
@@ -28,13 +29,36 @@ namespace core
         return value;
     }
 
-    FastNoise getNoise()
+    void initSeed(int seed)
     {
-        return GlobalNoise::get().noise;
+        GlobalRandoms::get().noise = FastNoise(seed);
+        GlobalRandoms::get().rand = std::mt19937(seed);
     }
 
-    void initNoise(int seed)
+    float simplex(float a, float b)
     {
-        GlobalNoise::get().noise = FastNoise(seed);
+        return GlobalRandoms::get().noise.GetSimplex(a, b);
+    }
+
+    float simplex(float a, float b, float c)
+    {
+        return GlobalRandoms::get().noise.GetSimplex(a, b, c);
+    }
+
+    float simplex(float a, float b, float c, float d)
+    {
+        return GlobalRandoms::get().noise.GetSimplex(a, b, c, d);
+    }
+
+    int randomInt(int min, int max)
+    {
+        auto rnd = std::uniform_int_distribution<int>(min, max);
+        return rnd(GlobalRandoms::get().rand);
+    }
+
+    float randomFloat(float min, float max)
+    {
+        auto rnd = std::uniform_real_distribution<float>(min, max);
+        return rnd(GlobalRandoms::get().rand);
     }
 }

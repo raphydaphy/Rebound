@@ -16,7 +16,6 @@ std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
 
     for (int octave = 0; octave < octaves; octave++)
     {
-
     }
 
     return terrainOffsets;
@@ -135,7 +134,7 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     {
         float sampleX = (x - halfSize + octaveOffsets[octave].x) / scale * frequency;
         float sampleZ = (z - halfSize + octaveOffsets[octave].y) / scale * frequency;
-        float noiseValue = (float) core::getNoise().GetSimplex(sampleX, sampleZ);
+        float noiseValue = core::simplex(sampleX, sampleZ);
         density += noiseValue * amplitude;
 
         amplitude *= persistance;
