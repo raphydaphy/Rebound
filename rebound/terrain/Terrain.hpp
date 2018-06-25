@@ -6,7 +6,7 @@
 #include "../../engine/scene/Model.hpp"
 #include <algorithm>
 #include "../../engine/core/util.hpp"
-//#include "../../engine/lib/OpenSimplexNoise.hpp"
+#include "../../engine/lib/OpenSimplexNoise.h"
 
 struct TerrainVoxel
 {

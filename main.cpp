@@ -1,5 +1,6 @@
 #include "main.hpp"
 #include "engine/core/util.hpp"
+#include "engine/lib/OpenSimplexNoise.h"
 
 TexturedStaticModel *acacia_1;
 TexturedStaticModel *acacia_2;
@@ -18,6 +19,11 @@ glm::vec3 *prevRectPos;
 
 int main()
 {
+    struct osn_context *ctx;
+    open_simplex_noise(8, &ctx);
+    double n = open_simplex_noise3(ctx, 5.5, 3.3, 1.5);
+    std::cout << n << std::endl;
+
     if (!core::initDisplay("Rebound")) return 1;
 
     core::initTimer();
