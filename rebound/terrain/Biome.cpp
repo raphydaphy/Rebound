@@ -64,7 +64,7 @@ float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, fl
                                float baseHeight, std::vector<glm::vec3> octaveOffsets)
 {
     float density = getBaseDensity(x, y, z);
-    float halfSize = Terrain::size / 2;
+    float halfSize = Terrain::size / 2.0f;
 
     float amplitude = 2;
     float frequency = 1.5f;
@@ -90,8 +90,7 @@ float Biome::evaulateOctave(float sampleX, float sampleY, float sampleZ)
 {
     // TODO: this line
 
-    //return (float)core::getNoise().Evaluate(sampleX, sampleY, sampleZ) * 2 - 1;
-    return 1;
+    return (float)core::getNoise().GetSimplex(sampleX, sampleY, sampleZ) * 2 - 1;
 }
 
 float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)

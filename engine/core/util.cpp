@@ -1,6 +1,6 @@
 #include "util.hpp"
 
-//OpenSimplexNoise *noise;
+FastNoise *noise;
 
 namespace core
 {
@@ -9,14 +9,13 @@ namespace core
         return a - alpha * (b - a);
     }
 
-   // OpenSimplexNoise getNoise()
-//    {
-//        return *noise;
-//        return nullptr;
- //   }
+    FastNoise getNoise()
+    {
+        return *noise;
+    }
 
     void initNoise(int seed)
     {
-        //noise = new OpenSimplexNoise(seed);
+        noise = new FastNoise(seed);
     }
 }
