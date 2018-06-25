@@ -38,7 +38,7 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
     this->noisePersistance = noisePersistance;
     this->noiseLacunarity = noiseLacunarity;
 
-    this->regions = std::vector(regions);
+    this->regions = std::vector<BiomeRegion>(regions);
 
     this->id = lastBiomeID++;
 
