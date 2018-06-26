@@ -7,7 +7,7 @@ TexturedStaticModel *acacia_3;
 StaticTexturedShader *texturedShader;
 StaticColoredShader *coloredShader;
 
-std::vector<Terrain> terrains;
+Terrain *terrain;
 
 glm::mat4 *projection;
 glm::mat4 *view;
@@ -34,9 +34,7 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    terrains.emplace_back(0, 0, 0);
-    terrains.emplace_back(-1, 0, 0);
-    terrains.emplace_back(1, 0, 0);
+    terrain = new Terrain(0, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -47,7 +45,7 @@ int main()
     projection = new glm::mat4();
 
     view = new glm::mat4();
-    *view = glm::lookAt(glm::vec3(0, 0, -40), glm::vec3(0,1,0), glm::vec3(0,1,0));
+    *view = glm::lookAt(glm::vec3(1,2,-10), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
     float sunBrightness = 1;
     Light sun(glm::vec3(-10, 8, -10), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
@@ -70,7 +68,7 @@ int main()
     coloredShader->view.load(*view);
     coloredShader->loadLight(sun, 0);
     coloredShader->sky_color.load(skyColor);
-    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
+    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.5f));
     *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(-5, -5, 0));
     coloredShader->model.load(*model_acacia_base);
     coloredShader->unbind();
@@ -157,19 +155,13 @@ void render(float alpha)
         coloredShader->projection.load(*projection);
     }
 
-    for (const Terrain &terrain : terrains)
+    for (ColoredStaticModel model : terrain->models)
     {
-        float scale = 0.5f;
-        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x * scale, terrain.y * scale, terrain.z * scale));
-        terrainModel = glm::scale(terrainModel, glm::vec3(scale));
-        coloredShader->model.load(terrainModel);
-        for (ColoredStaticModel model : terrain.models)
-        {
-            model.bind();
-            glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
-            model.unbind();
-        }
+        model.bind();
+        glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
+        model.unbind();
     }
+
     coloredShader->unbind();
 
 

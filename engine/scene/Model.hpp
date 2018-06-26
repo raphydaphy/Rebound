@@ -8,10 +8,12 @@
 class StaticModel
 {
 public:
+    int getVerticesLength();
     StaticModel bind();
     StaticModel unbind();
     void del();
 protected:
+    int vertices{};
     VertexArray vao;
 };
 
@@ -20,18 +22,12 @@ class TexturedStaticModel : public StaticModel
 public:
     explicit TexturedStaticModel(std::string path);
     explicit TexturedStaticModel(TexturedModelData data);
-    int getVerticesLength();
-protected:
-    int vertices;
 };
 
-class IndexedStaticModel : public StaticModel
+class ColoredStaticModel : public StaticModel
 {
 public:
-  explicit IndexedStaticModel(IndexedModelData data);
-  int getIndicesLength();
-protected:
-    int indices;
+  explicit ColoredStaticModel(ColoredModelData data);
 };
 
 #endif

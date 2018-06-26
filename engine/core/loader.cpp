@@ -28,10 +28,10 @@ TexturedModelData::TexturedModelData(std::vector<glm::vec3> verticesArray, std::
     this->texturesArray = std::move(texturesArray);
 }
 
-IndexedModelData::IndexedModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray,
-             std::vector<unsigned int> indicesArray) : ModelData(std::move(verticesArray), std::move(normalsArray))
+ColoredModelData::ColoredModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray,
+             std::vector<glm::vec3> colorsArray) : ModelData(std::move(verticesArray), std::move(normalsArray))
 {
-    this->indicesArray = std::move(indicesArray);
+    this->colorsArray = std::move(colorsArray);
 }
 
 namespace core

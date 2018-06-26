@@ -15,7 +15,7 @@ namespace core
     float simplex(float a, float b, float c, float d);
     int randomInt(int min, int max);
     float randomFloat(float min, float max);
-    void initSeed(unsigned int seed);
+    void initSeed(int seed);
 }
 
 #endif
