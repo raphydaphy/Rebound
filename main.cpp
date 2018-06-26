@@ -24,7 +24,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(12);
+    core::initSeed(98);
 
     biomes::init();
 
@@ -68,8 +68,8 @@ int main()
     coloredShader->view.load(*view);
     coloredShader->loadLight(sun, 0);
     coloredShader->sky_color.load(skyColor);
-    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.5f));
-    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(-5, -5, 0));
+    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.1f));
+    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(-5, -5, 5));
     coloredShader->model.load(*model_acacia_base);
     coloredShader->unbind();
 
@@ -155,10 +155,10 @@ void render(float alpha)
         coloredShader->projection.load(*projection);
     }
 
-    for (ColoredStaticModel model : terrain->models)
+    for (IndexedStaticModel model : terrain->models)
     {
         model.bind();
-        glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
+        glDrawElements(GL_TRIANGLES, model.getIndicesLength(), GL_UNSIGNED_INT, nullptr);
         model.unbind();
     }
 

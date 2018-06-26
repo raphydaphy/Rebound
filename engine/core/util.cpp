@@ -34,7 +34,7 @@ namespace core
         return value;
     }
 
-    void initSeed(int seed)
+    void initSeed(unsigned int seed)
     {
         GlobalRandoms::get().noise = FastNoise(seed);
         GlobalRandoms::get().rand = std::mt19937(seed);

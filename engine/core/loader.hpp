@@ -24,10 +24,10 @@ struct TexturedModelData : public ModelData
     std::vector<glm::vec2> texturesArray;
 };
 
-struct ColoredModelData : public ModelData
+struct IndexedModelData : public ModelData
 {
-    ColoredModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray, std::vector<glm::vec3> colorsArray);
-    std::vector<glm::vec3> colorsArray;
+    IndexedModelData(std::vector<glm::vec3> verticesArray, std::vector<glm::vec3> normalsArray, std::vector<unsigned int> indicesArray);
+    std::vector<unsigned int> indicesArray;
 };
 
 namespace core
