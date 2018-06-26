@@ -1,4 +1,5 @@
 #include "util.hpp"
+#include "../lib/OpenSimplexNoise.hpp"
 
 class GlobalRandoms
 {
@@ -11,7 +12,7 @@ public:
 private:
     GlobalRandoms() = default;
 public:
-    FastNoise noise;
+    OpenSimplexNoise noise;
     std::mt19937 rand;
 };
 
@@ -36,23 +37,23 @@ namespace core
 
     void initSeed(int seed)
     {
-        GlobalRandoms::get().noise = FastNoise(seed);
+        GlobalRandoms::get().noise = OpenSimplexNoise(seed);
         GlobalRandoms::get().rand = std::mt19937(seed);
     }
 
-    float simplex(float a, float b)
+    float simplex(double a, double b)
     {
-        return GlobalRandoms::get().noise.GetSimplex(a, b);
+        return (float)GlobalRandoms::get().noise.Evaluate(a, b);
     }
 
-    float simplex(float a, float b, float c)
+    float simplex(double a, double b, double c)
     {
-        return GlobalRandoms::get().noise.GetSimplex(a, b, c);
+        return (float)GlobalRandoms::get().noise.Evaluate(a, b, c);
     }
 
-    float simplex(float a, float b, float c, float d)
+    float simplex(double a, double b, double c, double d)
     {
-        return GlobalRandoms::get().noise.GetSimplex(a, b, c, d);
+        return (float)GlobalRandoms::get().noise.Evaluate(a, b, c, d);
     }
 
     int randomInt(int min, int max)
