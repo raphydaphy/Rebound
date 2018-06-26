@@ -1,5 +1,6 @@
 #include "Biome.hpp"
 #include "Terrain.hpp"
+#include "../../engine/lib/OpenSimplexNoise.hpp"
 
 class BiomeData
 {
@@ -20,6 +21,8 @@ public:
 
     std::map<int, Biome> biomeMap;
     std::map<int, BiomeRegion> regionMap;
+
+    OpenSimplexNoise noise = OpenSimplexNoise(3);
 };
 
 BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b)
@@ -96,7 +99,7 @@ float Biome::genTerrainDensity(int x, int y, int z, std::vector<glm::vec3> octav
 
 float Biome::evaulateOctave(float sampleX, float sampleY, float sampleZ)
 {
-    return core::simplex(sampleX, sampleY, sampleZ) * 2 - 1;
+    return (float)BiomeData::get().noise.Evaluate((double)sampleX, (double)sampleY,(double) sampleZ) * 2 - 1;
 }
 
 float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)
