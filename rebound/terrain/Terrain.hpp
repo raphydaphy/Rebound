@@ -21,7 +21,7 @@ class Terrain
 {
 public:
     Terrain(int gridX, int gridY, int gridZ);
-    static const int size = 33;
+    static const int size = 40;
     std::vector<ColoredStaticModel> models;
     float x, y, z;
 private:

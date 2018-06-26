@@ -70,7 +70,9 @@ namespace core
 
     bool displayResized()
     {
-        return prevWidth != getDisplayWidth() || prevHeight != getDisplayHeight();
+        int width = getDisplayWidth();
+        int height = getDisplayHeight();
+        return (prevWidth != width || prevHeight != height) && width > 0 && height > 0;
     }
 
     void updateDisplay()

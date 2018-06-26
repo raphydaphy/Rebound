@@ -24,7 +24,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(12);
+    core::initSeed(150234);
 
     biomes::init();
 
@@ -114,7 +114,7 @@ void render(float alpha)
 
     texturedShader->bind();
 
-    if (core::displayResized())
+    if (core::displayResized() && core::getDisplayWidth() > 0 && core::getDisplayHeight() > 0)
     {
         *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 100.0f);
         texturedShader->projection.load(*projection);
@@ -157,10 +157,12 @@ void render(float alpha)
 
     for (const Terrain &terrain : terrains)
     {
-        float scale = 0.5f;
-        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x, terrain.y, terrain.z) * glm::vec3(scale));
+        float scale = 0.8f;
+        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(-10, 1, 1) * glm::vec3(scale));
         terrainModel = glm::scale(terrainModel, glm::vec3(scale));
-        terrainModel = glm::rotate(terrainModel, glm::radians(interp) * 10, glm::vec3(1, 0, 0));
+
+        terrainModel = glm::rotate(terrainModel, glm::radians(-13.0f) * 10, glm::vec3(1, 0, 0));
+        terrainModel = glm::rotate(terrainModel, glm::radians(interp) * 4, glm::vec3(0, 0, 1));
         coloredShader->model.load(terrainModel);
         for (ColoredStaticModel model : terrain.models)
         {

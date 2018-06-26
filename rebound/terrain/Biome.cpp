@@ -136,12 +136,13 @@ BiomeRegion Biome::getRegionFromHeight(float height)
 }
 
 ForestBiome::ForestBiome() : Biome(80, 2, 10, 10, 250, 0.6f, 2,
-                                   {BiomeRegion("Grass", 10, 0.0431372549f, 0.91764705882f, 0.23921568627f),
-                                    BiomeRegion("Forest", 13, 0.0431372549f, 0.91764705882f, 0.23921568627f)})
+                                   {BiomeRegion("Grass", 5, 0.0431372549f, 0.91764705882f, 0.23921568627f),
+                                    BiomeRegion("Forest", 30, 0.0431372549f, 0.91764705882f, 0.23921568627f)})
 { }
 
 DesertBiome::DesertBiome() : Biome(20, 1, 10, 12, 250, 0.5f, 2,
-                                   {BiomeRegion("Sand", 10, 210 / 256.0f, 219 / 256.0f, 111 / 256.0f)})
+                                   {BiomeRegion("Sand", 10, 210 / 256.0f, 219 / 256.0f, 111 / 256.0f),
+                                    BiomeRegion("Dune", 13, 170 / 256.0f, 181 / 256.0f, 52 / 256.0f)})
 { }
 
 namespace biomes
@@ -177,7 +178,8 @@ namespace biomes
 
     void init()
     {
-        auto forest = std::make_unique<ForestBiome>(ForestBiome());
+
         auto desert = std::make_unique<DesertBiome>(DesertBiome());
+        auto forest = std::make_unique<ForestBiome>(ForestBiome());
     }
 }

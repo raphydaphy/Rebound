@@ -1,7 +1,6 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include "../lib/FastNoise.hpp"
 #include <random>
 #include <glm/gtc/matrix_transform.hpp>
 

@@ -41,6 +41,30 @@ std::vector<glm::vec2> genBiomeOffsets(int octaves, glm::vec3 offset)
     return biomeOffsets;
 }
 
+float getDensity(int x, int y, int z, unsigned int octaves, float scale, float persistance, float lacunarity, std::vector<glm::vec3> offsets)
+{
+    float density = -y + 6;
+    float halfSize = Terrain::size / 2.0f;
+    float amplitude = 1;
+    float frequency = 1;
+
+    for (unsigned int octave = 0; octave < octaves; octave++)
+    {
+        float sampleX = (x - halfSize + offsets[octave].x) / scale * frequency;
+        float sampleY = (y - halfSize + offsets[octave].y) / scale * frequency;
+        float sampleZ = (z - halfSize + offsets[octave].z) / scale * frequency;
+
+        float noiseValue = core::simplex(sampleX, sampleY, sampleZ) * 2 - 1;
+
+        density += noiseValue * amplitude;
+
+        amplitude *= persistance;
+        frequency *= lacunarity;
+    }
+
+    return density;
+}
+
 std::vector<ColoredModelData> Terrain::generateModelData()
 {
     glm::vec3 offset(this->x, this->y, this->z);
@@ -50,7 +74,8 @@ std::vector<ColoredModelData> Terrain::generateModelData()
         std::vector<TerrainVoxel*> tmpVoxels(size * size * size);
         const int biomeOctaves = 5;
 
-        std::vector<glm::vec3> terrainOffsets = genTerrainOffsets(biomes::getHighestOctaveCount(), offset);
+
+        std::vector<glm::vec3> terrainOffsets = genTerrainOffsets(biomes::getHighestOctaveCount() + 10, offset);
         std::vector<glm::vec2> biomeOffsets = genBiomeOffsets(biomeOctaves, offset);
 
         for (int x = 0; x < size; x++)
@@ -60,8 +85,8 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                 for (int z = 0; z < size; z++)
                 {
 
-                    float biomeDensity =
-                            ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
+                    float biomeDensity = getDensity(x, y, z, /* octaves */ 12, /* scale */ 14, /* persitance */ 0.5f, /* lacunarity */ 2, terrainOffsets);
+                           // ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
 
                     Biome lowerBiome = biomes::getByHeight(biomeDensity);
                     Biome higherBiome = biomes::getByID(lowerBiome.id + 1);
@@ -72,7 +97,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                     float alpha = std::abs(core::clamp((lowerBiome.maxHeight - biomeDensity) / 16.0f, 0, 1) - 1);
                     float interpolatedDensity = core::lerp(terrainDensityLower, terrainDensityHigher, alpha);
 
-                    tmpVoxels.at((unsigned int)(x + y * size + z * size * size)) = new TerrainVoxel(interpolatedDensity, &lowerBiome, alpha);
+                    tmpVoxels.at((unsigned int)(x + z * size + y * size * size)) = new TerrainVoxel(biomeDensity, &lowerBiome, alpha); // &lowerBiome, alpha
                 }
             }
         }

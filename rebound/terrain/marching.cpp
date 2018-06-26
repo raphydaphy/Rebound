@@ -398,7 +398,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         }
 
         float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3;
-        glm::vec3 color = getBlendColor(voxelIn, worldY + height);
+        glm::vec3 color = getBlendColor(voxelIn, height);
 
         for (int i = 0; i < 3; i++)
         {
