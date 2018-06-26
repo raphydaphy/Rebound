@@ -4,13 +4,11 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include <memory>
-#include "Terrain.hpp"
 
 namespace marching
 {
-    void generateMesh(std::vector<TerrainVoxel> voxels, int width, int height, int depth, int worldY,
-                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
-                      std::map<glm::vec3, std::vector<glm::vec3>> *triangles);
+    void generateMesh(std::vector<float> voxels, unsigned int width, unsigned int height, unsigned int depth,
+                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<unsigned int> *indices);
     void setSurface(float surface);
 }
 

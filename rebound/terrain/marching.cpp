@@ -1,7 +1,7 @@
 #include "marching.hpp"
 
 float surface = 0.5f;
-int windingOrder[] = { 0, 1, 2 };
+unsigned int windingOrder[] = { 0, 1, 2 };
 glm::vec3 edgeVertex[12];
 
 int vertexOffset[][3] =
@@ -309,7 +309,7 @@ float getOffset(float v1, float v2)
     float delta = v2 - v1;
     return (delta == 0) ? surface : (surface - v1) / delta;
 }
-
+/*
 glm::vec3 getBlendColor(Biome biome, float height)
 {
     BiomeRegion region = biome.getRegionFromHeight(height);
@@ -326,12 +326,10 @@ glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
     glm::vec3 biomeB = getBlendColor(biomes::getByID(biome.id + 1), height);
 
     return core::lerp(biomeA, biomeB, voxel.biomeEdge);
-}
+}*/
 
-std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
+void marchCube(int x, int y, int z, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<unsigned int> *indices)
 {
-    std::vector<std::vector<glm::vec3>> triangles;
-
     int flagIndex = 0;
 
     for (int adj = 0; adj < 8; adj++)
@@ -346,7 +344,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
     if (edgeFlags == 0)
     {
-        return triangles;
+        return;
     }
 
     float offset;
@@ -364,7 +362,8 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         }
     }
 
-    int index, vertex;
+    unsigned int index = 0;
+    int vertex = 0;
 
     for (int triangle = 0; triangle < 5; triangle++)
     {
@@ -380,12 +379,10 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         for (int triVertex = 0; triVertex < 3; triVertex++)
         {
             vertex = triangleConnectionTable[flagIndex][3 * triangle + triVertex];
-            //indices->push_back(index + windingOrder[triVertex]);
+            indices->push_back(index + windingOrder[triVertex]);
             vertices->push_back(edgeVertex[vertex]);
             triangleVerts.push_back(edgeVertex[vertex]);
         }
-
-        triangles.push_back(triangleVerts);
 
         glm::vec3 a = triangleVerts[1] - triangleVerts[0];
         glm::vec3 b = triangleVerts[2] - triangleVerts[0];
@@ -396,24 +393,13 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         {
             normals->push_back(normal);
         }
-
-        float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3;
-        glm::vec3 color = getBlendColor(voxelIn, worldY + height);
-
-        for (int i = 0; i < 3; i++)
-        {
-            colors->push_back(color);
-        }
     }
-
-    return triangles;
 }
 
 namespace marching
 {
-    void generateMesh(std::vector<TerrainVoxel> voxels, int width, int height, int depth, int worldY,
-                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
-                      std::map<glm::vec3, std::vector<glm::vec3>> *triangles)
+    void generateMesh(std::vector<float> voxels, unsigned int width, unsigned int height, unsigned int depth,
+                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<unsigned int> *indices)
     {
         if (::surface > 0)
         {
@@ -441,10 +427,10 @@ namespace marching
                         int adjX = x + vertexOffset[adj][0];
                         int adjY = y + vertexOffset[adj][1];
                         int adjZ = z + vertexOffset[adj][2];
-                        cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth).density;
+                        cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth);
                     }
-                    // insert this into triangles
-                    marchCube(x, y, z, worldY, voxels.at(x + y * width + z * height * depth),cube, vertices, normals, colors);
+
+                    marchCube(x, y, z, cube, vertices, normals, indices);
                 }
             }
         }

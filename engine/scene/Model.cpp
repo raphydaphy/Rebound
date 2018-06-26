@@ -1,10 +1,5 @@
 #include "Model.hpp"
 
-int StaticModel::getVerticesLength()
-{
-    return vertices;
-}
-
 StaticModel StaticModel::bind()
 {
     vao.bind({0, 1, 2});
@@ -33,11 +28,21 @@ TexturedStaticModel::TexturedStaticModel(TexturedModelData data)
     vertices = data.verticesArray.size();
 }
 
-ColoredStaticModel::ColoredStaticModel(ColoredModelData data)
+int TexturedStaticModel::getVerticesLength()
 {
-    vao = VertexArray().bind().createAttribute(0, &data.verticesArray[0], data.verticesArray.size() * sizeof(glm::vec3), 3)
-            .createAttribute(1, &data.normalsArray[0], data.normalsArray.size() * sizeof(glm::vec3), 3)
-            .createAttribute(2, &data.colorsArray[0], data.colorsArray.size() * sizeof(glm::vec3), 3).unbind();
+    return vertices;
+}
 
-    vertices = data.verticesArray.size();
+IndexedStaticModel::IndexedStaticModel(IndexedModelData data)
+{
+    vao = VertexArray().bind().storeIndices(&data.indicesArray[0], data.indicesArray.size() * sizeof(unsigned int))
+            .createAttribute(0, &data.verticesArray[0], data.verticesArray.size() * sizeof(glm::vec3), 3)
+            .createAttribute(1, &data.normalsArray[0], data.normalsArray.size() * sizeof(glm::vec3), 3).unbind();
+
+    indices = data.indicesArray.size();
+}
+
+int IndexedStaticModel::getIndicesLength()
+{
+    return indices;
 }

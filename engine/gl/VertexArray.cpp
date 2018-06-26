@@ -44,7 +44,7 @@ VertexArray VertexArray::unbind()
     return *this;
 }
 
-VertexArray VertexArray::storeIndices(const GLint indices[], int length)
+VertexArray VertexArray::storeIndices(const GLuint indices[], int length)
 {
     this->indices.bind().store(indices, length);
     this->indicesLength = length;
