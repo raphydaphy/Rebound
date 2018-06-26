@@ -12,9 +12,9 @@ public:
 private:
     BiomeData() = default;
 public:
-    int lastBiomeID = 0;
-    int lastRegionID = 0;
-    int highestOctaveCount = 0;
+    unsigned int lastBiomeID = 0;
+    unsigned int lastRegionID = 0;
+    unsigned int highestOctaveCount = 0;
 
     std::shared_ptr<Biome> highestBiome;
 
@@ -33,7 +33,7 @@ BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, fl
     BiomeData::get().regionMap.insert(std::pair<int, BiomeRegion>(this->id, *this));
 }
 
-BiomeRegion BiomeRegion::getByID(int id)
+BiomeRegion BiomeRegion::getByID(unsigned int id)
 {
     if (BiomeData::get().regionMap.find(id) != BiomeData::get().regionMap.end())
     {
@@ -41,7 +41,7 @@ BiomeRegion BiomeRegion::getByID(int id)
     }
 }
 
-Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int noiseOctaves, float noiseScale,
+Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, unsigned int noiseOctaves, float noiseScale,
              float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions)
 {
     this->maxHeight = maxHeight;
@@ -69,13 +69,7 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, int nois
     }
 }
 
-int Biome::getID()
-{
-    return this->id;
-}
-
-float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, float persistance, float lacunarity,
-                               float baseHeight, std::vector<glm::vec3> octaveOffsets)
+float Biome::genTerrainDensity(int x, int y, int z, std::vector<glm::vec3> octaveOffsets)
 {
     float density = getBaseDensity(x, y, z);
     float halfSize = Terrain::size / 2.0f;
@@ -83,18 +77,18 @@ float Biome::genTerrainDensity(int x, int y, int z, int octaves, float scale, fl
     float amplitude = 2;
     float frequency = 1.5f;
 
-    for (int octave = 0; octave < octaves; octave++)
+    for (int octave = 0; octave < noiseOctaves; octave++)
     {
-        float sampleX = (x - halfSize + octaveOffsets[octave].x) / scale * frequency;
-        float sampleY = (y - halfSize + octaveOffsets[octave].y) / scale * frequency;
-        float sampleZ = (z - halfSize + octaveOffsets[octave].z) / scale * frequency;
+        float sampleX = (x - halfSize + octaveOffsets[octave].x) / noiseScale * frequency;
+        float sampleY = (y - halfSize + octaveOffsets[octave].y) / noiseScale * frequency;
+        float sampleZ = (z - halfSize + octaveOffsets[octave].z) / noiseScale * frequency;
 
         float noiseValue = evaulateOctave(sampleX, sampleY, sampleZ);
 
         density += noiseValue * amplitude;
 
-        amplitude *= persistance;
-        frequency *= lacunarity;
+        amplitude *= noisePersistance;
+        frequency *= noiseLacunarity;
     }
 
     return evaulateNoise(x, y, z, density, halfSize);
@@ -120,6 +114,27 @@ bool Biome::operator==(const Biome &rhs)
     return id == rhs.id;
 }
 
+BiomeRegion Biome::getRegionFromID(unsigned int id)
+{
+    if (id >= 0 && id < regions.size())
+    {
+        return regions.at(id);
+    }
+    return regions.at(regions.size() - 1);
+}
+
+BiomeRegion Biome::getRegionFromHeight(float height)
+{
+    for (BiomeRegion region : regions)
+    {
+        if (region.maxHeight > height)
+        {
+            return region;
+        }
+    }
+    return regions.at(regions.size() - 1);
+}
+
 ForestBiome::ForestBiome() : Biome(80, 2, 10, 10, 250, 0.6f, 2,
                                    {BiomeRegion("Grass", 10, 0.0431372549f, 0.91764705882f, 0.23921568627f),
                                     BiomeRegion("Forest", 13, 0.0431372549f, 0.91764705882f, 0.23921568627f)})
@@ -141,7 +156,7 @@ namespace biomes
         return BiomeData::get().highestOctaveCount;
     }
 
-    Biome getByID(int id)
+    Biome getByID(unsigned int id)
     {
         if (BiomeData::get().biomeMap.find(id) != BiomeData::get().biomeMap.end())
         {

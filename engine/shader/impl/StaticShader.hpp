@@ -4,19 +4,31 @@
 #include "../ShaderProgram.hpp"
 #include "../../scene/Light.hpp"
 
-class StaticObjectShader: public ShaderProgram
+class StaticShader: public ShaderProgram
 {
 public:
-    StaticObjectShader();
+    StaticShader(const std::string &vertex, const std::string &fragment, std::initializer_list<const GLchar *> attributes);
     UniformMatrix projection = UniformMatrix("projection");
     UniformMatrix view = UniformMatrix("view");
     UniformMatrix model = UniformMatrix("model");
     UniformVector3 sky_color = UniformVector3("sky_color");
     void loadLight(Light light, int id);
-private:
+protected:
     UniformVector3Array light_positions = UniformVector3Array("light_positions", 4);
     UniformVector3Array light_colors = UniformVector3Array("light_colors", 4);
     UniformVector3Array light_attenuations = UniformVector3Array("light_attenuations", 4);
+};
+
+class StaticTexturedShader: public StaticShader
+{
+public:
+    StaticTexturedShader();
+};
+
+class StaticColoredShader: public StaticShader
+{
+public:
+    StaticColoredShader();
 };
 
 #endif

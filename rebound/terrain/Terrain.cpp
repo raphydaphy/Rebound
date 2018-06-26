@@ -64,19 +64,10 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                             ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
 
                     Biome lowerBiome = biomes::getByHeight(biomeDensity);
-                    Biome higherBiome = biomes::getByID(lowerBiome.getID() + 1);
+                    Biome higherBiome = biomes::getByID(lowerBiome.id + 1);
 
-                    // TODO: these two lines are kind of dumb
-                    float terrainDensityLower =
-                            lowerBiome.genTerrainDensity(x, (int) this->y + y, z, lowerBiome.noiseOctaves,
-                                                         lowerBiome.noiseScale, lowerBiome.noisePersistance,
-                                                         lowerBiome.noiseLacunarity, lowerBiome.baseHeight,
-                                                         terrainOffsets) * lowerBiome.heightMultiplier;
-                    float terrainDensityHigher =
-                            higherBiome.genTerrainDensity(x, (int) this->y + y, z, higherBiome.noiseOctaves,
-                                                          higherBiome.noiseScale, higherBiome.noisePersistance,
-                                                          higherBiome.noiseLacunarity, higherBiome.baseHeight,
-                                                          terrainOffsets) * higherBiome.heightMultiplier;
+                    float terrainDensityLower = lowerBiome.genTerrainDensity(x, (int) this->y + y, z, terrainOffsets) * lowerBiome.heightMultiplier;
+                    float terrainDensityHigher = higherBiome.genTerrainDensity(x, (int) this->y + y, z, terrainOffsets) * higherBiome.heightMultiplier;
 
                     float alpha = std::abs(core::clamp((lowerBiome.maxHeight - biomeDensity) / 16.0f, 0, 1) - 1);
                     float interpolatedDensity = core::lerp(terrainDensityLower, terrainDensityHigher, alpha);
@@ -164,4 +155,10 @@ Terrain::Terrain(int gridX, int gridY, int gridZ)
 
     // TODO: use a thread for this
     unprepared = std::move(generateModelData());
+
+    // TODO: do this after the thread is done
+    for (const ColoredModelData &mesh : unprepared)
+    {
+        models.emplace_back(mesh);
+    }
 }

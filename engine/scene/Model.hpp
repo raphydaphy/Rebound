@@ -26,6 +26,7 @@ public:
 
 class ColoredStaticModel : public StaticModel
 {
+public:
   explicit ColoredStaticModel(ColoredModelData data);
 };
 

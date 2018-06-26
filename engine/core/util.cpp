@@ -22,6 +22,11 @@ namespace core
         return a - alpha * (b - a);
     }
 
+    glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float alpha)
+    {
+        return glm::vec3(lerp(a.x, b.x, alpha), lerp(a.y, b.y, alpha), lerp(a.z, b.z, alpha));
+    }
+
     float clamp(float value, float min, float max)
     {
         if (value > max) return max;

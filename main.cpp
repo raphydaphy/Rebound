@@ -4,7 +4,10 @@ TexturedStaticModel *acacia_1;
 TexturedStaticModel *acacia_2;
 TexturedStaticModel *acacia_3;
 
-StaticObjectShader *shader;
+StaticTexturedShader *texturedShader;
+StaticColoredShader *coloredShader;
+
+Terrain *terrain;
 
 glm::mat4 *projection;
 glm::mat4 *view;
@@ -31,9 +34,10 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    Terrain terrain(0, 0, 0);
+    terrain = new Terrain(0, 0, 0);
 
-    shader = new StaticObjectShader();
+    texturedShader = new StaticTexturedShader();
+    coloredShader = new StaticColoredShader();
 
     Texture atlas = Texture("texture/atlas");
     atlas.bind();
@@ -54,11 +58,20 @@ int main()
     rectPos = new glm::vec3(-15, 0, 0);
     prevRectPos = new glm::vec3(-15, 0, 0);
 
-    shader->bind();
-    shader->view.load(*view);
-    shader->loadLight(sun, 0);
-    shader->sky_color.load(skyColor);
-    shader->unbind();
+    texturedShader->bind();
+    texturedShader->view.load(*view);
+    texturedShader->loadLight(sun, 0);
+    texturedShader->sky_color.load(skyColor);
+    texturedShader->unbind();
+
+    coloredShader->bind();
+    coloredShader->view.load(*view);
+    coloredShader->loadLight(sun, 0);
+    coloredShader->sky_color.load(skyColor);
+    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.5f));
+    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(-5, -5, 0));
+    coloredShader->model.load(*model_acacia_base);
+    coloredShader->unbind();
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -78,7 +91,8 @@ int main()
 
     glDisable(GL_DEPTH_TEST);
 
-    shader->cleanup();
+    texturedShader->cleanup();
+    coloredShader->cleanup();
 
     acacia_1->del();
     acacia_2->del();
@@ -98,12 +112,12 @@ void render(float alpha)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader->bind();
+    texturedShader->bind();
 
     if (core::displayResized())
     {
         *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 100.0f);
-        shader->projection.load(*projection);
+        texturedShader->projection.load(*projection);
 
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
     }
@@ -114,25 +128,41 @@ void render(float alpha)
     *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
     *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(interp, 0, 0));
 
-    shader->model.load(*model_acacia_base);
-    glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
+    texturedShader->model.load(*model_acacia_base);
+    //glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
     acacia_3->unbind();
 
     acacia_2->bind();
     *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(-15, 5, 0));
     *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * -10, glm::vec3(0, 1, 0));
-    shader->model.load(*model_acacia_translated);
-    glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
+    texturedShader->model.load(*model_acacia_translated);
+    //glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
     acacia_2->unbind();
 
     acacia_1->bind();
     *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(15, -10, 0));
     *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * 10, glm::vec3(0, 1, 0));
-    shader->model.load(*model_acacia_translated);
-    glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
+    texturedShader->model.load(*model_acacia_translated);
+    //glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
     acacia_1->unbind();
 
-    shader->unbind();
+    texturedShader->unbind();
+
+    coloredShader->bind();
+
+    if (core::displayResized())
+    {
+        coloredShader->projection.load(*projection);
+    }
+
+    for (ColoredStaticModel model : terrain->models)
+    {
+        model.bind();
+        glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
+        model.unbind();
+    }
+
+    coloredShader->unbind();
 
 
     core::updateDisplay();

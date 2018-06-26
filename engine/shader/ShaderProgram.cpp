@@ -1,14 +1,17 @@
 #include "ShaderProgram.hpp"
 
-ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLchar *> attributes)
+ShaderProgram::ShaderProgram(const std::string &name, std::initializer_list<const GLchar *> attributes) : ShaderProgram(name, name, attributes)
+{ }
+
+ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragment, std::initializer_list<const GLchar *> attributes)
 {
-    vertex = loadShader(name + ".vert", GL_VERTEX_SHADER);
-    fragment = loadShader(name + ".frag", GL_FRAGMENT_SHADER);
+    this->vertex = loadShader(vertex + ".vert", GL_VERTEX_SHADER);
+    this->fragment = loadShader(fragment + ".frag", GL_FRAGMENT_SHADER);
 
     program = glCreateProgram();
 
-    glAttachShader(program, vertex);
-    glAttachShader(program, fragment);
+    glAttachShader(program, this->vertex);
+    glAttachShader(program, this->fragment);
 
     bindAttributes(attributes);
 
@@ -20,7 +23,7 @@ ShaderProgram::ShaderProgram(std::string name, std::initializer_list<const GLcha
     {
         glGetProgramInfoLog(program, 512, nullptr, log);
 
-        std::cout << "Failed to link shader program " << name << std::endl << log << std::endl;
+        std::cout << "Failed to link shader program ( " << vertex << " / " << fragment << " )" << std::endl << log << std::endl;
 
         cleanup();
         exit(1);

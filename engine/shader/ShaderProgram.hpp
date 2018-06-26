@@ -15,7 +15,8 @@
 class ShaderProgram
 {
 public:
-    ShaderProgram(std::string name, std::initializer_list<const GLchar *> attributes);
+    ShaderProgram(const std::string &name, std::initializer_list<const GLchar *> attributes);
+    ShaderProgram(const std::string &vertex, const std::string &fragment, std::initializer_list<const GLchar *> attributes);
     GLuint loadShader(std::string file, GLenum type);
 
     template <typename T>

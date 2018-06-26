@@ -310,9 +310,22 @@ float getOffset(float v1, float v2)
     return (delta == 0) ? surface : (surface - v1) / delta;
 }
 
+glm::vec3 getBlendColor(Biome biome, float height)
+{
+    BiomeRegion region = biome.getRegionFromHeight(height);
+    glm::vec3 colorA = region.color;
+    glm::vec3 colorB = biome.getRegionFromID(region.id + 1).color;
+    float alpha = std::abs(core::clamp((region.maxHeight - height) / 2.0f, 0, 1) - 1);
+    return core::lerp(colorA, colorB, alpha);
+}
+
 glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
 {
-    return glm::vec3(1, 1, 1);
+    Biome biome = *voxel.biome;
+    glm::vec3 biomeA = getBlendColor(biome, height);
+    glm::vec3 biomeB = getBlendColor(biomes::getByID(biome.id + 1), height);
+
+    return core::lerp(biomeA, biomeB, voxel.biomeEdge);
 }
 
 std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
