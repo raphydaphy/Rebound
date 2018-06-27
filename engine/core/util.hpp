@@ -1,5 +1,5 @@
-#ifndef MATH_H
-#define MATH_H
+#ifndef REBOUND_MATH_H
+#define REBOUND_MATH_H
 
 #include <random>
 #include <glm/gtc/matrix_transform.hpp>

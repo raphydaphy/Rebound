@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_MAIN_H
-#define LEARNCPP_MAIN_H
+#ifndef REBOUND_MAIN_H
+#define REBOUND_MAIN_H
 
 #include <iostream>
 #include <GL/gl3w.h>

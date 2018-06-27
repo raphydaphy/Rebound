@@ -1,5 +1,5 @@
-#ifndef PICOPNG_H
-#define PICOPNG_H
+#ifndef REBOUND_PICOPNG_H
+#define REBOUND_PICOPNG_H
 
 #include <vector>
 #include <GL/gl3w.h>

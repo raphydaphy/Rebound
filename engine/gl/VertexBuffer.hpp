@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_VERTEXBUFFER_H
-#define LEARNCPP_VERTEXBUFFER_H
+#ifndef REBOUND_VERTEXBUFFER_H
+#define REBOUND_VERTEXBUFFER_H
 
 #include <GL/gl3w.h>
 #include <vector>

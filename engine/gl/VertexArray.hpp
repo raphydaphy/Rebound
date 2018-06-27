@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_VERTEXARRAY_H
-#define LEARNCPP_VERTEXARRAY_H
+#ifndef REBOUND_VERTEXARRAY_H
+#define REBOUND_VERTEXARRAY_H
 
 #include <GL/gl3w.h>
 #include <initializer_list>

@@ -66,6 +66,10 @@ namespace core
         // TODO: improve key system
         glfwSetKeyCallback(window, key_callback);
 
+        // TODO: improve rendering system
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
         std::cout << "Initialized GL3W with OpenGL version " << glGetString(GL_VERSION) << " and GLSL version " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 
         return true;

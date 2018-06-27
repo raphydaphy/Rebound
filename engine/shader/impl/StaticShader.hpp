@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_STATICOBJECTSHADER_H
-#define LEARNCPP_STATICOBJECTSHADER_H
+#ifndef REBOUND_STATICOBJECTSHADER_H
+#define REBOUND_STATICOBJECTSHADER_H
 
 #include "../ShaderProgram.hpp"
 #include "../../scene/Light.hpp"
@@ -12,7 +12,7 @@ public:
     UniformMatrix view = UniformMatrix("view");
     UniformMatrix model = UniformMatrix("model");
     UniformVector3 sky_color = UniformVector3("sky_color");
-    void loadLight(Light light, int id);
+    void loadLight(Light light, unsigned int id);
 protected:
     UniformVector3Array light_positions = UniformVector3Array("light_positions", 4);
     UniformVector3Array light_colors = UniformVector3Array("light_colors", 4);

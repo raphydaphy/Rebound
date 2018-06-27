@@ -1,5 +1,5 @@
-#ifndef BIOME_H
-#define BIOME_H
+#ifndef REBOUND_BIOME_H
+#define REBOUND_BIOME_H
 
 #include <string>
 #include <glm/vec3.hpp>

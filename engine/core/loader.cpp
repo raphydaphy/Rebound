@@ -55,7 +55,7 @@ namespace core
             exit(1);
         }
 
-        while( 1 )
+        while(true)
         {
 
             char lineHeader[128];

@@ -13,9 +13,9 @@ std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
 
     for (int octave = 0; octave < octaves; octave++)
     {
-        float offX = core::randomInt(-10000, 10000) + offset.x;
-        float offY = core::randomInt(-10000, 10000) + offset.y;
-        float offZ = core::randomInt(-10000, 10000) + offset.z;
+        float offX =core::randomInt(0, 200000) - 100000 + offset.x;
+        float offY = core::randomInt(0, 200000) - 100000 + offset.y;
+        float offZ = core::randomInt(0, 200000) - 100000 + offset.z;
 
         terrainOffsets.emplace_back(offX, offY, offZ);
     }
@@ -29,8 +29,8 @@ std::vector<glm::vec2> genBiomeOffsets(int octaves, glm::vec3 offset)
 
     for (int octave = 0; octave < octaves; octave++)
     {
-        float offX = core::randomInt(-10000, 10000) + offset.x;
-        float offY = core::randomInt(-10000, 10000) + offset.y;
+        float offX = core::randomInt(0, 200000) - 100000 + offset.x;
+        float offY = core::randomInt(0, 200000) - 100000 + offset.y;
 
         biomeOffsets.emplace_back(offX, offY);
     }
@@ -84,7 +84,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                 {
                     //float biomeDensity = getDensity(x, y, z, /* octaves */ 8, /* scale */ 50, /* persitance */ 0.6f, /* lacunarity */ 2.01f, terrainOffsets);
                     float biomeDensity =
-                            ((genBiomeDensity(x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
+                            ((genBiomeDensity( x, z, biomeOctaves, 500, 0.5f, 2, biomeOffsets) + 1) / 2.0f) * 100;
 
                     Biome lowerBiome = biomes::getByHeight(biomeDensity);
                     lowerBiome.id;
@@ -99,7 +99,7 @@ std::vector<ColoredModelData> Terrain::generateModelData()
                     float alpha = std::abs(core::clamp((lowerBiome.maxHeight - biomeDensity) / 16.0f, 0, 1) - 1);
                     float interpolatedDensity = core::lerp(terrainDensityLower, terrainDensityHigher, alpha);
 
-                    rowY.push_back(TerrainVoxel(interpolatedDensity, lowerBiome, alpha));
+                    rowY.emplace_back(interpolatedDensity, lowerBiome, alpha);
                 }
                 rowX.push_back(rowY);
             }
@@ -174,12 +174,8 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
 
 
 
-Terrain::Terrain(int gridX, int gridY, int gridZ)
+Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
 {
-    this->x = gridX * (size - 1);
-    this->y = gridY * (size - 1);
-    this->z = gridZ * (size - 1);
-
     // TODO: use a thread for this
     unprepared = std::move(generateModelData());
 

@@ -1,5 +1,5 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef REBOUND_TEXTURE_H
+#define REBOUND_TEXTURE_H
 
 #include <string>
 #include <vector>

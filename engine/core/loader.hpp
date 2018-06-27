@@ -1,5 +1,5 @@
-#ifndef LOADER_H
-#define LOADER_H
+#ifndef REBOUND_LOADER_H
+#define REBOUND_LOADER_H
 
 #include <string>
 #include <vector>

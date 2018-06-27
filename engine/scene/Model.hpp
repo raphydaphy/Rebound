@@ -1,5 +1,5 @@
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef REBOUND_MODEL_H
+#define REBOUND_MODEL_H
 
 #include "../core/loader.hpp"
 #include "../gl/VertexArray.hpp"

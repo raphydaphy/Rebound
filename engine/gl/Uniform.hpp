@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_UNIFORM_H
-#define LEARNCPP_UNIFORM_H
+#ifndef REBOUND_UNIFORM_H
+#define REBOUND_UNIFORM_H
 
 #include <iostream>
 #include <GL/gl3w.h>

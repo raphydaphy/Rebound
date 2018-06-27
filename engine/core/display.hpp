@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_DISPLAYMANAGER_H
-#define LEARNCPP_DISPLAYMANAGER_H
+#ifndef REBOUND_DISPLAYMANAGER_H
+#define REBOUND_DISPLAYMANAGER_H
 
 #include <iostream>
 #include <GL/gl3w.h>

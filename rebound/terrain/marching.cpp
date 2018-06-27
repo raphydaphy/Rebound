@@ -329,7 +329,7 @@ glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
     return core::lerp(biomeA, biomeB, voxel.biomeEdge);
 }
 
-std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, unsigned int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
+std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, unsigned int z, int worldY, const TerrainVoxel &voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
 {
     std::vector<std::vector<glm::vec3>> triangles;
 
@@ -413,6 +413,7 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
 
 namespace marching
 {
+    // TODO: what is triangles doing here???? do we even need it
     void generateMesh(std::vector<std::vector<std::vector<TerrainVoxel>>> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
                       std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
                       std::map<glm::vec3, std::vector<glm::vec3>> *triangles)

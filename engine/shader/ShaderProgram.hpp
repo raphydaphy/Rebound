@@ -1,5 +1,5 @@
-#ifndef LEARNCPP_SHADERPROGRAM_H
-#define LEARNCPP_SHADERPROGRAM_H
+#ifndef REBOUND_SHADERPROGRAM_H
+#define REBOUND_SHADERPROGRAM_H
 
 #include <GL/gl3w.h>
 #include <iostream>

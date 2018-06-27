@@ -1,5 +1,5 @@
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#ifndef REBOUND_TERRAIN_H
+#define REBOUND_TERRAIN_H
 
 #include <vector>
 #include "../../engine/scene/Model.hpp"
@@ -21,7 +21,7 @@ class Terrain
 {
 public:
     Terrain(int gridX, int gridY, int gridZ);
-    static const unsigned int size = 33;
+    static const unsigned int size = 44;
     std::vector<ColoredStaticModel> models;
     float x, y, z;
 private:

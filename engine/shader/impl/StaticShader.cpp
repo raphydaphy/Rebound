@@ -1,6 +1,6 @@
 #include "StaticShader.hpp"
 
-void StaticShader::loadLight(Light light, int id)
+void StaticShader::loadLight(Light light, unsigned int id)
 {
     light_positions.load(light.getPosition(), id);
     light_colors.load(light.getColor(), id);

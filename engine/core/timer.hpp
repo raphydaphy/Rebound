@@ -1,5 +1,5 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef REBOUND_TIMER_H
+#define REBOUND_TIMER_H
 
 #include <GLFW/glfw3.h>
 #include <thread>

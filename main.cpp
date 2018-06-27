@@ -23,7 +23,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(0);
+    core::initSeed(15);
 
     biomes::init();
 
@@ -33,7 +33,10 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    terrains.emplace_back(0, 0, 0);
+    terrains.emplace_back(0, 0, 1);
+    terrains.emplace_back(1, 0, 1);
+    terrains.emplace_back(2, 0, 1);
+    terrains.emplace_back(3, 0, 1);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -46,7 +49,7 @@ int main()
     view = new glm::mat4();
 
     float sunBrightness = 1;
-    Light sun(glm::vec3(40, 50, 40), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
+    Light sun(glm::vec3(40000, 50000, 40000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
 
     glm::vec3 skyColor(0.5, 0.5, 0.5);
 

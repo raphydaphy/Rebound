@@ -1,5 +1,5 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#ifndef REBOUND_LIGHT_H
+#define REBOUND_LIGHT_H
 
 #include <glm/gtc/matrix_transform.hpp>
 
