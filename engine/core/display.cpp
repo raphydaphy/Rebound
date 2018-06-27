@@ -6,9 +6,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     if (action == GLFW_PRESS)
     {
-        if (key == GLFW_KEY_W)
+        if (key == GLFW_KEY_ESCAPE)
         {
-            std::cout << "w" << std::endl;
+            glfwSetWindowShouldClose(window, 1);
         }
     }
 }
@@ -29,7 +29,6 @@ namespace core
             std::cerr << "Unable to initialize GLFW :(" << std::endl;
             return false;
         }
-
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -111,6 +110,11 @@ namespace core
         int height = 0;
         glfwGetWindowSize(window, nullptr, &height);
         return height;
+    }
+
+    int getKey(int key)
+    {
+        return glfwGetKey(window, key);
     }
 
     void errorCallback(int error, const char* description)

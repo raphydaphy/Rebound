@@ -12,11 +12,10 @@ std::vector<Terrain> terrains;
 glm::mat4 *projection;
 glm::mat4 *view;
 
-glm::mat4 *model_acacia_base;
-glm::mat4 *model_acacia_translated;
+glm::vec3 *playerPos;
+glm::vec3 *prevPlayerPos;
 
-glm::vec3 *rectPos;
-glm::vec3 *prevRectPos;
+static glm::mat4 smol = glm::scale(glm::mat4(1), glm::vec3(0.7f));
 
 int main()
 {
@@ -24,7 +23,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(3333);
+    core::initSeed(0);
 
     biomes::init();
 
@@ -35,7 +34,6 @@ int main()
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
     terrains.emplace_back(0, 0, 0);
-    terrains.emplace_back(1, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -46,32 +44,23 @@ int main()
     projection = new glm::mat4();
 
     view = new glm::mat4();
-    *view = glm::lookAt(glm::vec3(1,2,-35), glm::vec3(0,1,0), glm::vec3(0,1,0));
 
     float sunBrightness = 1;
-    Light sun(glm::vec3(-10, 8, -10), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
+    Light sun(glm::vec3(40, 50, 40), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
 
     glm::vec3 skyColor(0.5, 0.5, 0.5);
 
-    model_acacia_base = new glm::mat4(1.0f);
-    model_acacia_translated = new glm::mat4(1.0f);
-
-    rectPos = new glm::vec3(-15, 0, 0);
-    prevRectPos = new glm::vec3(-15, 0, 0);
+    playerPos = new glm::vec3(0, 10, 30);
+    prevPlayerPos = new glm::vec3(*playerPos);
 
     texturedShader->bind();
-    texturedShader->view.load(*view);
     texturedShader->loadLight(sun, 0);
     texturedShader->sky_color.load(skyColor);
     texturedShader->unbind();
 
     coloredShader->bind();
-    coloredShader->view.load(*view);
     coloredShader->loadLight(sun, 0);
     coloredShader->sky_color.load(skyColor);
-    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.5f));
-    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(-5, -5, 0));
-    coloredShader->model.load(*model_acacia_base);
     coloredShader->unbind();
 
     glEnable(GL_DEPTH_TEST);
@@ -105,15 +94,50 @@ int main()
 
 void update(float delta)
 {
-    prevRectPos->x = rectPos->x;
-    rectPos->x += 0.05;
+    *prevPlayerPos = glm::vec3(*playerPos);
+
+    float speed = 2;
+    // TODO: better input system
+    if (core::getKey(GLFW_KEY_W))
+    {
+        playerPos->z -= speed;
+    }
+    if (core::getKey(GLFW_KEY_S))
+    {
+        playerPos->z += speed;
+    }
+    if (core::getKey(GLFW_KEY_A))
+    {
+        playerPos->x -= speed;
+    }
+    if (core::getKey(GLFW_KEY_D))
+    {
+        playerPos->x += speed;
+    }
+    if (core::getKey(GLFW_KEY_SPACE))
+    {
+        playerPos->y += speed;
+    }
+    if (core::getKey(GLFW_KEY_LEFT_SHIFT))
+    {
+        playerPos->y -= speed;
+    }
+
 }
 
 void render(float alpha)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+    // TODO: better view matrix creation and updating
+    glm::vec3 player = core::lerp(*prevPlayerPos, *playerPos, alpha);
+    *view = glm::rotate(glm::mat4(1), glm::radians(15.0f), glm::vec3(1, 0, 0)); //pitch
+    *view = glm::translate(*view, -player);
+
+
     texturedShader->bind();
+    texturedShader->view.load(*view);
 
     if (core::displayResized() && core::getDisplayWidth() > 0 && core::getDisplayHeight() > 0)
     {
@@ -123,33 +147,28 @@ void render(float alpha)
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
     }
 
-    float interp = core::lerp(prevRectPos->x, rectPos->x, alpha);
-
-    acacia_3->bind();
-    *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
-    *model_acacia_base = glm::translate(*model_acacia_base, glm::vec3(interp, 0, 0));
-
-    texturedShader->model.load(*model_acacia_base);
-    //glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
-    acacia_3->unbind();
-
     acacia_2->bind();
-    *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(-15, 5, 0));
-    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * -10, glm::vec3(0, 1, 0));
-    texturedShader->model.load(*model_acacia_translated);
-    //glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
+    glm::mat4 model1 = glm::translate(smol, glm::vec3(-15, -0.5f, 13));
+    texturedShader->model.load(model1);
+    glDrawArrays(GL_TRIANGLES, 0, acacia_2->getVerticesLength());
     acacia_2->unbind();
 
+    acacia_3->bind();
+    glm::mat4 model2 = glm::translate(smol, glm::vec3(14.5f, 3, 43));
+    texturedShader->model.load(model2);
+    glDrawArrays(GL_TRIANGLES, 0, acacia_3->getVerticesLength());
+    acacia_3->unbind();
+
     acacia_1->bind();
-    *model_acacia_translated = glm::translate(*model_acacia_base, glm::vec3(15, -10, 0));
-    *model_acacia_translated = glm::rotate(*model_acacia_translated, glm::radians(interp) * 10, glm::vec3(0, 1, 0));
-    texturedShader->model.load(*model_acacia_translated);
-    //glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
+    glm::mat4 model3 = glm::translate(smol, glm::vec3(3, -1, 15));
+    texturedShader->model.load(model3);
+    glDrawArrays(GL_TRIANGLES, 0, acacia_1->getVerticesLength());
     acacia_1->unbind();
 
     texturedShader->unbind();
 
     coloredShader->bind();
+    coloredShader->view.load(*view);
 
     if (core::displayResized())
     {
@@ -158,9 +177,7 @@ void render(float alpha)
 
     for (const Terrain &terrain : terrains)
     {
-        float scale = 0.8f;
-        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - interp, terrain.y - 30, terrain.z) * glm::vec3(scale));
-        terrainModel = glm::scale(terrainModel, glm::vec3(scale));
+        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
         coloredShader->model.load(terrainModel);
         for (ColoredStaticModel model : terrain.models)
         {

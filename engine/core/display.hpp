@@ -18,6 +18,8 @@ namespace core
     int getDisplayWidth();
     int getDisplayHeight();
 
+    int getKey(int key);
+
     void errorCallback(int error, const char* description);
 }
 
