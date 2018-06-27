@@ -1,6 +1,18 @@
 #include "display.hpp"
 #include "../../main.hpp"
 
+// TODO: improve key system
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (action == GLFW_PRESS)
+    {
+        if (key == GLFW_KEY_W)
+        {
+            std::cout << "w" << std::endl;
+        }
+    }
+}
+
 namespace core
 {
     GLFWwindow *window;
@@ -51,6 +63,9 @@ namespace core
             std::cerr << "OpenGL 4.0 is not supported by your system!" << std::endl;
             return false;
         }
+
+        // TODO: improve key system
+        glfwSetKeyCallback(window, key_callback);
 
         std::cout << "Initialized GL3W with OpenGL version " << glGetString(GL_VERSION) << " and GLSL version " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
 

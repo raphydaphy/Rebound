@@ -1,10 +1,7 @@
 #include "Uniform.hpp"
 #include <utility>
 
-Uniform::Uniform(std::string name)
-{
-    this->name = std::move(name);
-}
+Uniform::Uniform(std::string name) : name{std::move(name)} { }
 
 void Uniform::store(GLuint program)
 {
@@ -54,15 +51,15 @@ void UniformVector3Array::store(GLuint program)
 
 void UniformVector3Array::load(const std::initializer_list<glm::vec3> &attributes)
 {
-    int n = 0;
+    unsigned int n = 0;
     for (glm::vec3 vec : attributes)
     {
-        vectors[n]->load(vec);
+        vectors.at(n)->load(vec);
         n++;
     }
 }
 
-void UniformVector3Array::load(glm::vec3 vec, int id)
+void UniformVector3Array::load(glm::vec3 vec, unsigned int id)
 {
-    vectors[id]->load(vec);
+    vectors.at(id)->load(vec);
 }

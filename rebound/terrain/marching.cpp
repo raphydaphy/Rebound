@@ -10,7 +10,7 @@ int vertexOffset[][3] =
         {0,0,1},{1,0,1},{1,1,1},{0,1,1}
 };
 
-int cubeEdgeFlags[] =
+unsigned int cubeEdgeFlags[] =
 {
         0x000, 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c, 0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
         0x190, 0x099, 0x393, 0x29a, 0x596, 0x49f, 0x795, 0x69c, 0x99c, 0x895, 0xb9f, 0xa96, 0xd9a, 0xc93, 0xf99, 0xe90,
@@ -321,20 +321,21 @@ glm::vec3 getBlendColor(Biome biome, float height)
 
 glm::vec3 getBlendColor(TerrainVoxel voxel, float height)
 {
-    Biome biome = *voxel.biome;
+    Biome biome = voxel.biome;
+
     glm::vec3 biomeA = getBlendColor(biome, height);
     glm::vec3 biomeB = getBlendColor(biomes::getByID(biome.id + 1), height);
 
     return core::lerp(biomeA, biomeB, voxel.biomeEdge);
 }
 
-std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
+std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, unsigned int z, int worldY, TerrainVoxel voxelIn, float cubeIn[], std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
 {
     std::vector<std::vector<glm::vec3>> triangles;
 
-    int flagIndex = 0;
+    unsigned int flagIndex = 0;
 
-    for (int adj = 0; adj < 8; adj++)
+    for (unsigned int adj = 0; adj < 8; adj++)
     {
         if (cubeIn[adj] <= surface)
         {
@@ -342,7 +343,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         }
     }
 
-    int edgeFlags = cubeEdgeFlags[flagIndex];
+    unsigned int edgeFlags = cubeEdgeFlags[flagIndex];
 
     if (edgeFlags == 0)
     {
@@ -351,9 +352,9 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
     float offset;
 
-    for (int edge = 0; edge < 12; edge++)
+    for (unsigned int edge = 0; edge < 12; edge++)
     {
-        if (0 != (edgeFlags & (1 << edge)))
+        if ((edgeFlags & (1 << edge)) != 0)
         {
             offset = getOffset(cubeIn[edgeConnection[edge][0]], cubeIn[edgeConnection[edge][1]]);
 
@@ -364,9 +365,10 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
         }
     }
 
-    int index, vertex;
+    unsigned int index;
+    int vertex;
 
-    for (int triangle = 0; triangle < 5; triangle++)
+    for (unsigned int triangle = 0; triangle < 5; triangle++)
     {
         if (triangleConnectionTable[flagIndex][3 * triangle] < 0)
         {
@@ -377,7 +379,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
         std::vector<glm::vec3> triangleVerts;
 
-        for (int triVertex = 0; triVertex < 3; triVertex++)
+        for (unsigned int triVertex = 0; triVertex < 3; triVertex++)
         {
             vertex = triangleConnectionTable[flagIndex][3 * triangle + triVertex];
             //indices->push_back(index + windingOrder[triVertex]);
@@ -411,7 +413,7 @@ std::vector<std::vector<glm::vec3>> marchCube(int x, int y, int z, int worldY, T
 
 namespace marching
 {
-    void generateMesh(std::vector<TerrainVoxel> voxels, int width, int height, int depth, int worldY,
+    void generateMesh(std::vector<TerrainVoxel> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
                       std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
                       std::map<glm::vec3, std::vector<glm::vec3>> *triangles)
     {
@@ -430,20 +432,20 @@ namespace marching
 
         float cube[8];
 
-        for (int x = 0; x < width; x++)
+        for (unsigned int x = 0; x < width; x++)
         {
-            for (int y = 0; y < height; y++)
+            for (unsigned int y = 0; y < height; y++)
             {
-                for (int z = 0; z < depth; z++)
+                for (unsigned int z = 0; z < depth; z++)
                 {
                     for (int adj = 0; adj < 8; adj++)
                     {
-                        int adjX = x + vertexOffset[adj][0];
-                        int adjY = y + vertexOffset[adj][1];
-                        int adjZ = z + vertexOffset[adj][2];
+                        unsigned int adjX = x + vertexOffset[adj][0];
+                        unsigned int adjY = y + vertexOffset[adj][1];
+                        unsigned int adjZ = z + vertexOffset[adj][2];
                         cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth).density;
                     }
-                    // insert this into triangles
+                    // TODO: insert this into triangles
                     marchCube(x, y, z, worldY, voxels.at(x + y * width + z * height * depth),cube, vertices, normals, colors);
                 }
             }

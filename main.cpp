@@ -24,7 +24,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(150234);
+    core::initSeed(0);
 
     biomes::init();
 
@@ -122,7 +122,7 @@ void render(float alpha)
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
     }
 
-    float interp = core::lerp(rectPos->x, prevRectPos->x, alpha);
+    float interp = core::lerp(prevRectPos->x, rectPos->x, alpha);
 
     acacia_3->bind();
     *model_acacia_base = glm::scale(glm::mat4(1), glm::vec3(0.25f));
@@ -157,7 +157,7 @@ void render(float alpha)
 
     for (const Terrain &terrain : terrains)
     {
-        float scale = 0.8f;
+        float scale = 0.4f;
         glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(-10, 1, 1) * glm::vec3(scale));
         terrainModel = glm::scale(terrainModel, glm::vec3(scale));
 

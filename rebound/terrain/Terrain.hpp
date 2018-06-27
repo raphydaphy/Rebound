@@ -11,9 +11,9 @@
 
 struct TerrainVoxel
 {
-    TerrainVoxel(float density, Biome *biome, float biomeEdge);
+    TerrainVoxel(float density, Biome biome, float biomeEdge);
     float density;
-    Biome *biome;
+    Biome biome;
     float biomeEdge;
 };
 
@@ -21,7 +21,7 @@ class Terrain
 {
 public:
     Terrain(int gridX, int gridY, int gridZ);
-    static const int size = 40;
+    static const unsigned int size = 33;
     std::vector<ColoredStaticModel> models;
     float x, y, z;
 private:

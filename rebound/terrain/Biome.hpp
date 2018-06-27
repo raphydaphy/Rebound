@@ -14,11 +14,11 @@ struct BiomeRegion
 {
     BiomeRegion(std::string name, float maxHeight, float r, float g, float b);
     BiomeRegion getByID(unsigned int id);
-    std::string name;
-    float maxHeight;
-    glm::vec3 color;
+    const std::string name;
+    const float maxHeight;
+    const glm::vec3 color;
 
-    unsigned int id;
+    const unsigned int id;
 };
 
 class Biome
@@ -31,22 +31,22 @@ public:
     BiomeRegion getRegionFromID(unsigned int id);
     BiomeRegion getRegionFromHeight(float height);
 
-    unsigned int id;
-    float heightMultiplier;
-    float maxHeight;
+    const unsigned int id;
+    const float heightMultiplier;
+    const float maxHeight;
 protected:
     virtual float evaulateOctave(float sampleX, float sampleY, float sampleZ);
     virtual float evaulateNoise(int x, int y, int z, float density, float halfSize);
     virtual float getBaseDensity(int x, int y, int z);
 
-    float baseHeight;
+    const float baseHeight;
 
-    unsigned int noiseOctaves;
-    float noiseScale;
-    float noisePersistance;
-    float noiseLacunarity;
+    const unsigned int noiseOctaves;
+    const float noiseScale;
+    const float noisePersistance;
+    const float noiseLacunarity;
 private:
-    std::vector<BiomeRegion> regions;
+    const std::vector<BiomeRegion> regions;
 };
 
 class ForestBiome : public Biome

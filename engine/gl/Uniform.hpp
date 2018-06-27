@@ -41,7 +41,7 @@ public:
     UniformVector3Array(std::string, int size);
     void store(GLuint program) override;
     void load(const std::initializer_list<glm::vec3> &attributes);
-    void load(glm::vec3 vec, int id);
+    void load(glm::vec3 vec, unsigned int id);
 private:
     std::vector<std::unique_ptr<UniformVector3>> vectors;
 };

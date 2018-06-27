@@ -20,7 +20,7 @@ namespace core
 {
     float lerp(float a, float b, float alpha)
     {
-        return a - alpha * (b - a);
+        return a + alpha * (b - a);
     }
 
     glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float alpha)

@@ -22,14 +22,8 @@ public:
     std::map<int, BiomeRegion> regionMap;
 };
 
-BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b)
+BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b) : name{std::move(name)}, maxHeight{maxHeight}, color{glm::vec3(r, g, b)}, id(BiomeData::get().lastRegionID++)
 {
-    this->name = std::move(name);
-    this->maxHeight = maxHeight;
-    this->color = glm::vec3(r, g, b);
-
-    this->id = BiomeData::get().lastRegionID++;
-
     BiomeData::get().regionMap.insert(std::pair<int, BiomeRegion>(this->id, *this));
 }
 
@@ -42,30 +36,22 @@ BiomeRegion BiomeRegion::getByID(unsigned int id)
 }
 
 Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, unsigned int noiseOctaves, float noiseScale,
-             float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions)
+             float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions) :
+        maxHeight{maxHeight}, heightMultiplier{heightMultiplier}, baseHeight{baseHeight}, noiseOctaves{noiseOctaves},
+        noiseScale{noiseScale}, noisePersistance{noisePersistance}, noiseLacunarity{noiseLacunarity},
+        id(BiomeData::get().lastBiomeID++), regions{std::vector<BiomeRegion>(regions)}
 {
-    this->maxHeight = maxHeight;
-    this->heightMultiplier = heightMultiplier;
-    this->baseHeight = baseHeight;
-    this->noiseOctaves = noiseOctaves;
-    this->noiseScale = noiseScale;
-    this->noisePersistance = noisePersistance;
-    this->noiseLacunarity = noiseLacunarity;
 
-    this->regions = std::vector<BiomeRegion>(regions);
+    BiomeData::get().biomeMap.insert(std::pair<int, Biome>(id, *this));
 
-    this->id = (BiomeData::get().lastBiomeID)++;
-
-    BiomeData::get().biomeMap.insert(std::pair<int, Biome>(this->id, *this));
-
-    if (BiomeData::get().highestBiome == nullptr || this->maxHeight > BiomeData::get().highestBiome->maxHeight)
+    if (BiomeData::get().highestBiome == nullptr || maxHeight > BiomeData::get().highestBiome->maxHeight)
     {
         BiomeData::get().highestBiome = std::make_shared<Biome>(*this);
     }
 
-    if (this->noiseOctaves > BiomeData::get().highestOctaveCount)
+    if (noiseOctaves > BiomeData::get().highestOctaveCount)
     {
-        BiomeData::get().highestOctaveCount = this->noiseOctaves;
+        BiomeData::get().highestOctaveCount = noiseOctaves;
     }
 }
 
@@ -77,11 +63,11 @@ float Biome::genTerrainDensity(int x, int y, int z, std::vector<glm::vec3> octav
     float amplitude = 2;
     float frequency = 1.5f;
 
-    for (int octave = 0; octave < noiseOctaves; octave++)
+    for (unsigned int octave = 0; octave < noiseOctaves; octave++)
     {
-        float sampleX = (x - halfSize + octaveOffsets[octave].x) / noiseScale * frequency;
-        float sampleY = (y - halfSize + octaveOffsets[octave].y) / noiseScale * frequency;
-        float sampleZ = (z - halfSize + octaveOffsets[octave].z) / noiseScale * frequency;
+        float sampleX = (x - halfSize + octaveOffsets.at(octave).x) / noiseScale * frequency;
+        float sampleY = (y - halfSize + octaveOffsets.at(octave).y) / noiseScale * frequency;
+        float sampleZ = (z - halfSize + octaveOffsets.at(octave).z) / noiseScale * frequency;
 
         float noiseValue = evaulateOctave(sampleX, sampleY, sampleZ);
 
