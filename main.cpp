@@ -24,7 +24,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(0);
+    core::initSeed(3333);
 
     biomes::init();
 
@@ -35,6 +35,7 @@ int main()
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
     terrains.emplace_back(0, 0, 0);
+    terrains.emplace_back(1, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -157,12 +158,9 @@ void render(float alpha)
 
     for (const Terrain &terrain : terrains)
     {
-        float scale = 0.4f;
-        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(-10, 1, 1) * glm::vec3(scale));
+        float scale = 0.8f;
+        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - interp, terrain.y - 30, terrain.z) * glm::vec3(scale));
         terrainModel = glm::scale(terrainModel, glm::vec3(scale));
-
-        terrainModel = glm::rotate(terrainModel, glm::radians(-13.0f) * 10, glm::vec3(1, 0, 0));
-        terrainModel = glm::rotate(terrainModel, glm::radians(interp) * 4, glm::vec3(0, 0, 1));
         coloredShader->model.load(terrainModel);
         for (ColoredStaticModel model : terrain.models)
         {

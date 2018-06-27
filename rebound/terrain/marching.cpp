@@ -413,7 +413,7 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
 
 namespace marching
 {
-    void generateMesh(std::vector<TerrainVoxel> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
+    void generateMesh(std::vector<std::vector<std::vector<TerrainVoxel>>> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
                       std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
                       std::map<glm::vec3, std::vector<glm::vec3>> *triangles)
     {
@@ -443,10 +443,10 @@ namespace marching
                         unsigned int adjX = x + vertexOffset[adj][0];
                         unsigned int adjY = y + vertexOffset[adj][1];
                         unsigned int adjZ = z + vertexOffset[adj][2];
-                        cube[adj] = voxels.at(adjX + adjY * width + adjZ * height * depth).density;
+                        cube[adj] = voxels.at(adjX).at(adjY).at(adjZ).density;
                     }
                     // TODO: insert this into triangles
-                    marchCube(x, y, z, worldY, voxels.at(x + y * width + z * height * depth),cube, vertices, normals, colors);
+                    marchCube(x, y, z, worldY, voxels.at(x).at(y).at(z),cube, vertices, normals, colors);
                 }
             }
         }

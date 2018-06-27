@@ -66,8 +66,8 @@ namespace biomes
     std::shared_ptr<Biome> getHighestBiome();
     int getHighestOctaveCount();
 
-    Biome getByID(unsigned int id);
-    Biome getByHeight(float height);
+    Biome &getByID(unsigned int id);
+    Biome &getByHeight(float height);
 
     void init();
 }

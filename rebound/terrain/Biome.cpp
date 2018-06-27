@@ -18,8 +18,8 @@ public:
 
     std::shared_ptr<Biome> highestBiome;
 
-    std::map<int, Biome> biomeMap;
-    std::map<int, BiomeRegion> regionMap;
+    std::map<unsigned int, Biome> biomeMap;
+    std::map<unsigned int, BiomeRegion> regionMap;
 };
 
 BiomeRegion::BiomeRegion(std::string name, float maxHeight, float r, float g, float b) : name{std::move(name)}, maxHeight{maxHeight}, color{glm::vec3(r, g, b)}, id(BiomeData::get().lastRegionID++)
@@ -33,13 +33,14 @@ BiomeRegion BiomeRegion::getByID(unsigned int id)
     {
         return BiomeData::get().regionMap.at(id);
     }
+    return BiomeData::get().regionMap.at(BiomeData::get().lastRegionID - 1);
 }
 
-Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, unsigned int noiseOctaves, float noiseScale,
-             float noisePersistance, float noiseLacunarity, std::initializer_list<BiomeRegion> regions) :
-        maxHeight{maxHeight}, heightMultiplier{heightMultiplier}, baseHeight{baseHeight}, noiseOctaves{noiseOctaves},
-        noiseScale{noiseScale}, noisePersistance{noisePersistance}, noiseLacunarity{noiseLacunarity},
-        id(BiomeData::get().lastBiomeID++), regions{std::vector<BiomeRegion>(regions)}
+Biome::Biome(float maxHeightIn, float heightMulIn, float baseHeightIn, unsigned int noiseOctavesIn, float noiseScaleIn,
+             float noisePersistanceIn, float noiseLacunarityIn, std::initializer_list<BiomeRegion> regionsIn) :
+        maxHeight{maxHeightIn}, heightMultiplier{heightMulIn}, baseHeight{baseHeightIn}, noiseOctaves{noiseOctavesIn},
+        noiseScale{noiseScaleIn}, noisePersistance{noisePersistanceIn}, noiseLacunarity{noiseLacunarityIn},
+        id(BiomeData::get().lastBiomeID++), regions{std::vector<BiomeRegion>(regionsIn)}
 {
 
     BiomeData::get().biomeMap.insert(std::pair<int, Biome>(id, *this));
@@ -49,7 +50,7 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, unsigned
         BiomeData::get().highestBiome = std::make_shared<Biome>(*this);
     }
 
-    if (noiseOctaves > BiomeData::get().highestOctaveCount)
+    if (noiseOctavesIn > BiomeData::get().highestOctaveCount)
     {
         BiomeData::get().highestOctaveCount = noiseOctaves;
     }
@@ -57,6 +58,7 @@ Biome::Biome(float maxHeight, float heightMultiplier, float baseHeight, unsigned
 
 float Biome::genTerrainDensity(int x, int y, int z, std::vector<glm::vec3> octaveOffsets)
 {
+
     float density = getBaseDensity(x, y, z);
     float halfSize = Terrain::size / 2.0f;
 
@@ -92,6 +94,11 @@ float Biome::evaulateNoise(int x, int y, int z, float density, float halfSize)
 
 float Biome::getBaseDensity(int x, int y, int z)
 {
+    baseHeight;
+    if (y == 0)
+    {
+        return baseHeight;
+    }
     return -y / 2.0f + baseHeight;
 }
 
@@ -118,7 +125,7 @@ BiomeRegion Biome::getRegionFromHeight(float height)
             return region;
         }
     }
-    return regions.at(regions.size() - 1);
+    return regions.at(BiomeData::get().lastBiomeID - 1);
 }
 
 ForestBiome::ForestBiome() : Biome(80, 2, 10, 10, 250, 0.6f, 2,
@@ -143,29 +150,30 @@ namespace biomes
         return BiomeData::get().highestOctaveCount;
     }
 
-    Biome getByID(unsigned int id)
+    Biome &getByID(unsigned int id)
     {
         if (BiomeData::get().biomeMap.find(id) != BiomeData::get().biomeMap.end())
         {
-            return BiomeData::get().biomeMap.at(id);
+            return BiomeData::get().biomeMap.at(id);;
         }
+        return BiomeData::get().biomeMap.at(BiomeData::get().lastBiomeID - 1);
     }
 
-    Biome getByHeight(float height)
+    Biome &getByHeight(float height)
     {
-        for (auto biome : BiomeData::get().biomeMap)
+        for (auto &biome : BiomeData::get().biomeMap)
         {
             if (height < biome.second.maxHeight)
             {
                 return biome.second;
             }
         }
+        return BiomeData::get().biomeMap.at(BiomeData::get().lastBiomeID - 1);
     }
 
     void init()
     {
-
-        auto desert = std::make_unique<DesertBiome>(DesertBiome());
         auto forest = std::make_unique<ForestBiome>(ForestBiome());
+        auto desert = std::make_unique<DesertBiome>(DesertBiome());
     }
 }
