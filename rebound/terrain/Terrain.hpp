@@ -23,7 +23,7 @@ class Terrain
 {
 public:
     Terrain(int gridX, int gridY, int gridZ);
-    static const unsigned int size = 33;
+    static const unsigned int size = 5;
     std::vector<ColoredStaticModel> models;
     int x, y, z;
     void del();
