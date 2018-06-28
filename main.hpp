@@ -17,6 +17,7 @@
 #include "engine/core/util.hpp"
 #include "rebound/terrain/Biome.hpp"
 #include "rebound/terrain/Terrain.hpp"
+#include "rebound/res/OBJModels.hpp"
 
 void update(float delta);
 void render(float alpha);

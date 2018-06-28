@@ -146,7 +146,7 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     return density;
 }
 
-Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * (size - 1)}, y{gridY * (size - 1)}, z{gridZ * (size - 1)}
+Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((int)size - 1)}, y{gridY * ((int)size - 1)}, z{gridZ * ((int)size - 1)}
 {
     this->rand = std::mt19937(core::getSeed());
 }

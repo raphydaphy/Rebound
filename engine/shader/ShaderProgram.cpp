@@ -5,8 +5,8 @@ ShaderProgram::ShaderProgram(const std::string &name, std::initializer_list<cons
 
 ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragment, std::initializer_list<const GLchar *> attributes)
 {
-    this->vertex = loadShader(vertex + ".vert", GL_VERTEX_SHADER);
-    this->fragment = loadShader(fragment + ".frag", GL_FRAGMENT_SHADER);
+    this->vertex = loadShader(vertex, GL_VERTEX_SHADER);
+    this->fragment = loadShader(fragment, GL_FRAGMENT_SHADER);
 
     program = glCreateProgram();
 
@@ -32,25 +32,8 @@ ShaderProgram::ShaderProgram(const std::string &vertex, const std::string &fragm
 
 GLuint ShaderProgram::loadShader(std::string file, GLenum type)
 {
-    std::ifstream src(file);
-
-    if (!src)
-    {
-        std::cout << "Unable to locate shader at " << file << std::endl;
-        exit(1);
-    }
-
     GLuint id = glCreateShader(type);
-
-    std::string shader;
-    std::string line;
-
-    while (std::getline(src, line))
-    {
-        shader += line + "\n";
-    }
-
-    const GLchar *source = shader.c_str();
+    const GLchar *source = file.c_str();
 
     glShaderSource(id, 1, &source, nullptr);
     glCompileShader(id);

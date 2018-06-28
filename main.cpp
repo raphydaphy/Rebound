@@ -37,9 +37,9 @@ int main()
     glCullFace(GL_BACK);
     glClearColor(skyColor.x, skyColor.y, skyColor.z, 1);
 
-    acacia_1 = new TexturedStaticModel("model/acacia_tree_1");
-    acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
-    acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
+    acacia_1 = new TexturedStaticModel(TexturedModelData(models::acacia_tree_1()));
+    acacia_2 = new TexturedStaticModel(TexturedModelData(models::acacia_tree_2()));
+    acacia_3 = new TexturedStaticModel(TexturedModelData(models::acacia_tree_3()));
 
     for (int radius = 1; radius < 8; radius++)
     {
@@ -122,6 +122,9 @@ int main()
 
     core::destroyDisplay();
 
+    std::cout << "Goodbye..." << std::endl;
+    std::cin.get();
+
     return 0;
 }
 
@@ -162,7 +165,6 @@ void update(float delta)
 
         if (!preparingTerrain && !terrain.generating && !terrain.generated)
         {
-            std::cout << "started making a terrain" << std::endl;
             terrain.generating = true;
             preparingTerrain = true;
             std::thread t(&Terrain::generateModelData, &terrain);
@@ -170,7 +172,6 @@ void update(float delta)
         }
         else if (preparingTerrain && terrain.generating && !terrain.generated && terrain.prepared())
         {
-            std::cout << "finished making a terrain" << std::endl;
             terrain.generated = true;
             preparingTerrain = false;
         }
