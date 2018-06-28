@@ -433,11 +433,11 @@ namespace marching
 
         float cube[8];
 
-        for (unsigned int x = 0; x < width; x++)
+        for (unsigned int x = 0; x < width ; x++)
         {
-            for (unsigned int y = 0; y < height; y++)
+            for (unsigned int y = 0; y < height ; y++)
             {
-                for (unsigned int z = 0; z < depth; z++)
+                for (unsigned int z = 0; z < depth ; z++)
                 {
                     for (int adj = 0; adj < 8; adj++)
                     {

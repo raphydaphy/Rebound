@@ -12,6 +12,8 @@ public:
 private:
     GlobalRandoms() = default;
 public:
+    // TODO: better seed system
+    unsigned int seed;
     OpenSimplexNoise noise;
     std::mt19937 rand;
 };
@@ -35,8 +37,9 @@ namespace core
         return value;
     }
 
-    void initSeed(int seed)
+    void initSeed(unsigned int seed)
     {
+        GlobalRandoms::get().seed = seed;
         GlobalRandoms::get().noise = OpenSimplexNoise(seed);
         GlobalRandoms::get().rand = std::mt19937(seed);
     }
@@ -66,5 +69,22 @@ namespace core
     {
         auto rnd = std::uniform_real_distribution<float>(min, max);
         return rnd(GlobalRandoms::get().rand);
+    }
+
+    unsigned int getSeed()
+    {
+        return GlobalRandoms::get().seed;
+    }
+
+    int randomInt(std::mt19937 rand, int min, int max)
+    {
+        auto rnd = std::uniform_int_distribution<int>(min, max);
+        return rnd(rand);
+    }
+
+    float randomFloat(std::mt19937 rand, int min, int max)
+    {
+        auto rnd = std::uniform_real_distribution<float>(min, max);
+        return rnd(rand);
     }
 }

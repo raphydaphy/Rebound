@@ -13,8 +13,11 @@ namespace core
     float simplex(double a, double b, double c);
     float simplex(double a, double b, double c, double d);
     int randomInt(int min, int max);
+    int randomInt(std::mt19937 rand, int min, int max);
     float randomFloat(float min, float max);
-    void initSeed(int seed);
+    float randomFloat(std::mt19937 rand, int min, int max);
+    void initSeed(unsigned int seed);
+    unsigned int getSeed();
 }
 
 #endif

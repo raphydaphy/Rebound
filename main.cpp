@@ -27,16 +27,20 @@ int main()
 
     biomes::init();
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1);
+    // TODO: improve rendering system
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glClearColor(227 / 256.0f, 168 / 256.0f, 87 / 256.0f, 1);
 
     acacia_1 = new TexturedStaticModel("model/acacia_tree_1");
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
+    terrains.emplace_back(0, 0, 0);
+    terrains.emplace_back(1, 0, 0);
+    terrains.emplace_back(-1, 0, 0);
     terrains.emplace_back(0, 0, 1);
-    terrains.emplace_back(1, 0, 1);
-    terrains.emplace_back(2, 0, 1);
-    terrains.emplace_back(3, 0, 1);
+    terrains.emplace_back(0, 0, -1);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -89,6 +93,12 @@ int main()
 
     acacia_1->del();
     acacia_2->del();
+    acacia_3->del();
+
+    for (Terrain terrain : terrains)
+    {
+        terrain.del();
+    }
 
     core::destroyDisplay();
 
@@ -191,7 +201,6 @@ void render(float alpha)
     }
 
     coloredShader->unbind();
-
 
     core::updateDisplay();
 }

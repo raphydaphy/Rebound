@@ -7,15 +7,15 @@ static constexpr unsigned int MAX_VERTS_PER_MESH = 30000;
 TerrainVoxel::TerrainVoxel(float density, Biome biome, float biomeEdge) : biome{std::move(biome)}, density{density}, biomeEdge{biomeEdge}
 { }
 
-std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
+std::vector<glm::vec3> Terrain::genTerrainOffsets(int octaves, glm::vec3 offset)
 {
     std::vector<glm::vec3> terrainOffsets;
 
     for (int octave = 0; octave < octaves; octave++)
     {
-        float offX =core::randomInt(0, 200000) - 100000 + offset.x;
-        float offY = core::randomInt(0, 200000) - 100000 + offset.y;
-        float offZ = core::randomInt(0, 200000) - 100000 + offset.z;
+        float offX =core::randomInt(rand, 0, 200000) - 100000 + offset.x;
+        float offY = core::randomInt(rand, 0, 200000) - 100000 + offset.y;
+        float offZ = core::randomInt(rand, 0, 200000) - 100000 + offset.z;
 
         terrainOffsets.emplace_back(offX, offY, offZ);
     }
@@ -23,43 +23,19 @@ std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset)
     return terrainOffsets;
 }
 
-std::vector<glm::vec2> genBiomeOffsets(int octaves, glm::vec3 offset)
+std::vector<glm::vec2> Terrain::genBiomeOffsets(int octaves, glm::vec3 offset)
 {
     std::vector<glm::vec2> biomeOffsets;
 
     for (int octave = 0; octave < octaves; octave++)
     {
-        float offX = core::randomInt(0, 200000) - 100000 + offset.x;
-        float offY = core::randomInt(0, 200000) - 100000 + offset.y;
+        float offX = core::randomInt(rand, 0, 200000) - 100000 + offset.x;
+        float offY = core::randomInt(rand, 0, 200000) - 100000 + offset.y;
 
         biomeOffsets.emplace_back(offX, offY);
     }
 
     return biomeOffsets;
-}
-
-float getDensity(int x, int y, int z, unsigned int octaves, float scale, float persistance, float lacunarity, std::vector<glm::vec3> offsets)
-{
-    float density = -y / 2.0f + 6;
-    float halfSize = Terrain::size / 2.0f;
-    float amplitude = 1;
-    float frequency = 1;
-
-    for (unsigned int octave = 0; octave < octaves; octave++)
-    {
-        float sampleX = (x - halfSize + offsets.at(octave).x) / scale * frequency;
-        float sampleY = (y - halfSize + offsets.at(octave).y) / scale * frequency;
-        float sampleZ = (z - halfSize + offsets.at(octave).z) / scale * frequency;
-
-        float noiseValue = core::simplex(sampleX, sampleY, sampleZ) * 2 - 1;
-
-        density += noiseValue * amplitude;
-
-        amplitude *= persistance;
-        frequency *= lacunarity;
-    }
-
-    return density;
 }
 
 std::vector<ColoredModelData> Terrain::generateModelData()
@@ -70,17 +46,16 @@ std::vector<ColoredModelData> Terrain::generateModelData()
     {
         const int biomeOctaves = 5;
 
-
         std::vector<glm::vec3> terrainOffsets = genTerrainOffsets(biomes::getHighestOctaveCount(), offset);
         std::vector<glm::vec2> biomeOffsets = genBiomeOffsets(biomeOctaves, offset);
 
-        for (unsigned int x = 0; x < size; x++)
+        for (unsigned int x = 0; x < size ; x++)
         {
             std::vector<std::vector<TerrainVoxel>> rowX;
-            for (unsigned int y = 0; y < size; y++)
+            for (unsigned int y = 0; y < size ; y++)
             {
                 std::vector<TerrainVoxel> rowY;
-                for (unsigned int z = 0; z < size; z++)
+                for (unsigned int z = 0; z < size ; z++)
                 {
                     //float biomeDensity = getDensity(x, y, z, /* octaves */ 8, /* scale */ 50, /* persitance */ 0.6f, /* lacunarity */ 2.01f, terrainOffsets);
                     float biomeDensity =
@@ -176,6 +151,8 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
 
 Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
 {
+    this->rand = std::mt19937(core::getSeed());
+
     // TODO: use a thread for this
     unprepared = std::move(generateModelData());
 
@@ -183,5 +160,13 @@ Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}
     for (const ColoredModelData &mesh : unprepared)
     {
         models.emplace_back(mesh);
+    }
+}
+
+void Terrain::del()
+{
+    for (ColoredStaticModel model : models)
+    {
+        model.del();
     }
 }

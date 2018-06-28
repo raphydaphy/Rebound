@@ -49,18 +49,6 @@ private:
     const std::vector<BiomeRegion> regions;
 };
 
-class ForestBiome : public Biome
-{
-public:
-    ForestBiome();
-};
-
-class DesertBiome : public Biome
-{
-public:
-    DesertBiome();
-};
-
 namespace biomes
 {
     std::shared_ptr<Biome> getHighestBiome();
