@@ -123,7 +123,6 @@ int main()
     core::destroyDisplay();
 
     std::cout << "Goodbye..." << std::endl;
-    std::cin.get();
 
     return 0;
 }
@@ -172,6 +171,7 @@ void update(float delta)
         }
         else if (preparingTerrain && terrain.generating && !terrain.generated && terrain.prepared())
         {
+            std::cout << terrain.x << ", " << terrain.z << std::endl;
             terrain.generated = true;
             preparingTerrain = false;
         }
@@ -233,13 +233,20 @@ void render(float alpha)
     {
         if (terrain.prepared())
         {
-            glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
-            coloredShader->model.load(terrainModel);
-            for (ColoredStaticModel model : terrain.models)
+            float dx = std::pow(terrain.x + (Terrain::size - 1) / 2.0f - playerPos->x, 2);
+            float dy = std::pow(terrain.y + (Terrain::size - 1) / 2.0f - playerPos->y, 2);
+            float dz = std::pow(terrain.z + (Terrain::size - 1) / 2.0f - playerPos->z, 2);
+
+            if (dx + dy + dz < 3000)
             {
-                model.bind();
-                glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
-                model.unbind();
+                glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
+                coloredShader->model.load(terrainModel);
+                for (ColoredStaticModel model : terrain.models)
+                {
+                    model.bind();
+                    glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
+                    model.unbind();
+                }
             }
         }
     }
