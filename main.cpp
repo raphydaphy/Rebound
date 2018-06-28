@@ -36,14 +36,15 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    for (int ix = 0; ix < 2; ix++)
+    for (int ix = 0; ix < 3; ix++)
     {
-        for (int iz = 0; iz < 2; iz++)
+        for (int iz = 0; iz < 3; iz++)
         {
             //terrains.emplace_back(ix, 0, iz);
         }
     }
     terrains.emplace_back(0, 0, 0);
+    terrains.emplace_back(1, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();

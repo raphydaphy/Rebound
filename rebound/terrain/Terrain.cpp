@@ -147,13 +147,11 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     return density;
 }
 
-
-
 Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
 {
     this->rand = std::mt19937(core::getSeed());
-
-    generateModelData();
+    std::thread t(&Terrain::generateModelData, this);
+    t.detach();
 }
 
 void Terrain::del()
@@ -168,13 +166,11 @@ void Terrain::update()
 {
     if (!prepared() && !unprepared.empty())
     {
-        std::cout << prepared() << ":" << unprepared.size() << std::endl;
         for (const ColoredModelData &mesh : unprepared)
         {
             models.emplace_back(mesh);
         }
         unprepared.clear();
-        std::cout << prepared() << ":" << unprepared.size()<< std::endl;
     }
 }
 
