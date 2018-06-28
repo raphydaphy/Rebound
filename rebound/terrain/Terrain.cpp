@@ -1,5 +1,4 @@
 #include "Terrain.hpp"
-#include <utility>
 #include "marching.hpp"
 
 static constexpr unsigned int MAX_VERTS_PER_MESH = 30000;
@@ -38,7 +37,7 @@ std::vector<glm::vec2> Terrain::genBiomeOffsets(int octaves, glm::vec3 offset)
     return biomeOffsets;
 }
 
-std::vector<ColoredModelData> Terrain::generateModelData()
+void * Terrain::generateModelData()
 {
     glm::vec3 offset(this->x, this->y, this->z);
 
@@ -120,8 +119,9 @@ std::vector<ColoredModelData> Terrain::generateModelData()
 
     }
 
-
-    return models;
+    // instead of adding to unprepared one model at a time, because that would
+    // start the loop to convert meshes to models before unprepared is full
+    unprepared = std::move(models);
 }
 
 float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float persistance, float lacunarity,
@@ -152,15 +152,6 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
 Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
 {
     this->rand = std::mt19937(core::getSeed());
-
-    // TODO: use a thread for this
-    unprepared = std::move(generateModelData());
-
-    // TODO: do this after the thread is done
-    for (const ColoredModelData &mesh : unprepared)
-    {
-        models.emplace_back(mesh);
-    }
 }
 
 void Terrain::del()
@@ -169,4 +160,21 @@ void Terrain::del()
     {
         model.del();
     }
+}
+
+void Terrain::update()
+{
+    if (!prepared() && !unprepared.empty())
+    {
+        for (const ColoredModelData &mesh : unprepared)
+        {
+            models.emplace_back(mesh);
+        }
+    }
+}
+
+bool Terrain::prepared() const
+{
+    // TODO: this could fail if the chunk is empty (air or underground)
+    return !models.empty();
 }

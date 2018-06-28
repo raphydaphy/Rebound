@@ -23,7 +23,7 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(15);
+    core::initSeed(3);
 
     biomes::init();
 
@@ -36,11 +36,13 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    terrains.emplace_back(0, 0, 0);
-    terrains.emplace_back(1, 0, 0);
-    terrains.emplace_back(-1, 0, 0);
-    terrains.emplace_back(0, 0, 1);
-    terrains.emplace_back(0, 0, -1);
+    for (int ix = 0; ix < 8; ix++)
+    {
+        for (int iz = 0; iz < 8; iz++)
+        {
+            terrains.emplace_back(ix, 0, iz);
+        }
+    }
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -136,6 +138,11 @@ void update(float delta)
         playerPos->y -= speed;
     }
 
+    for (Terrain terrain : terrains)
+    {
+        terrain.update();
+    }
+
 }
 
 void render(float alpha)
@@ -190,13 +197,16 @@ void render(float alpha)
 
     for (const Terrain &terrain : terrains)
     {
-        glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
-        coloredShader->model.load(terrainModel);
-        for (ColoredStaticModel model : terrain.models)
+        if (terrain.prepared())
         {
-            model.bind();
-            glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
-            model.unbind();
+            glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
+            coloredShader->model.load(terrainModel);
+            for (ColoredStaticModel model : terrain.models)
+            {
+                model.bind();
+                glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
+                model.unbind();
+            }
         }
     }
 
