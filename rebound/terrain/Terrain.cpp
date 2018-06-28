@@ -48,13 +48,13 @@ void Terrain::generateModelData()
         std::vector<glm::vec3> terrainOffsets = genTerrainOffsets(biomes::getHighestOctaveCount(), offset);
         std::vector<glm::vec2> biomeOffsets = genBiomeOffsets(biomeOctaves, offset);
 
-        for (unsigned int x = 0; x < size ; x++)
+        for (uint8_t x = 0; x < size ; x++)
         {
             std::vector<std::vector<TerrainVoxel>> rowX;
-            for (unsigned int y = 0; y < size ; y++)
+            for (uint8_t y = 0; y < size ; y++)
             {
                 std::vector<TerrainVoxel> rowY;
-                for (unsigned int z = 0; z < size ; z++)
+                for (uint8_t z = 0; z < size ; z++)
                 {
                     //float biomeDensity = getDensity(x, y, z, /* octaves */ 8, /* scale */ 50, /* persitance */ 0.6f, /* lacunarity */ 2.01f, terrainOffsets);
                     float biomeDensity =
@@ -85,8 +85,7 @@ void Terrain::generateModelData()
     std::vector<glm::vec3> colors;
 
     // triangles should have SIZE - 1 ^ 3 entries in it, one for every voxel except the last x, y and z rows
-    std::map<glm::vec3, std::vector<glm::vec3>> triangles;
-    marching::generateMesh(voxels, size - 1, size - 1, size - 1, (int)this->y, &vertices, &normals, &colors, &triangles);
+    marching::generateMesh(voxels, size - 1, size - 1, size - 1, (int)this->y, &vertices, &normals, &colors);
 
     int numMeshes = vertices.size() / MAX_VERTS_PER_MESH + 1;
 
@@ -147,11 +146,9 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
     return density;
 }
 
-Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
+Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * (size - 1)}, y{gridY * (size - 1)}, z{gridZ * (size - 1)}
 {
     this->rand = std::mt19937(core::getSeed());
-    std::thread t(&Terrain::generateModelData, this);
-    t.detach();
 }
 
 void Terrain::del()
@@ -178,4 +175,19 @@ bool Terrain::prepared()
 {
     // TODO: this could fail if the chunk is empty (air or underground)
     return !models.empty();
+}
+
+int Terrain::getGridX()
+{
+    return x / (size - 1);
+}
+
+int Terrain::getGridY()
+{
+    return y / (size - 1);
+}
+
+int Terrain::getGridZ()
+{
+    return z / (size - 1);
 }

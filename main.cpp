@@ -15,6 +15,9 @@ glm::mat4 *view;
 glm::vec3 *playerPos;
 glm::vec3 *prevPlayerPos;
 
+// TODO: better system for this
+bool preparingTerrain = false;
+
 static glm::mat4 smol = glm::scale(glm::mat4(1), glm::vec3(0.7f));
 
 int main()
@@ -23,28 +26,43 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(3);
+    core::initSeed(0);
 
     biomes::init();
+
+    glm::vec3 skyColor(227 / 256.0f, 168 / 256.0f, 87 / 256.0f);
 
     // TODO: improve rendering system
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glClearColor(227 / 256.0f, 168 / 256.0f, 87 / 256.0f, 1);
+    glClearColor(skyColor.x, skyColor.y, skyColor.z, 1);
 
     acacia_1 = new TexturedStaticModel("model/acacia_tree_1");
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    for (int ix = 0; ix < 3; ix++)
+    for (int radius = 1; radius < 8; radius++)
     {
-        for (int iz = 0; iz < 3; iz++)
+        for (int ix = -radius; ix < radius; ix++)
         {
-            //terrains.emplace_back(ix, 0, iz);
+            for (int iz = -radius; iz < radius; iz++)
+            {
+                bool done = false;
+                for (Terrain &terrain : terrains)
+                {
+                    if (terrain.getGridX() == ix && terrain.getGridY() == 0 && terrain.getGridZ() == iz)
+                    {
+                        done = true;
+                        break;
+                    }
+                }
+                if (!done)
+                {
+                    terrains.emplace_back(ix, 0, iz);
+                }
+            }
         }
     }
-    terrains.emplace_back(0, 0, 0);
-    terrains.emplace_back(1, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -58,8 +76,6 @@ int main()
 
     float sunBrightness = 1;
     Light sun(glm::vec3(40000, 50000, 40000), glm::vec3(sunBrightness, sunBrightness, sunBrightness));
-
-    glm::vec3 skyColor(0.5, 0.5, 0.5);
 
     playerPos = new glm::vec3(0, 10, 30);
     prevPlayerPos = new glm::vec3(*playerPos);
@@ -99,7 +115,7 @@ int main()
     acacia_2->del();
     acacia_3->del();
 
-    for (Terrain terrain : terrains)
+    for (auto &terrain : terrains)
     {
         terrain.del();
     }
@@ -140,9 +156,24 @@ void update(float delta)
         playerPos->y -= speed;
     }
 
-    for (Terrain &terrain : terrains)
+    for (auto &terrain : terrains)
     {
         terrain.update();
+
+        if (!preparingTerrain && !terrain.generating && !terrain.generated)
+        {
+            std::cout << "started making a terrain" << std::endl;
+            terrain.generating = true;
+            preparingTerrain = true;
+            std::thread t(&Terrain::generateModelData, &terrain);
+            t.detach();
+        }
+        else if (preparingTerrain && terrain.generating && !terrain.generated && terrain.prepared())
+        {
+            std::cout << "finished making a terrain" << std::endl;
+            terrain.generated = true;
+            preparingTerrain = false;
+        }
     }
 
 }
@@ -163,7 +194,7 @@ void render(float alpha)
 
     if (core::displayResized() && core::getDisplayWidth() > 0 && core::getDisplayHeight() > 0)
     {
-        *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 100.0f);
+        *projection = glm::perspective(glm::radians(45.0f), (float) core::getDisplayWidth() / core::getDisplayHeight(), 0.1f, 200.0f);
         texturedShader->projection.load(*projection);
 
         glViewport(0, 0, core::getDisplayWidth(), core::getDisplayHeight());
@@ -197,7 +228,7 @@ void render(float alpha)
         coloredShader->projection.load(*projection);
     }
 
-    for (Terrain &terrain : terrains)
+    for (auto &terrain : terrains)
     {
         if (terrain.prepared())
         {

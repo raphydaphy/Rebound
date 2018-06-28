@@ -19,8 +19,8 @@ out float visibility;
 out vec3 diffuse;
 out vec4 texture_color;
 
-const float fog_density = 0.005;
-const float fog_gradient = 4;
+const float fog_density = 0.007;
+const float fog_gradient = 10;
 
 void main()
 {

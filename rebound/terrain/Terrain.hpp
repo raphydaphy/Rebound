@@ -23,17 +23,22 @@ class Terrain
 {
 public:
     Terrain(int gridX, int gridY, int gridZ);
-    static const unsigned int size = 44;
+    static const unsigned int size = 33;
     std::vector<ColoredStaticModel> models;
-    float x, y, z;
+    int x, y, z;
     void del();
     void update();
     bool prepared();
+    void generateModelData();
+    bool generating = false;
+    bool generated = false;
+    int getGridX();
+    int getGridY();
+    int getGridZ();
 private:
     float genBiomeDensity(int x, int z, int octaves, float scale, float persistance, float lacunarity, std::vector<glm::vec2> octaveOffsets);
     std::vector<glm::vec3> genTerrainOffsets(int octaves, glm::vec3 offset);
     std::vector<glm::vec2> genBiomeOffsets(int octaves, glm::vec3 offset);
-    void generateModelData();
     std::vector<std::vector<std::vector<TerrainVoxel>>> voxels;
     std::vector<ColoredModelData> unprepared;
     std::mt19937 rand;

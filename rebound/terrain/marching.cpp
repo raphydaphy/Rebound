@@ -4,7 +4,7 @@ float surface = 0.5f;
 int windingOrder[] = { 0, 1, 2 };
 glm::vec3 edgeVertex[12];
 
-int vertexOffset[][3] =
+uint8_t vertexOffset[][3] =
 {
         {0,0,0},{1,0,0},{1,1,0},{0,1,0},
         {0,0,1},{1,0,1},{1,1,1},{0,1,1}
@@ -352,7 +352,7 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
 
     float offset;
 
-    for (unsigned int edge = 0; edge < 12; edge++)
+    for (uint8_t edge = 0; edge < 12; edge++)
     {
         if ((edgeFlags & (1 << edge)) != 0)
         {
@@ -368,21 +368,20 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
     unsigned int index;
     int vertex;
 
-    for (unsigned int triangle = 0; triangle < 5; triangle++)
+    for (uint8_t triangle = 0; triangle < 5; triangle++)
     {
         if (triangleConnectionTable[flagIndex][3 * triangle] < 0)
         {
             break;
         }
 
-        index = vertices->size();
+        index = (unsigned int)vertices->size();
 
         std::vector<glm::vec3> triangleVerts;
 
-        for (unsigned int triVertex = 0; triVertex < 3; triVertex++)
+        for (uint8_t triVertex = 0; triVertex < 3; triVertex++)
         {
             vertex = triangleConnectionTable[flagIndex][3 * triangle + triVertex];
-            //indices->push_back(index + windingOrder[triVertex]);
             vertices->push_back(edgeVertex[vertex]);
             triangleVerts.push_back(edgeVertex[vertex]);
         }
@@ -394,7 +393,7 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
         glm::vec3 normal = glm::cross(a, b);
         normal = glm::normalize(normal);
 
-        for (int i = 0; i < 3; i++)
+        for (uint8_t i = 0; i < 3; i++)
         {
             normals->push_back(normal);
         }
@@ -402,7 +401,7 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
         float height = (triangleVerts[0].y + triangleVerts[1].y + triangleVerts[2].y) / 3;
         glm::vec3 color = getBlendColor(voxelIn, height);
 
-        for (int i = 0; i < 3; i++)
+        for (uint8_t i = 0; i < 3; i++)
         {
             colors->push_back(color);
         }
@@ -413,10 +412,8 @@ std::vector<std::vector<glm::vec3>> marchCube(unsigned int x, unsigned int y, un
 
 namespace marching
 {
-    // TODO: what is triangles doing here???? do we even need it
     void generateMesh(std::vector<std::vector<std::vector<TerrainVoxel>>> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
-                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
-                      std::map<glm::vec3, std::vector<glm::vec3>> *triangles)
+                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors)
     {
         if (::surface > 0)
         {
@@ -433,20 +430,19 @@ namespace marching
 
         float cube[8];
 
-        for (unsigned int x = 0; x < width ; x++)
+        for (uint8_t x = 0; x < width ; x++)
         {
-            for (unsigned int y = 0; y < height ; y++)
+            for (uint8_t y = 0; y < height ; y++)
             {
-                for (unsigned int z = 0; z < depth ; z++)
+                for (uint8_t z = 0; z < depth ; z++)
                 {
                     for (int adj = 0; adj < 8; adj++)
                     {
-                        unsigned int adjX = x + vertexOffset[adj][0];
-                        unsigned int adjY = y + vertexOffset[adj][1];
-                        unsigned int adjZ = z + vertexOffset[adj][2];
+                        uint8_t adjX = x + vertexOffset[adj][0];
+                        uint8_t adjY = y + vertexOffset[adj][1];
+                        uint8_t adjZ = z + vertexOffset[adj][2];
                         cube[adj] = voxels.at(adjX).at(adjY).at(adjZ).density;
                     }
-                    // TODO: insert this into triangles
                     marchCube(x, y, z, worldY, voxels.at(x).at(y).at(z),cube, vertices, normals, colors);
                 }
             }

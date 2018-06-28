@@ -9,8 +9,7 @@
 namespace marching
 {
     void generateMesh(std::vector<std::vector<std::vector<TerrainVoxel>>> voxels, unsigned int width, unsigned int height, unsigned int depth, int worldY,
-                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors,
-                      std::map<glm::vec3, std::vector<glm::vec3>> *triangles);
+                      std::vector<glm::vec3> *vertices, std::vector<glm::vec3> *normals, std::vector<glm::vec3> *colors);
     void setSurface(float surface);
 }
 
