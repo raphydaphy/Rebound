@@ -36,13 +36,14 @@ int main()
     acacia_2 = new TexturedStaticModel("model/acacia_tree_2");
     acacia_3 = new TexturedStaticModel("model/acacia_tree_3");
 
-    for (int ix = 0; ix < 8; ix++)
+    for (int ix = 0; ix < 2; ix++)
     {
-        for (int iz = 0; iz < 8; iz++)
+        for (int iz = 0; iz < 2; iz++)
         {
-            terrains.emplace_back(ix, 0, iz);
+            //terrains.emplace_back(ix, 0, iz);
         }
     }
+    terrains.emplace_back(0, 0, 0);
 
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
@@ -138,7 +139,7 @@ void update(float delta)
         playerPos->y -= speed;
     }
 
-    for (Terrain terrain : terrains)
+    for (Terrain &terrain : terrains)
     {
         terrain.update();
     }
@@ -195,7 +196,7 @@ void render(float alpha)
         coloredShader->projection.load(*projection);
     }
 
-    for (const Terrain &terrain : terrains)
+    for (Terrain &terrain : terrains)
     {
         if (terrain.prepared())
         {

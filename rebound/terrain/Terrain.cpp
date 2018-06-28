@@ -37,7 +37,7 @@ std::vector<glm::vec2> Terrain::genBiomeOffsets(int octaves, glm::vec3 offset)
     return biomeOffsets;
 }
 
-void * Terrain::generateModelData()
+void Terrain::generateModelData()
 {
     glm::vec3 offset(this->x, this->y, this->z);
 
@@ -152,6 +152,8 @@ float Terrain::genBiomeDensity(int x, int z, int octaves, float scale, float per
 Terrain::Terrain(int gridX, int gridY, int gridZ) : x{gridX * ((float)size - 1)}, y{gridY * ((float)size - 1)}, z{(float)gridZ * (size - 1)}
 {
     this->rand = std::mt19937(core::getSeed());
+
+    generateModelData();
 }
 
 void Terrain::del()
@@ -166,14 +168,17 @@ void Terrain::update()
 {
     if (!prepared() && !unprepared.empty())
     {
+        std::cout << prepared() << ":" << unprepared.size() << std::endl;
         for (const ColoredModelData &mesh : unprepared)
         {
             models.emplace_back(mesh);
         }
+        unprepared.clear();
+        std::cout << prepared() << ":" << unprepared.size()<< std::endl;
     }
 }
 
-bool Terrain::prepared() const
+bool Terrain::prepared()
 {
     // TODO: this could fail if the chunk is empty (air or underground)
     return !models.empty();
