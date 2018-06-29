@@ -31,27 +31,27 @@ namespace models
 {
     TexturedModelData acacia_tree_1()
     {
-        std::vector<glm::vec3> vertices = std::vector(ModelStorage::get().acacia_tree_1_vertices.begin(), ModelStorage::get().acacia_tree_1_vertices.end());
-        std::vector<glm::vec3> normals = std::vector(ModelStorage::get().acacia_tree_1_normals.begin(), ModelStorage::get().acacia_tree_1_normals.end());
-        std::vector<glm::vec2> textures = std::vector(ModelStorage::get().acacia_tree_1_textures.begin(), ModelStorage::get().acacia_tree_1_textures.end());
+        std::vector<glm::vec3> vertices(ModelStorage::get().acacia_tree_1_vertices.begin(), ModelStorage::get().acacia_tree_1_vertices.end());
+        std::vector<glm::vec3> normals(ModelStorage::get().acacia_tree_1_normals.begin(), ModelStorage::get().acacia_tree_1_normals.end());
+        std::vector<glm::vec2> textures(ModelStorage::get().acacia_tree_1_textures.begin(), ModelStorage::get().acacia_tree_1_textures.end());
 
         return TexturedModelData(vertices, normals, textures);
     }
 
     TexturedModelData acacia_tree_2()
     {
-        std::vector<glm::vec3> vertices = std::vector(ModelStorage::get().acacia_tree_2_vertices.begin(), ModelStorage::get().acacia_tree_2_vertices.end());
-        std::vector<glm::vec3> normals = std::vector(ModelStorage::get().acacia_tree_2_normals.begin(), ModelStorage::get().acacia_tree_2_normals.end());
-        std::vector<glm::vec2> textures = std::vector(ModelStorage::get().acacia_tree_2_textures.begin(), ModelStorage::get().acacia_tree_2_textures.end());
+        std::vector<glm::vec3> vertices(ModelStorage::get().acacia_tree_2_vertices.begin(), ModelStorage::get().acacia_tree_2_vertices.end());
+        std::vector<glm::vec3> normals(ModelStorage::get().acacia_tree_2_normals.begin(), ModelStorage::get().acacia_tree_2_normals.end());
+        std::vector<glm::vec2> textures(ModelStorage::get().acacia_tree_2_textures.begin(), ModelStorage::get().acacia_tree_2_textures.end());
 
         return TexturedModelData(vertices, normals, textures);
     }
 
     TexturedModelData acacia_tree_3()
     {
-        std::vector<glm::vec3> vertices = std::vector(ModelStorage::get().acacia_tree_3_vertices.begin(), ModelStorage::get().acacia_tree_3_vertices.end());
-        std::vector<glm::vec3> normals = std::vector(ModelStorage::get().acacia_tree_3_normals.begin(), ModelStorage::get().acacia_tree_3_normals.end());
-        std::vector<glm::vec2> textures = std::vector(ModelStorage::get().acacia_tree_3_textures.begin(), ModelStorage::get().acacia_tree_3_textures.end());
+        std::vector<glm::vec3> vertices(ModelStorage::get().acacia_tree_3_vertices.begin(), ModelStorage::get().acacia_tree_3_vertices.end());
+        std::vector<glm::vec3> normals(ModelStorage::get().acacia_tree_3_normals.begin(), ModelStorage::get().acacia_tree_3_normals.end());
+        std::vector<glm::vec2> textures(ModelStorage::get().acacia_tree_3_textures.begin(), ModelStorage::get().acacia_tree_3_textures.end());
 
         return TexturedModelData(vertices, normals, textures);
     }

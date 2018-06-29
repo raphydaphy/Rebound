@@ -18,6 +18,7 @@
 #include "rebound/terrain/Biome.hpp"
 #include "rebound/terrain/Terrain.hpp"
 #include "rebound/res/OBJModels.hpp"
+#include <ctime>
 
 void update(float delta);
 void render(float alpha);

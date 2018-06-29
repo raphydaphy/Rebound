@@ -10,10 +10,10 @@ public:
         return data;
     }
 private:
-    GlobalRandoms() = default;
+    GlobalRandoms() : seed(0) {};
 public:
     // TODO: better seed system
-    unsigned int seed;
+    unsigned long int seed;
     OpenSimplexNoise noise;
     std::mt19937 rand;
 };
@@ -37,7 +37,7 @@ namespace core
         return value;
     }
 
-    void initSeed(unsigned int seed)
+    void initSeed(unsigned long int seed)
     {
         GlobalRandoms::get().seed = seed;
         GlobalRandoms::get().noise = OpenSimplexNoise(seed);
@@ -71,7 +71,7 @@ namespace core
         return rnd(GlobalRandoms::get().rand);
     }
 
-    unsigned int getSeed()
+    unsigned long int getSeed()
     {
         return GlobalRandoms::get().seed;
     }

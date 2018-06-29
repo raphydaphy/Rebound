@@ -16,8 +16,8 @@ namespace core
     int randomInt(std::mt19937 rand, int min, int max);
     float randomFloat(float min, float max);
     float randomFloat(std::mt19937 rand, int min, int max);
-    void initSeed(unsigned int seed);
-    unsigned int getSeed();
+    void initSeed(unsigned long int seed);
+    unsigned long int getSeed();
 }
 
 #endif

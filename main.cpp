@@ -26,7 +26,8 @@ int main()
 
     core::initTimer();
     core::setResourceDirectory("../rebound/res/");
-    core::initSeed(0);
+
+    core::initSeed((unsigned)std::time(0));
 
     biomes::init();
 
@@ -233,12 +234,13 @@ void render(float alpha)
     {
         if (terrain.prepared())
         {
-            float dx = std::pow(terrain.x + (Terrain::size - 1) / 2.0f - playerPos->x, 2);
-            float dy = std::pow(terrain.y + (Terrain::size - 1) / 2.0f - playerPos->y, 2);
-            float dz = std::pow(terrain.z + (Terrain::size - 1) / 2.0f - playerPos->z, 2);
+            // todo: load nearby terrain only
+            double dx = std::pow(terrain.x + (Terrain::size - 1) / 2.0f - playerPos->x, 2);
+            double dy = std::pow(terrain.y + (Terrain::size - 1) / 2.0f - playerPos->y, 2);
+            double dz = std::pow(terrain.z + (Terrain::size - 1) / 2.0f - playerPos->z, 2);
 
-            if (dx + dy + dz < 3000)
-            {
+            //if (dx + dy + dz < 3000)
+            //{
                 glm::mat4 terrainModel = glm::translate(glm::mat4(1), glm::vec3(terrain.x - 15, terrain.y - 15, terrain.z));
                 coloredShader->model.load(terrainModel);
                 for (ColoredStaticModel model : terrain.models)
@@ -247,7 +249,7 @@ void render(float alpha)
                     glDrawArrays(GL_TRIANGLES, 0, model.getVerticesLength());
                     model.unbind();
                 }
-            }
+            //}
         }
     }
 
