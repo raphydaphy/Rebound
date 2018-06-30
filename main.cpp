@@ -22,6 +22,7 @@ static glm::mat4 smol = glm::scale(glm::mat4(1), glm::vec3(0.7f));
 
 int main()
 {
+    
     if (!core::initDisplay("Rebound")) return 1;
 
     core::initTimer();
@@ -30,6 +31,8 @@ int main()
     core::initSeed((unsigned)std::time(0));
 
     biomes::init();
+
+    core::initDiscord();
 
     glm::vec3 skyColor(227 / 256.0f, 168 / 256.0f, 87 / 256.0f);
 
@@ -68,7 +71,7 @@ int main()
     texturedShader = new StaticTexturedShader();
     coloredShader = new StaticColoredShader();
 
-    Texture atlas = Texture("texture/atlas");
+    Texture atlas = Texture("../rebound/res/texture/atlas");
     atlas.bind();
 
     projection = new glm::mat4();
@@ -121,6 +124,7 @@ int main()
         terrain.del();
     }
 
+    core::shutdownDiscord();
     core::destroyDisplay();
 
     std::cout << "Goodbye..." << std::endl;

@@ -138,7 +138,6 @@ namespace core
 
     void loadPNG(std::vector<unsigned char> &buffer, std::string sfilename)
     {
-        sfilename = ResourceLocation::get().directory + sfilename;
         const std::string &filename = sfilename;
         std::cout << "Loading PNG file " << filename << std::endl;
 
