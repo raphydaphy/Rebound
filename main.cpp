@@ -32,8 +32,6 @@ int main()
 
     biomes::init();
 
-    core::initDiscord();
-
     glm::vec3 skyColor(227 / 256.0f, 168 / 256.0f, 87 / 256.0f);
 
     // TODO: improve rendering system
@@ -124,7 +122,6 @@ int main()
         terrain.del();
     }
 
-    core::shutdownDiscord();
     core::destroyDisplay();
 
     std::cout << "Goodbye..." << std::endl;

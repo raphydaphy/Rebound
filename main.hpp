@@ -19,7 +19,6 @@
 #include "rebound/terrain/Terrain.hpp"
 #include "rebound/res/OBJModels.hpp"
 #include <ctime>
-#include "engine/core/discord.hpp"
 
 void update(float delta);
 void render(float alpha);
