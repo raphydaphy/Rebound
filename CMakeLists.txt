@@ -16,7 +16,7 @@ add_executable(${PROJECT_NAME} main.cpp main.hpp engine/core/display.cpp engine/
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${DL_LIBRARIES_DIR}/glfw/include")
 if (WIN32)
-    target_link_libraries(${PROJECT_NAME} "${CMAKE_BINARY_DIR}/dl_lib/glfw/lib/glfw3.lib")
+   target_link_libraries(${PROJECT_NAME} "${CMAKE_BINARY_DIR}/dl_lib/glfw/lib/glfw3.lib")
 endif()
 
 # gl3w
