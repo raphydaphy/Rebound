@@ -168,9 +168,9 @@ void update(float delta)
         {
             terrain.generating = true;
             preparingTerrain = true;
-            //std::thread t(&Terrain::generateModelData, &terrain);
-            //t.detach();
-            terrain.generateModelData();
+            std::thread t(&Terrain::generateModelData, &terrain);
+            t.detach();
+            //terrain.generateModelData();
         }
         else if (preparingTerrain && terrain.generating && !terrain.generated && terrain.prepared())
         {

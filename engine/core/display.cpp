@@ -29,7 +29,6 @@ namespace core
             std::cerr << "Unable to initialize GLFW :(" << std::endl;
             return false;
         }
-
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
